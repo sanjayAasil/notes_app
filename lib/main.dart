@@ -1,0 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:sanjay_notes/routes.dart';
+import 'package:uuid/uuid.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: Routes.onGenerate,
+    );
+  }
+}
