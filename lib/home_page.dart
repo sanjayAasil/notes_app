@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(
+      drawer: const MyDrawer(
         selectedTab: 'homeScreen',
       ),
       body: Column(

@@ -8,7 +8,7 @@ import 'list_model.dart';
 import 'note.dart';
 
 class DeletedScreen extends StatefulWidget {
-  DeletedScreen({super.key});
+  const DeletedScreen({super.key});
 
   @override
   State<DeletedScreen> createState() => _DeletedScreenState();
@@ -20,7 +20,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(
+      drawer: const MyDrawer(
         selectedTab: 'deletedScreen',
       ),
       body: Column(
