@@ -26,81 +26,81 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           if (selectedIds.isEmpty)
             Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10, left: 10, right: 10),
-              child: InkWell(
-                onTap: () {},
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey.shade300,
-                  ),
-                  child: Row(
-                    children: [
-                      Builder(builder: (context) {
-                        return InkWell(
-                          onTap: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Icon(Icons.menu),
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20, left: 10, right: 10),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.grey.shade200,
+                ),
+                child: Row(
+                  children: [
+                    Builder(builder: (context) {
+                      return InkWell(
+                        onTap: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Icon(
+                            Icons.menu,
+                            size: 25,
                           ),
-                        );
-                      }),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(Routes.searchScreen);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
-                            child: Text(
-                              'Search your notes',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                              ),
+                        ),
+                      );
+                    }),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(Routes.searchScreen);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                          child: Text(
+                            'Search your notes',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          DataManager().homeScreenView = !DataManager().homeScreenView;
-                          setState(() {});
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            right: 20,
-                          ),
-                          child: Icon(
-                            DataManager().homeScreenView ? Icons.list : Icons.grid_view_outlined,
-                            size: 25,
-                          ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        DataManager().homeScreenView = !DataManager().homeScreenView;
+                        setState(() {});
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: 15,
+                        ),
+                        child: Icon(
+                          DataManager().homeScreenView ? Icons.list : Icons.grid_view_outlined,
+                          size: 30,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: InkWell(
-                            onTap: () {},
-                            child: Icon(
-                              Icons.account_circle_outlined,
-                              size: 25,
-                            )),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15.0),
+                      child: InkWell(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.account_circle_outlined,
+                            size: 30,
+                          )),
+                    ),
+                  ],
                 ),
               ),
             )
           else
             Container(
               alignment: Alignment.centerLeft,
-              color: Colors.grey.shade300,
+              color: Colors.grey.shade200,
               width: double.infinity,
-              height: 90,
+              height: MediaQueryData().padding.top + 100,
               child: Padding(
-                padding: EdgeInsets.only(top: MediaQueryData().padding.top + 20),
+                padding: EdgeInsets.only(top: MediaQueryData().padding.top + 50),
                 child: Row(
                   children: [
                     InkWell(
@@ -135,12 +135,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         for (int i = 0; i < selectedIds.length; i++) {
                           for (Note note in DataManager().notes) {
                             if (note.id == selectedIds[i]) {
+                              note.isPinned = true;
                               DataManager().notes.remove(note);
                               DataManager().pinnedNotes.add(note);
                             }
                           }
                           for (ListModel listModel in DataManager().listModels) {
                             if (listModel.id == selectedIds[i]) {
+                              listModel.isPinned = true;
                               DataManager().listModels.remove(listModel);
                               DataManager().pinnedListModels.add(listModel);
                             }
@@ -189,11 +191,26 @@ class _HomeScreenState extends State<HomeScreen> {
                               DataManager().notes.remove(note);
                             }
                           }
+                          for (Note note in DataManager().pinnedNotes) {
+                            if (note.id == selectedIds[i]) {
+                              note.isArchive = true;
+                              DataManager().archivedNotes.add(note);
+                              DataManager().pinnedNotes.remove(note);
+                            }
+                          }
                           for (ListModel listModel in DataManager().listModels) {
                             if (listModel.id == selectedIds[i]) {
                               listModel.isArchive = true;
                               DataManager().archivedListModels.add(listModel);
                               DataManager().listModels.remove(listModel);
+                              debugPrint("_HomeScreenState: build check ${listModel.labels}");
+                            }
+                          }
+                          for (ListModel listModel in DataManager().pinnedListModels) {
+                            if (listModel.id == selectedIds[i]) {
+                              listModel.isArchive = true;
+                              DataManager().archivedListModels.add(listModel);
+                              DataManager().pinnedListModels.remove(listModel);
                               debugPrint("_HomeScreenState: build check ${listModel.labels}");
                             }
                           }
@@ -218,10 +235,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               DataManager().notes.remove(note);
                             }
                           }
+                          for (Note note in DataManager().pinnedNotes) {
+                            if (note.id == selectedIds[i]) {
+                              DataManager().deletedNotes.add(note);
+                              DataManager().pinnedNotes.remove(note);
+                            }
+                          }
                           for (ListModel listModel in DataManager().listModels) {
                             if (listModel.id == selectedIds[i]) {
                               DataManager().deletedListModel.add(listModel);
                               DataManager().listModels.remove(listModel);
+                            }
+                          }
+                          for (ListModel listModel in DataManager().pinnedListModels) {
+                            if (listModel.id == selectedIds[i]) {
+                              DataManager().deletedListModel.add(listModel);
+                              DataManager().pinnedListModels.remove(listModel);
                             }
                           }
                         }
@@ -269,19 +298,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(height: 20),
                           if (DataManager().pinnedNotes.isNotEmpty || DataManager().pinnedListModels.isNotEmpty)
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20.0, bottom: 10),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                   child: Text(
-                                    'PINNED',
-                                    style: TextStyle(
-                                      color: Colors.grey.shade700,
-                                    ),
+                                    'Pinned',
+                                    style: TextStyle(),
                                   ),
                                 ),
                                 for (Note note in DataManager().pinnedNotes)
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
                                       onTap: () {
@@ -310,8 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(12),
                                           border: Border.all(
-                                            color: selectedIds.contains(note.id) ? Colors.blue : Colors.black,
-                                            width: selectedIds.contains(note.id) ? 2.0 : 1.0,
+                                            color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
+                                            width: selectedIds.contains(note.id) ? 3.0 : 1,
                                           ),
                                         ),
                                         child: Column(
@@ -321,13 +349,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                               '${note.title}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w500,
-                                                fontSize: 17,
+                                                fontSize: 16,
                                               ),
                                             ),
-                                            Text(
-                                              note.note,
-                                              maxLines: 10,
-                                              overflow: TextOverflow.ellipsis,
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 10.0),
+                                              child: Text(
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                                note.note,
+                                                maxLines: 10,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
                                             Align(
                                               alignment: AlignmentDirectional.centerStart,
@@ -341,7 +375,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           color: Colors.grey.shade300,
                                                           borderRadius: BorderRadius.circular(5),
                                                         ),
-                                                        child: Text('  ${label}  '),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                                          child: Text(
+                                                            '  ${label}  ',
+                                                            style: TextStyle(
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w300,
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                 ],
@@ -356,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ///ListView pinned ListModel
                                 for (ListModel listModel in DataManager().pinnedListModels)
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
                                       onTap: () {
@@ -386,32 +430,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(12),
                                           border: Border.all(
-                                            color: selectedIds.contains(listModel.id) ? Colors.blue : Colors.black,
-                                            width: selectedIds.contains(listModel.id) ? 2.0 : 1.0,
+                                            color:
+                                                selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
+                                            width: selectedIds.contains(listModel.id) ? 3.0 : 1,
                                           ),
                                         ),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              '${listModel.title}',
-                                              style: TextStyle(
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                              child: Text(
+                                                '${listModel.title}',
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 17,
-                                                  color: Colors.grey.shade800),
+                                                  fontSize: 15,
+                                                ),
+                                              ),
                                             ),
                                             for (ListItem item in listModel.items)
-                                              Row(
-                                                children: [
-                                                  item.ticked
-                                                      ? Icon(
-                                                          Icons.check_box_outlined,
-                                                          color: Colors.grey.shade500,
-                                                        )
-                                                      : Icon(Icons.check_box_outline_blank,
-                                                          color: Colors.grey.shade500),
-                                                  Text(item.name),
-                                                ],
+                                              Padding(
+                                                padding: const EdgeInsets.all(2.0),
+                                                child: Row(
+                                                  children: [
+                                                    item.ticked
+                                                        ? Icon(
+                                                            Icons.check_box_outlined,
+                                                            color: Colors.grey.shade500,
+                                                            size: 20,
+                                                          )
+                                                        : Icon(Icons.check_box_outline_blank,
+                                                            size: 20, color: Colors.grey.shade500),
+                                                    Text(
+                                                      item.name,
+                                                      style: TextStyle(color: Colors.grey.shade600),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             Align(
                                               alignment: AlignmentDirectional.centerStart,
@@ -425,7 +480,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           color: Colors.grey.shade300,
                                                           borderRadius: BorderRadius.circular(5),
                                                         ),
-                                                        child: Text('  ${label}  '),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                                          child: Text(
+                                                            '  ${label}  ',
+                                                            style: TextStyle(
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w300,
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                 ],
@@ -442,21 +507,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           ///ListView Notes
 
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (DataManager().pinnedNotes.isNotEmpty && DataManager().notes.isNotEmpty ||
-                                  DataManager().pinnedListModels.isNotEmpty && DataManager().listModels.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20.0, bottom: 10),
+                                  DataManager().pinnedNotes.isNotEmpty && DataManager().listModels.isNotEmpty ||
+                                  DataManager().pinnedListModels.isNotEmpty && DataManager().listModels.isNotEmpty ||
+                                  DataManager().pinnedListModels.isNotEmpty && DataManager().notes.isNotEmpty)
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 20.0, bottom: 10, top: 10),
                                   child: Text(
-                                    'OTHERS',
-                                    style: TextStyle(
-                                      color: Colors.grey.shade700,
-                                    ),
+                                    'Others',
+                                    style: TextStyle(),
                                   ),
                                 ),
                               for (Note note in DataManager().notes)
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(12),
                                     onTap: () {
@@ -485,21 +551,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
-                                          color: selectedIds.contains(note.id) ? Colors.blue : Colors.black,
-                                          width: selectedIds.contains(note.id) ? 2.0 : 1.0,
+                                          color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
+                                          width: selectedIds.contains(note.id) ? 3.0 : 1,
                                         ),
                                       ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            '${note.title}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 17,
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                            child: Text(
+                                              '${note.title}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                              ),
                                             ),
                                           ),
                                           Text(
+                                            style: TextStyle(
+                                              color: Colors.grey.shade600,
+                                            ),
                                             note.note,
                                             maxLines: 10,
                                             overflow: TextOverflow.ellipsis,
@@ -516,7 +588,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         color: Colors.grey.shade300,
                                                         borderRadius: BorderRadius.circular(5),
                                                       ),
-                                                      child: Text('  ${label}  '),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                                        child: Text(
+                                                          '  ${label}  ',
+                                                          style: TextStyle(
+                                                            fontSize: 13,
+                                                            fontWeight: FontWeight.w300,
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                               ],
@@ -530,10 +612,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
 
-                          ///List view listItem
+                          ///List view listModel
                           for (ListModel listModel in DataManager().listModels)
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(12),
                                 onTap: () {
@@ -562,29 +644,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: selectedIds.contains(listModel.id) ? Colors.blue : Colors.black,
-                                      width: selectedIds.contains(listModel.id) ? 2.0 : 1.0,
+                                      color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
+                                      width: selectedIds.contains(listModel.id) ? 3.0 : 1.0,
                                     ),
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '${listModel.title}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500, fontSize: 17, color: Colors.grey.shade800),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                                        child: Text(
+                                          '${listModel.title}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                          ),
+                                        ),
                                       ),
                                       for (ListItem item in listModel.items)
-                                        Row(
-                                          children: [
-                                            item.ticked
-                                                ? Icon(
-                                                    Icons.check_box_outlined,
-                                                    color: Colors.grey.shade500,
-                                                  )
-                                                : Icon(Icons.check_box_outline_blank, color: Colors.grey.shade500),
-                                            Text(item.name),
-                                          ],
+                                        Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Row(
+                                            children: [
+                                              item.ticked
+                                                  ? Icon(
+                                                      Icons.check_box_outlined,
+                                                      size: 20,
+                                                      color: Colors.grey.shade500,
+                                                    )
+                                                  : Icon(
+                                                      Icons.check_box_outline_blank,
+                                                      color: Colors.grey.shade500,
+                                                      size: 20,
+                                                    ),
+                                              Text(item.name),
+                                            ],
+                                          ),
                                         ),
                                       Align(
                                         alignment: AlignmentDirectional.centerStart,
@@ -598,7 +693,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     color: Colors.grey.shade300,
                                                     borderRadius: BorderRadius.circular(5),
                                                   ),
-                                                  child: Text('  ${label}  '),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                                    child: Text(
+                                                      '  ${label}  ',
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight: FontWeight.w300,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                           ],
@@ -620,7 +724,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: const EdgeInsets.all(20),
                               child: Text(
-                                'PINNED',
+                                'Pinned',
                                 style: TextStyle(
                                   color: Colors.grey.shade700,
                                 ),
@@ -712,7 +816,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0, bottom: 10),
                               child: Text(
-                                'OTHERS',
+                                'Others',
                                 style: TextStyle(
                                   color: Colors.grey.shade700,
                                 ),
@@ -804,7 +908,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
 
-                                  ///Grid view listItem
+                                  ///Grid view listModel
                                   for (int i = 0; i < DataManager().listModels.length; i++)
                                     Container(
                                       width: MediaQuery.of(context).size.width / 2 - 20,
@@ -908,7 +1012,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           Container(
-            color: Colors.grey.shade300,
+            color: Colors.grey.shade200,
             height: 45,
             child: Row(
               children: [
@@ -954,8 +1058,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           Navigator.of(context).pushNamed(Routes.createNewNoteScreen);
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.grey.shade300,
+        child: Icon(Icons.add,size: 40,color: CupertinoColors.activeBlue,),
+        backgroundColor: Colors.grey.shade200,
       ),
     );
   }

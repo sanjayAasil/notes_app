@@ -104,8 +104,13 @@ class _DeletedScreenState extends State<DeletedScreen> {
                                 DataManager().archivedNotes.add(note);
                                 DataManager().deletedNotes.remove(note);
                               } else {
-                                DataManager().notes.add(note);
-                                DataManager().deletedNotes.remove(note);
+                                if (note.isPinned) {
+                                  DataManager().pinnedNotes.add(note);
+                                  DataManager().deletedNotes.remove(note);
+                                } else {
+                                  DataManager().notes.add(note);
+                                  DataManager().deletedNotes.remove(note);
+                                }
                               }
                             }
                           }
@@ -115,8 +120,13 @@ class _DeletedScreenState extends State<DeletedScreen> {
                                 DataManager().archivedListModels.add(listModel);
                                 DataManager().deletedListModel.remove(listModel);
                               } else {
-                                DataManager().listModels.add(listModel);
-                                DataManager().deletedListModel.remove(listModel);
+                                if (listModel.isPinned) {
+                                  DataManager().pinnedListModels.add(listModel);
+                                  DataManager().deletedListModel.remove(listModel);
+                                } else {
+                                  DataManager().listModels.add(listModel);
+                                  DataManager().deletedListModel.remove(listModel);
+                                }
                               }
                             }
                           }
