@@ -22,7 +22,7 @@ class SearchScreen extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Icon(
                       CupertinoIcons.back,
                     ),
@@ -32,6 +32,8 @@ class SearchScreen extends StatelessWidget {
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Search your notes',
+                      border: InputBorder.none,
+
                     ),
                   ),
                 ),

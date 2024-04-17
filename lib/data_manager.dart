@@ -15,13 +15,13 @@ class DataManager {
 
   List<Note> pinnedNotes = [];
 
+  List<Note> deletedNotes = [];
+
   List<ListModel> listModels = [];
 
   List<ListModel> archivedListModels = [];
 
   List<ListModel> pinnedListModels = [];
-
-  List<Note> deletedNotes = [];
 
   List<ListModel> deletedListModel = [];
 
