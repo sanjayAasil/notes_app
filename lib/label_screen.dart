@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/routes.dart';
 
 import 'data_manager.dart';
-import 'list_model.dart';
+
 import 'note.dart';
 
 class LabelScreen extends StatefulWidget {
-  final List<Note> notesForLabel;
-  final List<ListModel> listModelForLabel;
+  // final List<Note> notesForLabel;
+  // final List<Note> archivedNotesForLabel;
+  // final List<Note> pinnedNotesForLabel;
+  // final List<ListModel> listModelForLabel;
+  // final List<ListModel> pinnedListModelForLabel;
+  // final List<ListModel> archivedListModelForLabel;
 
-  LabelScreen({
-    super.key,
-    required this.notesForLabel,
-    required this.listModelForLabel,
-  });
+  final List<String> selectedIds;
+
+  LabelScreen({super.key, required this.selectedIds});
+
+  // LabelScreen({
+  //   super.key,
+  //   required this.notesForLabel,
+  //   required this.archivedNotesForLabel,
+  //   required this.pinnedNotesForLabel,
+  //   required this.listModelForLabel,
+  //   required this.pinnedListModelForLabel,
+  //   required this.archivedListModelForLabel,
+  // });
 
   @override
   State<LabelScreen> createState() => _LabelScreenState();
@@ -42,27 +55,56 @@ class _LabelScreenState extends State<LabelScreen> {
                         child: Icon(Icons.arrow_back),
                       ),
                       onTap: () {
-                        debugPrint("_LabelScreenState: build check");
                         for (int i = 0; i < selectedLabels.length; i++) {
-                          for (Note note in widget.notesForLabel) {
-                            if (!note.labels.contains(selectedLabels[i])) {
-                              note.labels.add(selectedLabels[i]);
-                              debugPrint("_LabelScreenState: build check ${note.labels} $i ");
+                          for (Note note in DataManager().notes) {
+                            if (widget.selectedIds.contains(note.id)) {
+                              if (!note.labels.contains(selectedLabels[i])) {
+                                note.labels.add(selectedLabels[i]);
+                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${note.labels}");
+                              }
+                            }
+                          }
+                          for (Note note in DataManager().archivedNotes) {
+                            if (widget.selectedIds.contains(note.id)) {
+                              if (!note.labels.contains(selectedLabels[i])) {
+                                note.labels.add(selectedLabels[i]);
+                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${note.labels}");
+                              }
+                            }
+                          }
+                          for (Note note in DataManager().pinnedNotes) {
+                            if (widget.selectedIds.contains(note.id)) {
+                              if (!note.labels.contains(selectedLabels[i])) {
+                                note.labels.add(selectedLabels[i]);
+                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${note.labels}");
+                              }
+                            }
+                          }
+                          for (ListModel listModel in DataManager().listModels) {
+                            if (widget.selectedIds.contains(listModel.id)) {
+                              if (!listModel.labels.contains(selectedLabels[i])) {
+                                listModel.labels.add(selectedLabels[i]);
+                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${listModel.labels}");
+                              }
+                            }
+                          }
+                          for (ListModel listModel in DataManager().archivedListModels) {
+                            if (widget.selectedIds.contains(listModel.id)) {
+                              if (!listModel.labels.contains(selectedLabels[i])) {
+                                listModel.labels.add(selectedLabels[i]);
+                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${listModel.labels}");
+                              }
+                            }
+                          }
+                          for (ListModel listModel in DataManager().pinnedListModels) {
+                            if (widget.selectedIds.contains(listModel.id)) {
+                              if (!listModel.labels.contains(selectedLabels[i])) {
+                                listModel.labels.add(selectedLabels[i]);
+                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${listModel.labels}");
+                              }
                             }
                           }
                         }
-                        for (int i = 0; i < selectedLabels.length; i++) {
-                          debugPrint("_LabelScreenState: build check 2nd ${widget.listModelForLabel.length}");
-                          for (ListModel listModel in widget.listModelForLabel) {
-                            debugPrint("_LabelScreenState: build ${selectedLabels.length}");
-                            if (!listModel.labels.contains(selectedLabels[i])) {
-                              listModel.labels.add(selectedLabels[i]);
-                              debugPrint("_LabelScreenState: build ${listModel.labels} $i");
-                            }
-                            debugPrint("_LabelScreenState: build wefbweyfgcyehvbcfyfewbfchewb");
-                          }
-                        }
-
                         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
                       },
                     ),

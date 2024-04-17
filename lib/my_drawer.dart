@@ -24,7 +24,7 @@ class MyDrawer extends StatelessWidget {
                   bottom: 25,
                 ),
                 child: Text(
-                  'Google',
+                  'Keep',
                   style: TextStyle(
                     color: Colors.blueAccent,
                     fontWeight: FontWeight.w500,
@@ -38,7 +38,7 @@ class MyDrawer extends StatelessWidget {
                   bottom: 25,
                 ),
                 child: Text(
-                  ' Keep',
+                  ' Notes',
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 20,

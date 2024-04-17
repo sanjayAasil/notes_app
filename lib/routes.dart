@@ -44,15 +44,27 @@ class Routes {
       case createNewLabelScreen:
         return MaterialPageRoute(builder: (context) => CreateNewLabelScreen());
       case labelScreen:
-        Map<String, dynamic> data = settings.arguments as Map<String, dynamic>;
-        List<Note> notesForLabel = data['notes'];
-        List<ListModel> listModelForLabel = data['listModel'];
+        List<String> selectedIds = settings.arguments as List<String>;
+        // Map<String, dynamic> data = settings.arguments as Map<String, dynamic>;
+        // List<Note> notesForLabel = data['notes'];
+        // List<Note> pinnedNotes = data['pinnedNotes'];
+        // List<Note> archivedNotesForLabel = data['archivedNotes'];
+        // List<ListModel> listModelForLabel = data['listModel'];
+        // List<ListModel> pinnedListModel = data['pinnedListModel'];
+        // List<ListModel> archivedListModel = data['archivedListModel'];
 
-        return MaterialPageRoute(
-            builder: (context) => LabelScreen(
-                  notesForLabel: notesForLabel,
-                  listModelForLabel: listModelForLabel,
-                ));
+        // return MaterialPageRoute(
+        //     builder: (context) => LabelScreen(
+        //           notesForLabel: notesForLabel,
+        //           listModelForLabel: listModelForLabel,
+        //           archivedNotesForLabel: archivedNotesForLabel,
+        //           pinnedNotesForLabel: pinnedNotes,
+        //           pinnedListModelForLabel: pinnedListModel,
+        //           archivedListModelForLabel: archivedListModel,
+        //         ));
+
+        return MaterialPageRoute(builder: (context) => LabelScreen(selectedIds: selectedIds));
+
       case viewOrEditListModel:
         ListModel listModel = settings.arguments as ListModel;
         return MaterialPageRoute(builder: (context) => ViewOrEditListModel(listModel: listModel));

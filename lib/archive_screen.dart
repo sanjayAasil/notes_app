@@ -133,14 +133,16 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                       onTap: () {},
                     ),
                     InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds);
+                      },
                       child: Padding(
                         padding: EdgeInsets.all(12),
                         child: Icon(
-                          CupertinoIcons.paintbrush,
+                          Icons.label_outline,
                           size: 25,
                         ),
                       ),
-                      onTap: () {},
                     ),
                     InkWell(
                       child: Padding(
@@ -507,7 +509,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                                           color: selectedIds.contains(DataManager().archivedListModels[i].id)
                                               ? Colors.blue
                                               : Colors.black,
-                                          width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 2.0 : 1.0,
+                                          width:
+                                              selectedIds.contains(DataManager().archivedListModels[i].id) ? 2.0 : 1.0,
                                         ),
                                       ),
                                       child: Column(

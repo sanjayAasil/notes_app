@@ -6,6 +6,7 @@ class ListModel {
   final String id;
   List<String> labels = [];
   bool isArchive = false;
+  bool isPinned = false;
 
   ListModel({
     required this.title,

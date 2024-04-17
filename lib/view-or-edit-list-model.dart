@@ -78,17 +78,73 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                     ),
                     Expanded(child: SizedBox()),
 
-                    const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Icon(CupertinoIcons.pin),
+                    InkWell(
+                      onTap: () {
+                        if (itemNameControllers.isEmpty && titleController.text.isEmpty) {
+                          // DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+                          // DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+                          // Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+                          return;
+                        }
+                        for (int i = 0; i < itemNameControllers.length; i++) {
+                          print('Item name : ${itemNameControllers}');
+                          ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
+                          items.add(item);
+                        }
+
+                        for (int i = 0; i < DataManager().pinnedListModels.length; i++) {
+                          if (DataManager().pinnedListModels[i].id == widget.listModel.id) {
+                            DataManager().pinnedListModels[i].title = titleController.text.trim();
+                            DataManager().pinnedListModels[i].items.clear();
+                            DataManager().pinnedListModels[i].items.addAll(items);
+                          }
+                        }
+                        for (int i = 0; i < DataManager().listModels.length; i++) {
+                          if (DataManager().listModels[i].id == widget.listModel.id) {
+                            DataManager().listModels[i].title = titleController.text.trim();
+                            DataManager().listModels[i].items.clear();
+                            DataManager().pinnedListModels[i].items.addAll(items);
+                          }
+                        }
+
+                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Icon(CupertinoIcons.pin),
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.all(10.0),
                       child: Icon(CupertinoIcons.bell),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Icon(Icons.archive_outlined),
+                    InkWell(
+                      onTap: () {
+                        if (itemNameControllers.isEmpty && titleController.text.isEmpty) {
+                          DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+                          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+                          return;
+                        }
+                        for (int i = 0; i < itemNameControllers.length; i++) {
+                          print('Item name : ${itemNameControllers}');
+                          ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
+                          items.add(item);
+                        }
+
+                        for (int i = 0; i < DataManager().archivedListModels.length; i++) {
+                          if (DataManager().pinnedListModels[i].id == widget.listModel.id) {
+                            DataManager().pinnedListModels[i].title = titleController.text.trim();
+                            DataManager().pinnedListModels[i].items.clear();
+                            DataManager().pinnedListModels[i].items.addAll(items);
+                          }
+                        }
+
+                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Icon(Icons.archive_outlined),
+                      ),
                     ),
                     // SizedBox(),
                   ],
@@ -120,6 +176,32 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
               ),
               Column(
                 children: [
+                  InkWell(
+                    onTap: () {
+                      itemNameControllers.add(TextEditingController());
+                      itemTicked.add(false);
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 40,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 65.0),
+                            child: Icon(CupertinoIcons.plus),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Text(
+                              'List item',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   for (int i = 0; i < itemNameControllers.length; i++)
                     Container(
                       height: 40,
@@ -133,7 +215,8 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           InkWell(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10.0, right: 10),
-                              child: itemTicked[i] ? Icon(Icons.check_box_outlined) : Icon(Icons.check_box_outline_blank),
+                              child:
+                                  itemTicked[i] ? Icon(Icons.check_box_outlined) : Icon(Icons.check_box_outline_blank),
                             ),
                             onTap: () {
                               itemTicked[i] = !itemTicked[i];
@@ -168,34 +251,6 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
               ),
               Column(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      itemNameControllers.add(TextEditingController());
-                      itemTicked.add(false);
-
-                      //debugPrint("_NewListScreenState: build ${items.length}");
-                      setState(() {});
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 40,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 65.0),
-                            child: Icon(CupertinoIcons.plus),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              'List item',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Align(
