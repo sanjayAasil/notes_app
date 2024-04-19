@@ -28,4 +28,6 @@ class DataManager {
   List<String> labels = [];
 
   bool homeScreenView = true;
+
+  bool archiveScreenView = true;
 }

@@ -3,7 +3,7 @@ import 'package:sanjay_notes/routes.dart';
 
 
 void main() {
-  runApp(MyApp());
+  runApp(  MyApp());
 }
 
 class MyApp extends StatefulWidget {

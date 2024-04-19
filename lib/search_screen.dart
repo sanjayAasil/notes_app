@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +30,7 @@ class SearchScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(15.0),
                     child: Icon(
                       CupertinoIcons.back,
+                      color: Colors.grey.shade800,
                     ),
                   ),
                 ),
@@ -33,7 +39,6 @@ class SearchScreen extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Search your notes',
                       border: InputBorder.none,
-
                     ),
                   ),
                 ),

@@ -7,26 +7,9 @@ import 'data_manager.dart';
 import 'note.dart';
 
 class LabelScreen extends StatefulWidget {
-  // final List<Note> notesForLabel;
-  // final List<Note> archivedNotesForLabel;
-  // final List<Note> pinnedNotesForLabel;
-  // final List<ListModel> listModelForLabel;
-  // final List<ListModel> pinnedListModelForLabel;
-  // final List<ListModel> archivedListModelForLabel;
-
   final List<String> selectedIds;
 
-  LabelScreen({super.key, required this.selectedIds});
-
-  // LabelScreen({
-  //   super.key,
-  //   required this.notesForLabel,
-  //   required this.archivedNotesForLabel,
-  //   required this.pinnedNotesForLabel,
-  //   required this.listModelForLabel,
-  //   required this.pinnedListModelForLabel,
-  //   required this.archivedListModelForLabel,
-  // });
+  const LabelScreen({super.key, required this.selectedIds});
 
   @override
   State<LabelScreen> createState() => _LabelScreenState();
@@ -52,61 +35,9 @@ class _LabelScreenState extends State<LabelScreen> {
                     InkWell(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.arrow_back),
+                        child: Icon(Icons.arrow_back,color: Colors.grey.shade800,),
                       ),
-                      onTap: () {
-                        for (int i = 0; i < selectedLabels.length; i++) {
-                          for (Note note in DataManager().notes) {
-                            if (widget.selectedIds.contains(note.id)) {
-                              if (!note.labels.contains(selectedLabels[i])) {
-                                note.labels.add(selectedLabels[i]);
-                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${note.labels}");
-                              }
-                            }
-                          }
-                          for (Note note in DataManager().archivedNotes) {
-                            if (widget.selectedIds.contains(note.id)) {
-                              if (!note.labels.contains(selectedLabels[i])) {
-                                note.labels.add(selectedLabels[i]);
-                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${note.labels}");
-                              }
-                            }
-                          }
-                          for (Note note in DataManager().pinnedNotes) {
-                            if (widget.selectedIds.contains(note.id)) {
-                              if (!note.labels.contains(selectedLabels[i])) {
-                                note.labels.add(selectedLabels[i]);
-                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${note.labels}");
-                              }
-                            }
-                          }
-                          for (ListModel listModel in DataManager().listModels) {
-                            if (widget.selectedIds.contains(listModel.id)) {
-                              if (!listModel.labels.contains(selectedLabels[i])) {
-                                listModel.labels.add(selectedLabels[i]);
-                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${listModel.labels}");
-                              }
-                            }
-                          }
-                          for (ListModel listModel in DataManager().archivedListModels) {
-                            if (widget.selectedIds.contains(listModel.id)) {
-                              if (!listModel.labels.contains(selectedLabels[i])) {
-                                listModel.labels.add(selectedLabels[i]);
-                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${listModel.labels}");
-                              }
-                            }
-                          }
-                          for (ListModel listModel in DataManager().pinnedListModels) {
-                            if (widget.selectedIds.contains(listModel.id)) {
-                              if (!listModel.labels.contains(selectedLabels[i])) {
-                                listModel.labels.add(selectedLabels[i]);
-                                debugPrint("_LabelScreenState build: checkkkkkkkkkkk  ${listModel.labels}");
-                              }
-                            }
-                          }
-                        }
-                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                      },
+                      onTap: onBackPress,
                     ),
                     Expanded(
                       child: Padding(
@@ -134,6 +65,53 @@ class _LabelScreenState extends State<LabelScreen> {
       ),
     );
   }
+  onBackPress () {
+    for (int i = 0; i < selectedLabels.length; i++) {
+      for (Note note in DataManager().notes) {
+        if (widget.selectedIds.contains(note.id)) {
+          if (!note.labels.contains(selectedLabels[i])) {
+            note.labels.add(selectedLabels[i]);
+          }
+        }
+      }
+      for (Note note in DataManager().archivedNotes) {
+        if (widget.selectedIds.contains(note.id)) {
+          if (!note.labels.contains(selectedLabels[i])) {
+            note.labels.add(selectedLabels[i]);
+          }
+        }
+      }
+      for (Note note in DataManager().pinnedNotes) {
+        if (widget.selectedIds.contains(note.id)) {
+          if (!note.labels.contains(selectedLabels[i])) {
+            note.labels.add(selectedLabels[i]);
+          }
+        }
+      }
+      for (ListModel listModel in DataManager().listModels) {
+        if (widget.selectedIds.contains(listModel.id)) {
+          if (!listModel.labels.contains(selectedLabels[i])) {
+            listModel.labels.add(selectedLabels[i]);
+          }
+        }
+      }
+      for (ListModel listModel in DataManager().archivedListModels) {
+        if (widget.selectedIds.contains(listModel.id)) {
+          if (!listModel.labels.contains(selectedLabels[i])) {
+            listModel.labels.add(selectedLabels[i]);
+          }
+        }
+      }
+      for (ListModel listModel in DataManager().pinnedListModels) {
+        if (widget.selectedIds.contains(listModel.id)) {
+          if (!listModel.labels.contains(selectedLabels[i])) {
+            listModel.labels.add(selectedLabels[i]);
+          }
+        }
+      }
+    }
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+  }
 }
 
 class LabelTile extends StatefulWidget {
@@ -155,7 +133,7 @@ class _LabelTileState extends State<LabelTile> {
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Icon(Icons.label_outline_rounded),
+            child: Icon(Icons.label_outline_rounded,color: Colors.grey.shade800,),
           ),
           Expanded(
             child: Padding(
@@ -180,7 +158,7 @@ class _LabelTileState extends State<LabelTile> {
                       Icons.check_box,
                       color: Colors.blue.shade700,
                     )
-                  : Icon(Icons.check_box_outline_blank),
+                  : Icon(Icons.check_box_outline_blank,color: Colors.grey.shade800,),
             ),
           ),
         ],

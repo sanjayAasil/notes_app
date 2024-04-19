@@ -7,7 +7,6 @@ class Note {
   List<String> labels;
   bool isArchive;
   bool isPinned;
-
   Note({
     required this.title,
     required this.note,

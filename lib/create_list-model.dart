@@ -32,24 +32,12 @@ class _NewListScreenState extends State<NewListScreen> {
             child: Row(
               children: [
                 InkWell(
-                  onTap: () {
-                    for (int i = 0; i < itemControllers.length; i++) {
-                      if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
-                    }
-
-                    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
-                    if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                      return;
-                    }
-                    DataManager().listModels.add(listModel);
-
-                    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                  },
+                  onTap: onBackPressed,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
                       CupertinoIcons.back,
+                      color: Colors.grey.shade800,
                     ),
                   ),
                 ),
@@ -57,34 +45,31 @@ class _NewListScreenState extends State<NewListScreen> {
 
                 InkWell(
                   borderRadius: BorderRadius.circular(40),
-                  onTap: () {
-                    for (int i = 0; i < itemControllers.length; i++) {
-                      if (itemControllers.isNotEmpty) {
-                        items[i].name = itemControllers[i].text.trim();
-                      }
-                    }
-                    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
-                    if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
-                      return;
-                    }
-                    listModel.isPinned = true;
-                    DataManager().pinnedListModels.add(listModel);
-                    debugPrint("_NewListScreenState build: ${DataManager().pinnedListModels.length}");
-
-                    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                  },
+                  onTap: onPinned,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Icon(CupertinoIcons.pin),
+                    child: Icon(
+                      CupertinoIcons.pin,
+                      color: Colors.grey.shade800,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Icon(CupertinoIcons.bell),
+                  child: Icon(
+                    CupertinoIcons.bell,
+                    color: Colors.grey.shade800,
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Icon(Icons.archive_outlined),
+                InkWell(
+                  onTap: onArchived,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      Icons.archive_outlined,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
                 ),
                 // SizedBox(),
               ],
@@ -110,7 +95,10 @@ class _NewListScreenState extends State<NewListScreen> {
               ),
               Padding(
                 padding: EdgeInsets.all(10),
-                child: Icon(Icons.more_vert_rounded),
+                child: Icon(
+                  Icons.more_vert_rounded,
+                  color: Colors.grey.shade800,
+                ),
               ),
             ],
           ),
@@ -133,7 +121,10 @@ class _NewListScreenState extends State<NewListScreen> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 65.0),
-                            child: Icon(CupertinoIcons.plus),
+                            child: Icon(
+                              CupertinoIcons.plus,
+                              color: Colors.grey.shade800,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
@@ -154,7 +145,10 @@ class _NewListScreenState extends State<NewListScreen> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 20.0, right: 10),
-                            child: Icon(Icons.drag_indicator_sharp),
+                            child: Icon(
+                              Icons.drag_indicator_sharp,
+                              color: Colors.grey.shade800,
+                            ),
                           ),
                           InkWell(
                               child: Padding(
@@ -179,7 +173,10 @@ class _NewListScreenState extends State<NewListScreen> {
                           InkWell(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10.0, right: 10),
-                              child: Icon(CupertinoIcons.xmark),
+                              child: Icon(
+                                CupertinoIcons.xmark,
+                                color: Colors.grey.shade800,
+                              ),
                             ),
                             onTap: () {
                               itemControllers.removeAt(i);
@@ -197,5 +194,50 @@ class _NewListScreenState extends State<NewListScreen> {
         ],
       ),
     );
+  }
+
+  onBackPressed() {
+    for (int i = 0; i < itemControllers.length; i++) {
+      if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
+    }
+
+    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    if (listModel.items.isEmpty || titleController.text.trim().isEmpty) {
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      return;
+    }
+    DataManager().listModels.add(listModel);
+
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+  }
+
+  onArchived() {
+    for (int i = 0; i < itemControllers.length; i++) {
+      if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
+    }
+
+    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
+      return;
+    }
+    listModel.isArchive = true;
+    DataManager().archivedListModels.add(listModel);
+
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+  }
+
+  onPinned() {
+    for (int i = 0; i < itemControllers.length; i++) {
+      if (itemControllers.isNotEmpty) {
+        items[i].name = itemControllers[i].text.trim();
+      }
+    }
+    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
+      return;
+    }
+    listModel.isPinned = true;
+    DataManager().pinnedListModels.add(listModel);
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
 }

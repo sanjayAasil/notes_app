@@ -1,14 +1,14 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/archive_screen.dart';
+import 'package:sanjay_notes/archive/archive_screen.dart';
 import 'package:sanjay_notes/create_new_label.dart';
 import 'package:sanjay_notes/deleted_screen.dart';
 import 'package:sanjay_notes/label_screen.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/view-or-edit-list-model.dart';
 import 'package:sanjay_notes/manage_note.dart';
-import 'package:sanjay_notes/home_page.dart';
-import 'package:sanjay_notes/new_list_screen.dart';
+import 'package:sanjay_notes/home/home_screen.dart';
+import 'package:sanjay_notes/create_list-model.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/search_screen.dart';
 
@@ -45,23 +45,6 @@ class Routes {
         return MaterialPageRoute(builder: (context) => CreateNewLabelScreen());
       case labelScreen:
         List<String> selectedIds = settings.arguments as List<String>;
-        // Map<String, dynamic> data = settings.arguments as Map<String, dynamic>;
-        // List<Note> notesForLabel = data['notes'];
-        // List<Note> pinnedNotes = data['pinnedNotes'];
-        // List<Note> archivedNotesForLabel = data['archivedNotes'];
-        // List<ListModel> listModelForLabel = data['listModel'];
-        // List<ListModel> pinnedListModel = data['pinnedListModel'];
-        // List<ListModel> archivedListModel = data['archivedListModel'];
-
-        // return MaterialPageRoute(
-        //     builder: (context) => LabelScreen(
-        //           notesForLabel: notesForLabel,
-        //           listModelForLabel: listModelForLabel,
-        //           archivedNotesForLabel: archivedNotesForLabel,
-        //           pinnedNotesForLabel: pinnedNotes,
-        //           pinnedListModelForLabel: pinnedListModel,
-        //           archivedListModelForLabel: archivedListModel,
-        //         ));
 
         return MaterialPageRoute(builder: (context) => LabelScreen(selectedIds: selectedIds));
 

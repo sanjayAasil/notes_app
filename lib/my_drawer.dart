@@ -201,7 +201,7 @@ class DrawerTile extends StatelessWidget {
             child: Icon(
               icon,
               size: 25,
-              color: isSelected ? CupertinoColors.activeBlue : null,
+              color: isSelected ? CupertinoColors.activeBlue : Colors.grey.shade800,
             ),
           ),
           Padding(

@@ -46,115 +46,44 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () {
-                      for (int i = 0; i < itemNameControllers.length; i++) {
-                        ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
-                        items.add(item);
-                      }
-                      debugPrint("_ViewOrEditListModelState build: checkkkkkkkkk  ${titleController.text.trim()}");
-                      if (items.isEmpty && titleController.text.trim().isEmpty) {
-                        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
-                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                        return;
-                      }
-                      for (int i = 0; i < DataManager().listModels.length; i++) {
-                        if (DataManager().listModels[i].id == widget.listModel.id) {
-                          DataManager().listModels[i].title = titleController.text.trim();
-                          DataManager().listModels[i].items.clear();
-                          DataManager().listModels[i].items.addAll(items);
-                        }
-                      }
-
-                      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                    },
-                    child: const Padding(
+                    onTap: onBackPressed,
+                    child: Padding(
                       padding: EdgeInsets.all(10.0),
                       child: Icon(
-                        CupertinoIcons.back,
+                        Icons.arrow_back,
+                        color: Colors.grey.shade800,
                       ),
                     ),
                   ),
                   Expanded(child: SizedBox()),
 
                   InkWell(
-                    onTap: () {
-                      if (itemNameControllers.isEmpty && titleController.text.isEmpty) {
-                        return;
-                      }
-                      for (int i = 0; i < itemNameControllers.length; i++) {
-                        print('Item name : ${itemNameControllers}');
-                        ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
-                        items.add(item);
-                      }
-
-                      for (int i = 0; i < DataManager().pinnedListModels.length; i++) {
-                        if (DataManager().pinnedListModels[i].id == widget.listModel.id) {
-                          DataManager().pinnedListModels[i].title = titleController.text.trim();
-                          DataManager().pinnedListModels[i].items.clear();
-                          DataManager().pinnedListModels[i].items.addAll(items);
-                        }
-                      }
-                      for (int i = 0; i < DataManager().listModels.length; i++) {
-                        if (DataManager().listModels[i].id == widget.listModel.id) {
-                          DataManager().listModels[i].title = titleController.text.trim();
-                          DataManager().listModels[i].items.clear();
-                          DataManager().listModels[i].items.addAll(items);
-                          DataManager().pinnedListModels.add(DataManager().listModels[i]);
-                          DataManager().listModels.remove(DataManager().listModels[i]);
-                        }
-                      }
-
-                      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                    },
-                    child: const Padding(
+                    onTap: onPinned,
+                    child: Padding(
                       padding: EdgeInsets.all(10.0),
-                      child: Icon(CupertinoIcons.pin),
+                      child: Icon(
+                        CupertinoIcons.pin,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
                   ),
 
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.all(10.0),
-                    child: Icon(CupertinoIcons.bell),
+                    child: Icon(
+                      CupertinoIcons.bell,
+                      color: Colors.grey.shade800,
+                    ),
                   ),
 
                   InkWell(
-                    onTap: () {
-                      if (itemNameControllers.isEmpty && titleController.text.isEmpty) {
-                        return;
-                      }
-                      for (int i = 0; i < itemNameControllers.length; i++) {
-                        print('Item name : ${itemNameControllers}');
-                        ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
-                        items.add(item);
-                      }
-
-                      for (int i = 0; i < DataManager().pinnedListModels.length; i++) {
-                        if (DataManager().pinnedListModels[i].id == widget.listModel.id) {
-                          DataManager().pinnedListModels[i].title = titleController.text.trim();
-                          DataManager().pinnedListModels[i].items.clear();
-                          DataManager().pinnedListModels[i].items.addAll(items);
-                          DataManager().archivedListModels.add(DataManager().pinnedListModels[i]);
-                          DataManager().archivedListModels[i].isArchive = true;
-                          DataManager().pinnedListModels[i].isPinned = false;
-                          DataManager().pinnedListModels.remove(DataManager().pinnedListModels[i]);
-                        }
-                      }
-                      for (int i = 0; i < DataManager().listModels.length; i++) {
-                        if (DataManager().listModels[i].id == widget.listModel.id) {
-                          DataManager().listModels[i].title = titleController.text.trim();
-                          DataManager().listModels[i].items.clear();
-                          DataManager().listModels[i].items.addAll(items);
-                          DataManager().archivedListModels.add(DataManager().listModels[i]);
-                          DataManager().listModels[i].isArchive = true;
-                          DataManager().listModels.remove(DataManager().listModels[i]);
-                        }
-                      }
-
-                      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-                    },
-                    child: const Padding(
+                    onTap: onArchived,
+                    child: Padding(
                       padding: EdgeInsets.all(10.0),
-                      child: Icon(Icons.archive_outlined),
+                      child: Icon(
+                        Icons.archive_outlined,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
                   ),
                   // SizedBox(),
@@ -181,7 +110,10 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.more_vert_rounded),
+                  child: Icon(
+                    Icons.more_vert_rounded,
+                    color: Colors.grey.shade800,
+                  ),
                 ),
               ],
             ),
@@ -200,7 +132,10 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 65.0),
-                          child: Icon(CupertinoIcons.plus),
+                          child: Icon(
+                            CupertinoIcons.plus,
+                            color: Colors.grey.shade800,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 15.0),
@@ -221,12 +156,23 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0, right: 10),
-                          child: Icon(Icons.drag_indicator_sharp),
+                          child: Icon(
+                            Icons.drag_indicator_sharp,
+                            color: Colors.grey.shade800,
+                          ),
                         ),
                         InkWell(
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10.0, right: 10),
-                            child: itemTicked[i] ? Icon(Icons.check_box_outlined) : Icon(Icons.check_box_outline_blank),
+                            child: itemTicked[i]
+                                ? Icon(
+                                    Icons.check_box_outlined,
+                                    color: Colors.grey.shade800,
+                                  )
+                                : Icon(
+                                    Icons.check_box_outline_blank,
+                                    color: Colors.grey.shade800,
+                                  ),
                           ),
                           onTap: () {
                             itemTicked[i] = !itemTicked[i];
@@ -246,7 +192,10 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           borderRadius: BorderRadius.circular(40),
                           child: Padding(
                             padding: const EdgeInsets.all(10),
-                            child: Icon(CupertinoIcons.xmark),
+                            child: Icon(
+                              CupertinoIcons.xmark,
+                              color: Colors.grey.shade800,
+                            ),
                           ),
                           onTap: () {
                             itemNameControllers.removeAt(i);
@@ -288,5 +237,130 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         ),
       ),
     );
+  }
+
+  onBackPressed() {
+    for (int i = 0; i < itemNameControllers.length; i++) {
+      ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
+      items.add(item);
+    }
+    widget.listModel.title = titleController.text.trim();
+    widget.listModel.items.clear();
+    widget.listModel.items.addAll(items);
+
+    if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
+      if (widget.listModel.isArchive) {
+        DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+        DataManager().archivedListModels.add(widget.listModel);
+      } else if (widget.listModel.isPinned) {
+        DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+        DataManager().pinnedListModels.add(widget.listModel);
+      } else {
+        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+        DataManager().listModels.add(widget.listModel);
+      }
+    } else {
+      DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+      DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+      DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+    }
+
+    if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
+      if (widget.listModel.isArchive) {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      }
+    } else {
+      if (widget.listModel.isArchive) {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      }
+    }
+  }
+
+  onPinned() {
+    for (int i = 0; i < itemNameControllers.length; i++) {
+      ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
+      items.add(item);
+    }
+    widget.listModel.title = titleController.text.trim();
+    widget.listModel.items.clear();
+    widget.listModel.items.addAll(items);
+
+    if (titleController.text.isNotEmpty || itemNameControllers.isNotEmpty) {
+      if (widget.listModel.isArchive) {
+        if (widget.listModel.isPinned) {
+          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          widget.listModel.isPinned = false;
+          DataManager().archivedListModels.add(widget.listModel);
+        } else {
+          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          widget.listModel.isPinned = true;
+          DataManager().archivedListModels.add(widget.listModel);
+        }
+      } else if (widget.listModel.isPinned) {
+        DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+        widget.listModel.isPinned = false;
+        DataManager().listModels.add(widget.listModel);
+      } else {
+        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+        widget.listModel.isPinned = true;
+        DataManager().pinnedListModels.add(widget.listModel);
+      }
+    } else {
+      return;
+    }
+
+    if (titleController.text.isNotEmpty || itemNameControllers.isNotEmpty) {
+      if (widget.listModel.isArchive) {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+      } else if (widget.listModel.isPinned) {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      }
+    } else {
+      return;
+    }
+  }
+
+  onArchived() {
+    for (int i = 0; i < itemNameControllers.length; i++) {
+      ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
+      items.add(item);
+    }
+    widget.listModel.title = titleController.text.trim();
+    widget.listModel.items.clear();
+    widget.listModel.items.addAll(items);
+
+    if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
+      if (widget.listModel.isArchive) {
+        if (widget.listModel.isPinned) {
+          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          widget.listModel.isArchive = false;
+          DataManager().pinnedListModels.add(widget.listModel);
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+        } else {
+          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          widget.listModel.isArchive = false;
+          DataManager().listModels.add(widget.listModel);
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+        }
+      } else if (widget.listModel.isPinned) {
+        DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+        widget.listModel.isArchive = true;
+        DataManager().archivedListModels.add(widget.listModel);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      } else {
+        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+        widget.listModel.isArchive = true;
+        DataManager().archivedListModels.add(widget.listModel);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      }
+    } else {
+      return;
+    }
   }
 }

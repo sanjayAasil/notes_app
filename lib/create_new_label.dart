@@ -21,7 +21,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: MediaQueryData().padding.top + 45),
+            padding: EdgeInsets.only(top: MediaQueryData().padding.top + 50),
             child: Row(
               children: [
                 InkWell(
@@ -33,8 +33,11 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(Icons.arrow_back),
+                    padding: const EdgeInsets.all(15.0),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Colors.grey.shade800,
+                    ),
                   ),
                 ),
                 Padding(
@@ -55,7 +58,10 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 borderRadius: BorderRadius.circular(40),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Icon(CupertinoIcons.plus),
+                  child: Icon(
+                    CupertinoIcons.plus,
+                    color: Colors.grey.shade800,
+                  ),
                 ),
               ),
               Expanded(
@@ -80,7 +86,10 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 borderRadius: BorderRadius.circular(40),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.check_box_outlined),
+                  child: Icon(
+                    Icons.check_box_outlined,
+                    color: Colors.grey.shade800,
+                  ),
                 ),
               ),
             ],
@@ -98,7 +107,10 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Icon(Icons.label_outline_rounded),
+                              child: Icon(
+                                Icons.label_outline_rounded,
+                                color: Colors.grey.shade800,
+                              ),
                             ),
                             Expanded(
                               child: Padding(
@@ -111,7 +123,10 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                               onTap: () {},
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Icon(CupertinoIcons.pen),
+                                child: Icon(
+                                  CupertinoIcons.pen,
+                                  color: Colors.grey.shade800,
+                                ),
                               ),
                             ),
                           ],
