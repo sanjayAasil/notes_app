@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -10,7 +9,7 @@ class ManageNotePage extends StatefulWidget {
 
   const ManageNotePage._({this.note});
 
-  factory ManageNotePage.create() => ManageNotePage._();
+  factory ManageNotePage.create() => const ManageNotePage._();
 
   factory ManageNotePage.viewOrEdit(Note note) => ManageNotePage._(note: note);
 
@@ -34,57 +33,79 @@ class _ManageNotePageState extends State<ManageNotePage> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            height: 60,
-            alignment: AlignmentDirectional.centerStart,
-            color: Colors.grey.shade300,
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: onBackPressed,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      CupertinoIcons.back,
-                      color: Colors.grey.shade800,
+          if (widget.note != null && widget.note!.isDeleted)
+            Container(
+              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              height: 60,
+              alignment: AlignmentDirectional.centerStart,
+              color: Colors.grey.shade300,
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        CupertinoIcons.back,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ), // SizedBox(),
+                ],
+              ),
+            )
+          else
+            Container(
+              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              height: 60,
+              alignment: AlignmentDirectional.centerStart,
+              color: Colors.grey.shade300,
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: onBackPressed,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        CupertinoIcons.back,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
 
-                InkWell(
-                  onTap: onPinned,
-                  borderRadius: BorderRadius.circular(40),
-                  child: Padding(
+                  InkWell(
+                    onTap: onPinned,
+                    borderRadius: BorderRadius.circular(40),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        CupertinoIcons.pin,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+                  Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Icon(
-                      CupertinoIcons.pin,
+                      CupertinoIcons.bell,
                       color: Colors.grey.shade800,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Icon(
-                    CupertinoIcons.bell,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      Icons.archive_outlined,
-                      color: Colors.grey.shade800,
+                  InkWell(
+                    onTap: archiveButton,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.archive_outlined,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
                   ),
-                  onTap: archiveButton,
-                ),
-                // SizedBox(),
-              ],
+                  // SizedBox(),
+                ],
+              ),
             ),
-          ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -92,11 +113,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 20, left: 20),
                     child: TextField(
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30,
                       ),
                       controller: titleController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Title',
                         border: InputBorder.none,
                         hintStyle: TextStyle(
@@ -112,7 +133,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                       controller: noteController,
                       maxLines: null,
                       // keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Note',
                         hintStyle: TextStyle(fontWeight: FontWeight.w300),
                         border: InputBorder.none,
@@ -132,7 +153,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                   color: Colors.grey.shade300,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: Text('  ${label}  '),
+                                child: Text('  $label  '),
                               ),
                             ),
                       ],

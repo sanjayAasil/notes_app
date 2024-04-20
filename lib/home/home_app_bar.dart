@@ -27,7 +27,7 @@ class DefaultHomeAppBar extends StatelessWidget {
               return InkWell(
                 onTap: () => Scaffold.of(context).openDrawer(),
                 child: Padding(
-                  padding: EdgeInsets.only(left: 20),
+                  padding: const EdgeInsets.only(left: 20),
                   child: Icon(
                     Icons.menu,
                     size: 25,
@@ -39,8 +39,8 @@ class DefaultHomeAppBar extends StatelessWidget {
             Expanded(
               child: InkWell(
                 onTap: () => Navigator.of(context).pushNamed(Routes.searchScreen),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
                   child: Text(
                     'Search your notes',
                     style: TextStyle(
@@ -56,7 +56,7 @@ class DefaultHomeAppBar extends StatelessWidget {
                 onViewChanged?.call();
               },
               child: Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   right: 15,
                 ),
                 child: Icon(
@@ -99,14 +99,14 @@ class SelectedHomeAppBar extends StatelessWidget {
       alignment: Alignment.centerLeft,
       color: Colors.grey.shade200,
       width: double.infinity,
-      height: MediaQueryData().padding.top + 100,
+      height: const MediaQueryData().padding.top + 100,
       child: Padding(
-        padding: EdgeInsets.only(top: MediaQueryData().padding.top + 50),
+        padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50),
         child: Row(
           children: [
             InkWell(
               child: Padding(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: Icon(
                   CupertinoIcons.xmark,
                   size: 25,
@@ -121,14 +121,14 @@ class SelectedHomeAppBar extends StatelessWidget {
             Expanded(
                 child: Text(
               '${selectedIds.length}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
               ),
             )),
             InkWell(
               onTap: onPinned,
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Icon(
                   CupertinoIcons.pin,
                   color: Colors.grey.shade800,
@@ -139,7 +139,7 @@ class SelectedHomeAppBar extends StatelessWidget {
             InkWell(
               onTap: () {},
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Icon(
                   CupertinoIcons.bell,
                   size: 25,
@@ -149,7 +149,7 @@ class SelectedHomeAppBar extends StatelessWidget {
             ),
             InkWell(
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Icon(
                   Icons.label_outline_rounded,
                   size: 25,
@@ -161,7 +161,7 @@ class SelectedHomeAppBar extends StatelessWidget {
             InkWell(
               onTap: onArchive,
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Icon(
                   Icons.archive_outlined,
                   size: 25,
@@ -172,7 +172,7 @@ class SelectedHomeAppBar extends StatelessWidget {
             InkWell(
               onTap: onDeleted,
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Icon(
                   Icons.delete_outline,
                   size: 25,
@@ -193,10 +193,16 @@ class SelectedHomeAppBar extends StatelessWidget {
     List<ListModel> pinnedListModels =
         DataManager().pinnedListModels.where((element) => selectedIds.contains(element.id)).toList();
 
-    for (Note note in DataManager().archivedNotes) {
+    for (Note note in notes) {
       note.isArchive = true;
     }
-    for (ListModel listModel in DataManager().archivedListModels) {
+    for (Note note in pinnedNotes) {
+      note.isArchive = true;
+    }
+    for (ListModel listModel in listModels) {
+      listModel.isArchive = true;
+    }
+    for (ListModel listModel in pinnedListModels) {
       listModel.isArchive = true;
     }
 
@@ -222,18 +228,22 @@ class SelectedHomeAppBar extends StatelessWidget {
         DataManager().pinnedListModels.where((element) => selectedIds.contains(element.id)).toList();
 
     for (Note note in notes) {
+      note.isDeleted = true;
       DataManager().deletedNotes.add(note);
       DataManager().notes.remove(note);
     }
     for (Note note in pinnedNotes) {
+      note.isDeleted = true;
       DataManager().deletedNotes.add(note);
       DataManager().pinnedNotes.remove(note);
     }
     for (ListModel listModel in listModels) {
+      listModel.isDeleted = true;
       DataManager().deletedListModel.add(listModel);
       DataManager().listModels.remove(listModel);
     }
     for (ListModel listModel in pinnedListModels) {
+      listModel.isDeleted = true;
       DataManager().deletedListModel.add(listModel);
       DataManager().pinnedListModels.remove(listModel);
     }

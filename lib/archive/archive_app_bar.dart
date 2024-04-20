@@ -14,16 +14,12 @@ class DefaultArchiveAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: MediaQueryData().padding.top + 50, left: 15),
+      padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50, left: 15),
       child: Row(
         children: [
           Builder(
               builder: (context) => InkWell(
-                    onTap: () {
-                      Scaffold.of(context).openDrawer();
-
-                      debugPrint("_ArchiveScreenState: build ");
-                    },
+                    onTap: () => Scaffold.of(context).openDrawer(),
                     borderRadius: BorderRadius.circular(40),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -34,10 +30,8 @@ class DefaultArchiveAppBar extends StatelessWidget {
                       ),
                     ),
                   )),
-          SizedBox(
-            width: 20,
-          ),
-          Expanded(
+          const SizedBox(width: 20),
+          const Expanded(
             child: Text(
               'Archive',
               style: TextStyle(fontSize: 18),
@@ -46,8 +40,8 @@ class DefaultArchiveAppBar extends StatelessWidget {
           InkWell(
             borderRadius: BorderRadius.circular(40),
             onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
               child: Icon(
                 Icons.search,
                 size: 30,
@@ -86,13 +80,13 @@ class SelectedArchiveAppBar extends StatelessWidget {
       alignment: Alignment.centerLeft,
       color: Colors.grey.shade200,
       width: double.infinity,
-      height: MediaQueryData().padding.top + 100,
+      height: const MediaQueryData().padding.top + 100,
       child: Padding(
-        padding: EdgeInsets.only(top: MediaQueryData().padding.top + 50),
+        padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50),
         child: Row(
           children: [
             InkWell(
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(15),
                 child: Icon(
                   CupertinoIcons.xmark,
@@ -106,12 +100,12 @@ class SelectedArchiveAppBar extends StatelessWidget {
             Expanded(
                 child: Text(
               '${selectedIds.length}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
               ),
             )),
             InkWell(
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
                   CupertinoIcons.pin,
@@ -121,7 +115,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
               onTap: () {},
             ),
             InkWell(
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
                   CupertinoIcons.bell,
@@ -134,7 +128,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds);
               },
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
                   Icons.label_outline,
@@ -143,7 +137,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
               ),
             ),
             InkWell(
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
                   Icons.unarchive_outlined,
@@ -179,7 +173,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
               },
             ),
             InkWell(
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
                   Icons.delete_outline,
@@ -187,13 +181,21 @@ class SelectedArchiveAppBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                DataManager().deletedNotes =
+                List<Note> notes =
                     DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
-                DataManager().archivedNotes.removeWhere((element) => selectedIds.contains(element.id));
+                for (Note note in notes) {
+                  note.isDeleted = true;
+                }
 
-                DataManager().deletedListModel =
+                DataManager().archivedNotes.removeWhere((element) => selectedIds.contains(element.id));
+                DataManager().deletedNotes.addAll(notes);
+                List<ListModel> listModels =
                     DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+                for (ListModel listModel in listModels) {
+                  listModel.isDeleted = true;
+                }
                 DataManager().archivedListModels.removeWhere((element) => selectedIds.contains(element.id));
+                DataManager().deletedListModel.addAll(listModels);
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
               },

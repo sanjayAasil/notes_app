@@ -47,7 +47,6 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         selectedTab: 'archiveScreen',
       ),
       body: Column(
-
         children: [
           if (selectedIds.isEmpty)
             DefaultArchiveAppBar(onViewChanged: () {

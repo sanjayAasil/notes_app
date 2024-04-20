@@ -7,7 +7,7 @@ import 'package:sanjay_notes/routes.dart';
 class ViewOrEditListModel extends StatefulWidget {
   final ListModel listModel;
 
-  const ViewOrEditListModel({required this.listModel});
+  const ViewOrEditListModel({super.key, required this.listModel});
 
   @override
   State<ViewOrEditListModel> createState() => _ViewOrEditListModelState();
@@ -27,7 +27,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     for (ListItem listItem in widget.listModel.items) {
       itemNameControllers.add(TextEditingController(text: listItem.name));
       itemTicked.add(listItem.ticked);
-      debugPrint("_ViewOrEditListModelState: initState ${itemNameControllers}");
+      debugPrint("_ViewOrEditListModelState: initState $itemNameControllers");
     }
   }
 
@@ -48,19 +48,19 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                   InkWell(
                     onTap: onBackPressed,
                     child: Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.grey.shade800,
                       ),
                     ),
                   ),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
 
                   InkWell(
                     onTap: onPinned,
                     child: Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Icon(
                         CupertinoIcons.pin,
                         color: Colors.grey.shade800,
@@ -69,7 +69,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                   ),
 
                   Padding(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Icon(
                       CupertinoIcons.bell,
                       color: Colors.grey.shade800,
@@ -79,7 +79,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                   InkWell(
                     onTap: onArchived,
                     child: Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Icon(
                         Icons.archive_outlined,
                         color: Colors.grey.shade800,
@@ -97,11 +97,11 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                     padding: const EdgeInsets.all(20.0),
                     child: TextField(
                       controller: titleController,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w300,
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Title',
                         border: InputBorder.none,
                       ),
@@ -109,7 +109,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Icon(
                     Icons.more_vert_rounded,
                     color: Colors.grey.shade800,
@@ -125,7 +125,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                     itemTicked.add(false);
                     setState(() {});
                   },
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
                     height: 40,
                     child: Row(
@@ -137,8 +137,8 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                             color: Colors.grey.shade800,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 15.0),
                           child: Text(
                             'List item',
                             style: TextStyle(fontSize: 18),
@@ -149,7 +149,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                   ),
                 ),
                 for (int i = 0; i < itemNameControllers.length; i++)
-                  Container(
+                  SizedBox(
                     height: 40,
                     width: double.infinity,
                     child: Row(
@@ -183,7 +183,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                         Expanded(
                           child: TextField(
                             controller: itemNameControllers[i],
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                             ),
                           ),
@@ -224,7 +224,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                                 color: Colors.grey.shade300,
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: Text('  ${label}  '),
+                              child: Text('  $label  '),
                             ),
                           ),
                       ],

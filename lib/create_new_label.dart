@@ -5,7 +5,7 @@ import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/routes.dart';
 
 class CreateNewLabelScreen extends StatefulWidget {
-  CreateNewLabelScreen({super.key});
+  const CreateNewLabelScreen({super.key});
 
   @override
   State<CreateNewLabelScreen> createState() => _CreateNewLabelScreenState();
@@ -17,11 +17,11 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(selectedTab: 'createNewLabelScreen'),
+      drawer: const MyDrawer(selectedTab: 'createNewLabelScreen'),
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: MediaQueryData().padding.top + 50),
+            padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50),
             child: Row(
               children: [
                 InkWell(
@@ -40,8 +40,8 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
                     'Edit labels',
                     style: TextStyle(fontSize: 20),
@@ -50,7 +50,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
               ],
             ),
           ),
-          Divider(),
+          const Divider(),
           Row(
             children: [
               InkWell(
@@ -68,7 +68,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 child: TextField(
                   controller: controller,
                   maxLines: 1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: ' Create new label',
                     hintStyle: TextStyle(fontWeight: FontWeight.w300),
                     border: InputBorder.none,
@@ -94,7 +94,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
               ),
             ],
           ),
-          Divider(),
+          const Divider(),
           if (DataManager().labels.isNotEmpty)
             Expanded(
               child: SingleChildScrollView(

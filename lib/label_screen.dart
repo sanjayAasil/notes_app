@@ -35,7 +35,10 @@ class _LabelScreenState extends State<LabelScreen> {
                     InkWell(
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.arrow_back,color: Colors.grey.shade800,),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
                       onTap: onBackPress,
                     ),
@@ -65,7 +68,8 @@ class _LabelScreenState extends State<LabelScreen> {
       ),
     );
   }
-  onBackPress () {
+
+  onBackPress() {
     for (int i = 0; i < selectedLabels.length; i++) {
       for (Note note in DataManager().notes) {
         if (widget.selectedIds.contains(note.id)) {
@@ -133,7 +137,10 @@ class _LabelTileState extends State<LabelTile> {
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Icon(Icons.label_outline_rounded,color: Colors.grey.shade800,),
+            child: Icon(
+              Icons.label_outline_rounded,
+              color: Colors.grey.shade800,
+            ),
           ),
           Expanded(
             child: Padding(
@@ -158,7 +165,10 @@ class _LabelTileState extends State<LabelTile> {
                       Icons.check_box,
                       color: Colors.blue.shade700,
                     )
-                  : Icon(Icons.check_box_outline_blank,color: Colors.grey.shade800,),
+                  : Icon(
+                      Icons.check_box_outline_blank,
+                      color: Colors.grey.shade800,
+                    ),
             ),
           ),
         ],

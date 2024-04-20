@@ -24,7 +24,7 @@ class ArchivedListView extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -69,7 +69,7 @@ class ArchivedListView extends StatelessWidget {
                         },
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -83,8 +83,8 @@ class ArchivedListView extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 10.0),
                                 child: Text(
-                                  '${note.title}',
-                                  style: TextStyle(
+                                  note.title,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                   ),
@@ -110,7 +110,7 @@ class ArchivedListView extends StatelessWidget {
                                             color: Colors.grey.shade300,
                                             borderRadius: BorderRadius.circular(5),
                                           ),
-                                          child: Text('  ${label}  '),
+                                          child: Text('  $label  '),
                                         ),
                                       ),
                                   ],
@@ -152,7 +152,7 @@ class ArchivedListView extends StatelessWidget {
                         },
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -164,7 +164,7 @@ class ArchivedListView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${listModel.title}',
+                                listModel.title,
                                 style:
                                     TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.grey.shade800),
                               ),
@@ -197,7 +197,7 @@ class ArchivedListView extends StatelessWidget {
                                             color: Colors.grey.shade300,
                                             borderRadius: BorderRadius.circular(5),
                                           ),
-                                          child: Text('  ${label}  '),
+                                          child: Text('  $label  '),
                                         ),
                                       ),
                                   ],
@@ -254,7 +254,7 @@ class ArchivedListView extends StatelessWidget {
                         },
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -266,8 +266,8 @@ class ArchivedListView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${note.title}',
-                                style: TextStyle(
+                                note.title,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 17,
                                 ),
@@ -289,7 +289,7 @@ class ArchivedListView extends StatelessWidget {
                                             color: Colors.grey.shade300,
                                             borderRadius: BorderRadius.circular(5),
                                           ),
-                                          child: Text('  ${label}  '),
+                                          child: Text('  $label  '),
                                         ),
                                       ),
                                   ],
@@ -301,7 +301,7 @@ class ArchivedListView extends StatelessWidget {
                       ),
                     ),
 
-                ///Archivedd ListModel isNotePinned
+                ///Archived ListModel isNotePinned
 
                 for (ListModel listModel in DataManager().archivedListModels)
                   if (!listModel.isPinned)
@@ -331,7 +331,7 @@ class ArchivedListView extends StatelessWidget {
                         },
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -343,7 +343,7 @@ class ArchivedListView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${listModel.title}',
+                                listModel.title,
                                 style:
                                     TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.grey.shade800),
                               ),
@@ -376,7 +376,7 @@ class ArchivedListView extends StatelessWidget {
                                             color: Colors.grey.shade300,
                                             borderRadius: BorderRadius.circular(5),
                                           ),
-                                          child: Text('  ${label}  '),
+                                          child: Text('  $label  '),
                                         ),
                                       ),
                                   ],

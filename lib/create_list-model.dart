@@ -1,14 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/routes.dart';
 
 class NewListScreen extends StatefulWidget {
-  NewListScreen({super.key});
+  const NewListScreen({super.key});
 
   @override
   State<NewListScreen> createState() => _NewListScreenState();
@@ -41,7 +38,7 @@ class _NewListScreenState extends State<NewListScreen> {
                     ),
                   ),
                 ),
-                Expanded(child: SizedBox()),
+                const Expanded(child: SizedBox()),
 
                 InkWell(
                   borderRadius: BorderRadius.circular(40),
@@ -82,11 +79,11 @@ class _NewListScreenState extends State<NewListScreen> {
                   padding: const EdgeInsets.all(20.0),
                   child: TextField(
                     controller: titleController,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w300,
                     ),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Title',
                       border: InputBorder.none,
                     ),
@@ -94,7 +91,7 @@ class _NewListScreenState extends State<NewListScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Icon(
                   Icons.more_vert_rounded,
                   color: Colors.grey.shade800,
@@ -111,10 +108,10 @@ class _NewListScreenState extends State<NewListScreen> {
                       itemControllers.add(TextEditingController());
                       ListItem item = ListItem(name: '');
                       items.add(item);
-                      debugPrint("_NewListScreenState: build ${items}");
+                      debugPrint("_NewListScreenState: build $items");
                       setState(() {});
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       height: 40,
                       child: Row(
@@ -126,8 +123,8 @@ class _NewListScreenState extends State<NewListScreen> {
                               color: Colors.grey.shade800,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 15.0),
                             child: Text(
                               'List item',
                               style: TextStyle(fontSize: 18),
@@ -138,7 +135,7 @@ class _NewListScreenState extends State<NewListScreen> {
                     ),
                   ),
                   for (int i = 0; i < itemControllers.length; i++)
-                    Container(
+                    SizedBox(
                       height: 40,
                       width: double.infinity,
                       child: Row(
@@ -154,8 +151,8 @@ class _NewListScreenState extends State<NewListScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 10.0, right: 10),
                                 child: items[i].ticked
-                                    ? Icon(Icons.check_box_outlined)
-                                    : Icon(Icons.check_box_outline_blank),
+                                    ? const Icon(Icons.check_box_outlined)
+                                    : const Icon(Icons.check_box_outline_blank),
                               ),
                               onTap: () {
                                 items[i].ticked = !items[i].ticked;
@@ -165,7 +162,7 @@ class _NewListScreenState extends State<NewListScreen> {
                           Expanded(
                             child: TextField(
                               controller: itemControllers[i],
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),
                             ),

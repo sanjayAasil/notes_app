@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import '../data_manager.dart';
 import '../list_model.dart';
 import '../routes.dart';
@@ -34,7 +31,7 @@ class HomeScreenGridView extends StatelessWidget {
               for (int i = 0; i < DataManager().pinnedNotes.length; i++)
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 5,
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
@@ -61,21 +58,21 @@ class HomeScreenGridView extends StatelessWidget {
                     },
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(DataManager().pinnedNotes[i].id)
                               ? Colors.blue.shade800
                               : Colors.grey,
-                          width: selectedIds.contains(DataManager().pinnedNotes[i].id) ? 2.0 : 1.0,
+                          width: selectedIds.contains(DataManager().pinnedNotes[i].id) ? 3.0 : 1.0,
                         ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${DataManager().pinnedNotes[i].title}',
+                            DataManager().pinnedNotes[i].title,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -103,7 +100,7 @@ class HomeScreenGridView extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Text(
-                                        '  ${label}  ',
+                                        '  $label  ',
                                       ),
                                     ),
                                   ),
@@ -118,7 +115,7 @@ class HomeScreenGridView extends StatelessWidget {
               for (int i = 0; i < DataManager().pinnedListModels.length; i++)
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 5,
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
@@ -145,14 +142,14 @@ class HomeScreenGridView extends StatelessWidget {
                     },
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(DataManager().pinnedListModels[i].id)
                               ? Colors.blue.shade800
                               : Colors.grey,
-                          width: selectedIds.contains(DataManager().pinnedListModels[i].id) ? 2.0 : 1.0,
+                          width: selectedIds.contains(DataManager().pinnedListModels[i].id) ? 3.0 : 1.0,
                         ),
                       ),
                       child: Column(
@@ -161,7 +158,7 @@ class HomeScreenGridView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(5),
                             child: Text(
-                              '${DataManager().pinnedListModels[i].title}',
+                              DataManager().pinnedListModels[i].title,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
@@ -180,7 +177,6 @@ class HomeScreenGridView extends StatelessWidget {
                                               Icons.check_box_outlined,
                                               color: Colors.grey.shade500,
                                               size: 20,
-
                                             )
                                           : Icon(
                                               Icons.check_box_outline_blank,
@@ -205,7 +201,7 @@ class HomeScreenGridView extends StatelessWidget {
                                         color: Colors.grey.shade300,
                                         borderRadius: BorderRadius.circular(5),
                                       ),
-                                      child: Text('  ${label}  '),
+                                      child: Text('  $label  '),
                                     ),
                                   ),
                               ],
@@ -219,8 +215,6 @@ class HomeScreenGridView extends StatelessWidget {
             ],
           ),
         ),
-
-
 
         ///GridView notes
 
@@ -270,20 +264,20 @@ class HomeScreenGridView extends StatelessWidget {
                       },
                       child: Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: selectedIds.contains(DataManager().notes[i].id) ? Colors.blue.shade800 : Colors.grey,
-                            width: selectedIds.contains(DataManager().notes[i].id) ? 2.0 : 1.0,
+                            width: selectedIds.contains(DataManager().notes[i].id) ? 3.0 : 1.0,
                           ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${DataManager().notes[i].title}',
-                              style: TextStyle(
+                              DataManager().notes[i].title,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 17,
                               ),
@@ -305,7 +299,7 @@ class HomeScreenGridView extends StatelessWidget {
                                           color: Colors.grey.shade300,
                                           borderRadius: BorderRadius.circular(5),
                                         ),
-                                        child: Text('  ${label}  '),
+                                        child: Text('  $label  '),
                                       ),
                                     ),
                                 ],
@@ -319,7 +313,7 @@ class HomeScreenGridView extends StatelessWidget {
                 for (int i = 0; i < DataManager().listModels.length; i++)
                   Container(
                     width: MediaQuery.of(context).size.width / 2 - 5,
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(12),
                       onTap: () {
@@ -346,14 +340,14 @@ class HomeScreenGridView extends StatelessWidget {
                       },
                       child: Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: selectedIds.contains(DataManager().listModels[i].id)
                                 ? Colors.blue.shade800
                                 : Colors.grey,
-                            width: selectedIds.contains(DataManager().listModels[i].id) ? 2.0 : 1.0,
+                            width: selectedIds.contains(DataManager().listModels[i].id) ? 3.0 : 1.0,
                           ),
                         ),
                         child: Column(
@@ -362,7 +356,7 @@ class HomeScreenGridView extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(5),
                               child: Text(
-                                '${DataManager().listModels[i].title}',
+                                DataManager().listModels[i].title,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16,
@@ -378,16 +372,15 @@ class HomeScreenGridView extends StatelessWidget {
                                       children: [
                                         listItem.ticked
                                             ? Icon(
-                                          Icons.check_box_outlined,
-                                          color: Colors.grey.shade500,
-                                          size: 20,
-
-                                        )
+                                                Icons.check_box_outlined,
+                                                color: Colors.grey.shade500,
+                                                size: 20,
+                                              )
                                             : Icon(
-                                          Icons.check_box_outline_blank,
-                                          color: Colors.grey.shade500,
-                                          size: 20,
-                                        ),
+                                                Icons.check_box_outline_blank,
+                                                color: Colors.grey.shade500,
+                                                size: 20,
+                                              ),
                                         Text(listItem.name),
                                       ],
                                     ),
@@ -406,7 +399,7 @@ class HomeScreenGridView extends StatelessWidget {
                                           color: Colors.grey.shade300,
                                           borderRadius: BorderRadius.circular(5),
                                         ),
-                                        child: Text('  ${label}  '),
+                                        child: Text('  $label  '),
                                       ),
                                     ),
                                 ],

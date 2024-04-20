@@ -26,7 +26,7 @@ class ArchivedGridView extends StatelessWidget {
           children: [
             if (isPinned)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   'Pinned',
                   style: TextStyle(
@@ -46,7 +46,7 @@ class ArchivedGridView extends StatelessWidget {
                       if (DataManager().archivedNotes[i].isPinned)
                         Container(
                           width: MediaQuery.of(context).size.width / 2 - 5,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),
                             onTap: () {
@@ -87,7 +87,7 @@ class ArchivedGridView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${DataManager().archivedNotes[i].title}',
+                                    DataManager().archivedNotes[i].title,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16,
@@ -115,7 +115,7 @@ class ArchivedGridView extends StatelessWidget {
                                                 borderRadius: BorderRadius.circular(5),
                                               ),
                                               child: Text(
-                                                '  ${label}  ',
+                                                '  $label  ',
                                               ),
                                             ),
                                           ),
@@ -134,7 +134,7 @@ class ArchivedGridView extends StatelessWidget {
                       if (DataManager().archivedListModels[i].isPinned)
                         Container(
                           width: MediaQuery.of(context).size.width / 2 - 20,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),
                             onTap: () {
@@ -177,7 +177,7 @@ class ArchivedGridView extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 10.0),
                                     child: Text(
-                                      '${DataManager().archivedListModels[i].title}',
+                                      DataManager().archivedListModels[i].title,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16,
@@ -220,7 +220,7 @@ class ArchivedGridView extends StatelessWidget {
                                                 color: Colors.grey.shade300,
                                                 borderRadius: BorderRadius.circular(5),
                                               ),
-                                              child: Text('  ${label}  '),
+                                              child: Text('  $label  '),
                                             ),
                                           ),
                                       ],
@@ -241,7 +241,7 @@ class ArchivedGridView extends StatelessWidget {
             ),
             if (isPinned && others)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
                   'Others',
                   style: TextStyle(
@@ -257,7 +257,7 @@ class ArchivedGridView extends StatelessWidget {
                     if (!DataManager().archivedNotes[i].isPinned)
                       Container(
                         width: MediaQuery.of(context).size.width / 2 - 10,
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         // padding: EdgeInsets.only(
                         //     right: i.isEven ? 10 : 0, left: i.isOdd ? 10 : 0, top: 10, bottom: 10),
                         child: InkWell(
@@ -300,7 +300,7 @@ class ArchivedGridView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${DataManager().archivedNotes[i].title}',
+                                  DataManager().archivedNotes[i].title,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
@@ -324,7 +324,7 @@ class ArchivedGridView extends StatelessWidget {
                                               borderRadius: BorderRadius.circular(5),
                                             ),
                                             child: Text(
-                                              '  ${label}  ',
+                                              '  $label  ',
                                             ),
                                           ),
                                         ),
@@ -384,7 +384,7 @@ class ArchivedGridView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${DataManager().archivedListModels[i].title}',
+                                  DataManager().archivedListModels[i].title,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
@@ -426,7 +426,7 @@ class ArchivedGridView extends StatelessWidget {
                                               color: Colors.grey.shade300,
                                               borderRadius: BorderRadius.circular(5),
                                             ),
-                                            child: Text('  ${label}  '),
+                                            child: Text('  $label  '),
                                           ),
                                         ),
                                     ],

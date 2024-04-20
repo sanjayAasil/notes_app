@@ -27,22 +27,22 @@ class Routes {
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
       case homeScreen:
-        return MaterialPageRoute(builder: (context) => HomeScreen());
+        return MaterialPageRoute(builder: (context) => const HomeScreen());
       case searchScreen:
-        return MaterialPageRoute(builder: (context) => SearchScreen());
+        return MaterialPageRoute(builder: (context) => const SearchScreen());
       case newListScreen:
-        return MaterialPageRoute(builder: (context) => NewListScreen());
+        return MaterialPageRoute(builder: (context) => const NewListScreen());
       case createNewNoteScreen:
         return MaterialPageRoute(builder: (context) => ManageNotePage.create());
       case editOrViewNoteScreen:
         Note note = settings.arguments as Note;
         return MaterialPageRoute(builder: (context) => ManageNotePage.viewOrEdit(note));
       case archiveScreen:
-        return MaterialPageRoute(builder: (context) => ArchiveScreen());
+        return MaterialPageRoute(builder: (context) => const ArchiveScreen());
       case deletedScreen:
-        return MaterialPageRoute(builder: (context) => DeletedScreen());
+        return MaterialPageRoute(builder: (context) => const DeletedScreen());
       case createNewLabelScreen:
-        return MaterialPageRoute(builder: (context) => CreateNewLabelScreen());
+        return MaterialPageRoute(builder: (context) => const CreateNewLabelScreen());
       case labelScreen:
         List<String> selectedIds = settings.arguments as List<String>;
 
@@ -53,7 +53,7 @@ class Routes {
         return MaterialPageRoute(builder: (context) => ViewOrEditListModel(listModel: listModel));
       default:
         return MaterialPageRoute(
-          builder: (context) => Scaffold(
+          builder: (context) => const Scaffold(
             body: Center(
               child: Text('Page Not Found'),
             ),

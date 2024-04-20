@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/routes.dart';
 
-
 void main() {
-  runApp(  MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

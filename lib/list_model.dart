@@ -7,6 +7,7 @@ class ListModel {
   List<String> labels = [];
   bool isArchive = false;
   bool isPinned = false;
+  bool isDeleted = false;
 
   ListModel({
     required this.title,

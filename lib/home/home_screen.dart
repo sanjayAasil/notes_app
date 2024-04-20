@@ -20,20 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MyDrawer(
-        selectedTab: 'homeScreen',
-      ),
+      drawer: const MyDrawer(selectedTab: 'homeScreen'),
       body: Column(
         children: [
           if (selectedIds.isEmpty)
-            DefaultHomeAppBar(onViewChanged: () {
-              setState(() {});
-            })
+            DefaultHomeAppBar(onViewChanged: () => setState(() {}))
           else
             SelectedHomeAppBar(
-              onSelectedIdsCleared: () {
-                setState(() {});
-              },
+              onSelectedIdsCleared: () => setState(() {}),
               selectedIds: selectedIds,
             ),
           if (DataManager().notes.isEmpty &&
@@ -44,41 +38,35 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                   Icon(
                     Icons.sticky_note_2_outlined,
                     color: Colors.yellow.shade800,
                     size: 100,
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text('Notes you add appear here'),
-                  Expanded(child: SizedBox()),
+                  const SizedBox(height: 20),
+                  const Text('Notes you add appear here'),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
             )
           else
             Expanded(
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: DataManager().homeScreenView
                     ?
 
                     ///ListView Pinned notes
                     HomeScreenListView(
                         selectedIds: selectedIds,
-                        onUpdateRequest: () {
-                          setState(() {});
-                        },
+                        onUpdateRequest: () => setState(() {}),
                       )
 
-                    ///Grid View pinnednotes
+                    ///Grid View pinned-notes
                     : HomeScreenGridView(
                         selectedIds: selectedIds,
-                        onUpdateRequest: () {
-                          setState(() {});
-                        },
+                        onUpdateRequest: () => setState(() {}),
                       ),
               ),
             ),
@@ -135,16 +123,18 @@ class _HomeScreenState extends State<HomeScreen> {
           //Expanded(child: SizedBox()),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(Routes.createNewNoteScreen);
-        },
-        child: Icon(
-          Icons.add,
-          size: 40,
-          color: CupertinoColors.activeBlue,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: const MediaQueryData().padding.bottom + 50),
+        child: FloatingActionButton(
+          onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
+          backgroundColor: Colors.grey.shade200,
+          elevation: 20,
+          child: const Icon(
+            Icons.add,
+            size: 40,
+            color: CupertinoColors.activeBlue,
+          ),
         ),
-        backgroundColor: Colors.grey.shade200,
       ),
     );
   }

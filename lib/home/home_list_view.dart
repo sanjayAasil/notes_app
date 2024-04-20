@@ -56,7 +56,7 @@ class HomeScreenListView extends StatelessWidget {
                     },
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
@@ -68,8 +68,8 @@ class HomeScreenListView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${note.title}',
-                            style: TextStyle(
+                            note.title,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                             ),
@@ -100,8 +100,8 @@ class HomeScreenListView extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                         child: Text(
-                                          '  ${label}  ',
-                                          style: TextStyle(
+                                          '  $label  ',
+                                          style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w300,
                                           ),
@@ -146,7 +146,7 @@ class HomeScreenListView extends StatelessWidget {
                     },
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
@@ -160,8 +160,8 @@ class HomeScreenListView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: Text(
-                              '${listModel.title}',
-                              style: TextStyle(
+                              listModel.title,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -201,8 +201,8 @@ class HomeScreenListView extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                         child: Text(
-                                          '  ${label}  ',
-                                          style: TextStyle(
+                                          '  $label  ',
+                                          style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w300,
                                           ),
@@ -266,7 +266,7 @@ class HomeScreenListView extends StatelessWidget {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
@@ -280,8 +280,8 @@ class HomeScreenListView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Text(
-                            '${note.title}',
-                            style: TextStyle(
+                            note.title,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                             ),
@@ -310,8 +310,8 @@ class HomeScreenListView extends StatelessWidget {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                       child: Text(
-                                        '  ${label}  ',
-                                        style: TextStyle(
+                                        '  $label  ',
+                                        style: const TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w300,
                                         ),
@@ -358,7 +358,7 @@ class HomeScreenListView extends StatelessWidget {
               },
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
@@ -372,8 +372,8 @@ class HomeScreenListView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                       child: Text(
-                        '${listModel.title}',
-                        style: TextStyle(
+                        listModel.title,
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                         ),
@@ -414,8 +414,8 @@ class HomeScreenListView extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                   child: Text(
-                                    '  ${label}  ',
-                                    style: TextStyle(
+                                    '  $label  ',
+                                    style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w300,
                                     ),

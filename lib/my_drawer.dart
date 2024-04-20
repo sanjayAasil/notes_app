@@ -23,7 +23,7 @@ class MyDrawer extends StatelessWidget {
                   left: 25,
                   bottom: 25,
                 ),
-                child: Text(
+                child: const Text(
                   'Keep',
                   style: TextStyle(
                     color: Colors.blueAccent,
@@ -37,7 +37,7 @@ class MyDrawer extends StatelessWidget {
                   top: MediaQuery.of(context).padding.top + 20,
                   bottom: 25,
                 ),
-                child: Text(
+                child: const Text(
                   ' Notes',
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
@@ -57,7 +57,7 @@ class MyDrawer extends StatelessWidget {
               isSelected: selectedTab == 'homeScreen',
             ),
           ),
-          DrawerTile(
+          const DrawerTile(
             name: 'Remainder',
             icon: Icons.timer_outlined,
           ),
@@ -65,10 +65,10 @@ class MyDrawer extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(),
+                const Divider(),
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text('     Labels'),
@@ -78,7 +78,7 @@ class MyDrawer extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).pushNamedAndRemoveUntil(Routes.createNewLabelScreen, (route) => false);
                       },
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                         child: Text('Edit'),
                       ),
@@ -92,8 +92,8 @@ class MyDrawer extends StatelessWidget {
                         onTap: () {},
                         child: Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                               child: Icon(Icons.label_outline_rounded),
                             ),
                             Expanded(
@@ -109,8 +109,8 @@ class MyDrawer extends StatelessWidget {
                             InkWell(
                                 borderRadius: BorderRadius.circular(40),
                                 onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                                   child: Icon(CupertinoIcons.pen),
                                 )),
                           ],
@@ -121,14 +121,14 @@ class MyDrawer extends StatelessWidget {
                           ? () => Navigator.of(context)
                               .pushNamedAndRemoveUntil(Routes.createNewLabelScreen, (route) => false)
                           : null,
-                      child: DrawerTile(
+                      child: const DrawerTile(
                         name: 'Create new label',
                         icon: Icons.add,
                       ),
                     ),
                   ],
                 ),
-                Divider(),
+                const Divider(),
               ],
             )
           else
@@ -136,7 +136,7 @@ class MyDrawer extends StatelessWidget {
               onTap: selectedTab != 'createNewLabelScreen'
                   ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.createNewLabelScreen, (route) => false)
                   : null,
-              child: DrawerTile(
+              child: const DrawerTile(
                 name: 'Create new label',
                 icon: Icons.add,
               ),
@@ -161,11 +161,11 @@ class MyDrawer extends StatelessWidget {
               isSelected: selectedTab == 'deletedScreen',
             ),
           ),
-          DrawerTile(
+          const DrawerTile(
             name: 'Settings',
             icon: Icons.settings,
           ),
-          DrawerTile(
+          const DrawerTile(
             name: 'Help & feedback',
             icon: Icons.help_outline_rounded,
           ),
@@ -205,7 +205,7 @@ class DrawerTile extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
             child: Text(
               name,
               style: TextStyle(
