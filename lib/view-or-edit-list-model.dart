@@ -64,7 +64,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                         InkWell(
                           onTap: onPinned,
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: widget.listModel.isPinned
                                 ? Icon(
                                     CupertinoIcons.pin_fill,
@@ -78,7 +78,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                         ),
 
                         Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Icon(
                             CupertinoIcons.bell,
                             color: Colors.grey.shade800,
@@ -88,7 +88,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                         InkWell(
                           onTap: onArchived,
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: widget.listModel.isArchive
                                 ? Icon(
                                     Icons.unarchive_outlined,

@@ -38,9 +38,9 @@ class FavoriteListView extends StatelessWidget {
                     ),
                   ),
 
-                ///ArchivedNote Pinned
+                ///FavNote Pinned
 
-                for (Note note in DataManager().archivedNotes)
+                for (Note note in DataManager().favoriteNotes)
                   if (note.isPinned)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -122,9 +122,9 @@ class FavoriteListView extends StatelessWidget {
                       ),
                     ),
 
-                ///Archived ListModel Pinned
+                ///FavNote ListModel Pinned
 
-                for (ListModel listModel in DataManager().archivedListModels)
+                for (ListModel listModel in DataManager().favoriteListModels)
                   if (listModel.isPinned)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -225,9 +225,9 @@ class FavoriteListView extends StatelessWidget {
                     ),
                   ),
 
-                ///Archived Notes IsNotePinned
+                ///FavNote Notes IsNotePinned
 
-                for (Note note in DataManager().archivedNotes)
+                for (Note note in DataManager().favoriteNotes)
                   if (!note.isPinned)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -303,9 +303,9 @@ class FavoriteListView extends StatelessWidget {
                       ),
                     ),
 
-                ///Archived ListModel isNotePinned
+                ///FavNotearc ListModel isNotePinned
 
-                for (ListModel listModel in DataManager().archivedListModels)
+                for (ListModel listModel in DataManager().favoriteListModels)
                   if (!listModel.isPinned)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

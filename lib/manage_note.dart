@@ -126,18 +126,15 @@ class _ManageNotePageState extends State<ManageNotePage> {
                               ),
                             ),
                           ),
-                          Container(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: TextField(
-                                controller: noteController,
-                                maxLines: null,
-                                // keyboardType: TextInputType.multiline,
-                                decoration: const InputDecoration(
-                                  hintText: 'Note',
-                                  hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                                  border: InputBorder.none,
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: TextField(
+                              controller: noteController,
+                              maxLines: null,
+                              decoration: const InputDecoration(
+                                hintText: 'Note',
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                border: InputBorder.none,
                               ),
                             ),
                           ),
@@ -372,16 +369,10 @@ class _ManageNotePageState extends State<ManageNotePage> {
         DataManager().archivedNotes.add(note);
       } else {
         if (widget.note!.isFavorite) {
-          if (widget.note!.isPinned) {
-            widget.note!.isFavorite = false;
-            widget.note!.isArchive = true;
-            DataManager().favoriteNotes.removeWhere((element) => widget.note!.id == element.id);
-            DataManager().archivedNotes.add(widget.note!);
-          } else {
-            // widget.note!.isFavorite = false;
-            // widget.note!. = false;
-            // DataManager()
-          }
+          widget.note!.isFavorite = false;
+          widget.note!.isArchive = true;
+          DataManager().favoriteNotes.removeWhere((element) => widget.note!.id == element.id);
+          DataManager().archivedNotes.add(widget.note!);
         }
         if (widget.note!.isArchive && widget.note!.isPinned) {
           DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
@@ -410,7 +401,9 @@ class _ManageNotePageState extends State<ManageNotePage> {
     }
 
     if (widget.note != null) {
-      if (widget.note!.isArchive && widget.note!.isPinned) {
+      if (!widget.note!.isFavorite) {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+      } else if (widget.note!.isArchive && widget.note!.isPinned) {
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else if (widget.note!.isArchive && !widget.note!.isPinned) {
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
@@ -435,17 +428,16 @@ class _ManageNotePageState extends State<ManageNotePage> {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
         widget.note!.color = mainColor;
+
         if (widget.note!.isArchive) {
           if (widget.note!.isPinned) {
-            widget.note!.isPinned = false;
             widget.note!.color = mainColor;
             DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-            DataManager().archivedNotes.add(widget.note!);
+            DataManager().favoriteNotes.add(widget.note!);
           } else {
-            widget.note!.isPinned = true;
             widget.note!.color = mainColor;
             DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-            DataManager().archivedNotes.add(widget.note!);
+            DataManager().favoriteNotes.add(widget.note!);
           }
         } else if (widget.note!.isFavorite) {
           widget.note!.isFavorite = false;
@@ -454,8 +446,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.isPinned = false;
           widget.note!.color = mainColor;
-          DataManager().notes.add(widget.note!);
-        } else if (widget.note!.isFavorite) {
+          DataManager().favoriteNotes.add(widget.note!);
         } else {
           DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.isPinned = true;
@@ -495,7 +486,17 @@ class _ManageNotePageState extends State<ManageNotePage> {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
         widget.note!.color = mainColor;
-        if (widget.note!.isArchive) {
+        if (widget.note!.isFavorite) {
+          if (widget.note!.isPinned) {
+            widget.note!.isPinned = false;
+            DataManager().favoriteNotes.removeWhere((element) => widget.note!.id == element.id);
+            DataManager().favoriteNotes.add(widget.note!);
+          } else {
+            widget.note!.isPinned = true;
+            DataManager().favoriteNotes.removeWhere((element) => widget.note!.id == element.id);
+            DataManager().favoriteNotes.add(widget.note!);
+          }
+        } else if (widget.note!.isArchive) {
           if (widget.note!.isPinned) {
             widget.note!.isPinned = false;
             widget.note!.color = mainColor;
@@ -523,6 +524,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
       if (widget.note != null) {
         DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
         DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
+        DataManager().favoriteNotes.removeWhere((element) => element.id == widget.note!.id);
         DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
       } else {
         return;
@@ -532,6 +534,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
     if (widget.note != null) {
       if (widget.note!.isArchive) {
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+      } else if (widget.note!.isFavorite) {
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else {
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }

@@ -93,7 +93,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
               },
             ),
             Expanded(
@@ -139,33 +139,25 @@ class SelectedFavoriteAppBar extends StatelessWidget {
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
-                  Icons.unarchive_outlined,
+                  Icons.archive_outlined,
                   size: 25,
                 ),
               ),
               onTap: () {
                 List<Note> notes =
-                    DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+                    DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
-                  note.isArchive = false;
-                  if (note.isPinned) {
-                    DataManager().pinnedNotes.add(note);
-                  } else {
-                    DataManager().notes.add(note);
-                  }
-                  DataManager().archivedNotes.removeWhere((element) => element == note);
+                  note.isArchive = true;
+                  DataManager().archivedNotes.add(note);
+                  DataManager().favoriteNotes.removeWhere((element) => element == note);
                 }
 
                 List<ListModel> listModels =
-                    DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+                    DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
-                  listModel.isArchive = false;
-                  if (listModel.isPinned) {
-                    DataManager().pinnedListModels.add(listModel);
-                  } else {
-                    DataManager().listModels.add(listModel);
-                  }
-                  DataManager().archivedListModels.removeWhere((element) => element == listModel);
+                  listModel.isArchive = true;
+                  DataManager().archivedListModels.add(listModel);
+                  DataManager().favoriteListModels.removeWhere((element) => element == listModel);
                 }
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
@@ -181,19 +173,19 @@ class SelectedFavoriteAppBar extends StatelessWidget {
               ),
               onTap: () {
                 List<Note> notes =
-                    DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+                    DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isDeleted = true;
                 }
 
-                DataManager().archivedNotes.removeWhere((element) => selectedIds.contains(element.id));
+                DataManager().favoriteNotes.removeWhere((element) => selectedIds.contains(element.id));
                 DataManager().deletedNotes.addAll(notes);
                 List<ListModel> listModels =
-                    DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+                    DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
                   listModel.isDeleted = true;
                 }
-                DataManager().archivedListModels.removeWhere((element) => selectedIds.contains(element.id));
+                DataManager().favoriteListModels.removeWhere((element) => selectedIds.contains(element.id));
                 DataManager().deletedListModel.addAll(listModels);
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
@@ -206,21 +198,21 @@ class SelectedFavoriteAppBar extends StatelessWidget {
   }
 
   onPinned() {
-    List<Note> notes = DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+    List<Note> notes = DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
 
     for (Note note in notes) {
       note.isPinned = true;
-      DataManager().archivedNotes.remove(note);
-      DataManager().archivedNotes.add(note);
+      DataManager().favoriteNotes.remove(note);
+      DataManager().favoriteNotes.add(note);
     }
 
     List<ListModel> listModels =
-        DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
-      DataManager().archivedListModels.remove(listModel);
-      DataManager().archivedListModels.add(listModel);
+      DataManager().favoriteListModels.remove(listModel);
+      DataManager().favoriteListModels.add(listModel);
     }
 
     selectedIds.clear();

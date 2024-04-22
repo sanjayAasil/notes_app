@@ -42,12 +42,21 @@ class _NewListScreenState extends State<NewListScreen> {
                     ),
                   ),
                   const Expanded(child: SizedBox()),
-
+                  InkWell(
+                    onTap: onFavorite,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
                   InkWell(
                     borderRadius: BorderRadius.circular(40),
                     onTap: onPinned,
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Icon(
                         CupertinoIcons.pin,
                         color: Colors.grey.shade800,
@@ -55,7 +64,7 @@ class _NewListScreenState extends State<NewListScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Icon(
                       CupertinoIcons.bell,
                       color: Colors.grey.shade800,
@@ -64,7 +73,7 @@ class _NewListScreenState extends State<NewListScreen> {
                   InkWell(
                     onTap: onArchived,
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Icon(
                         Icons.archive_outlined,
                         color: Colors.grey.shade800,
@@ -370,6 +379,23 @@ class _NewListScreenState extends State<NewListScreen> {
     }
     listModel.isPinned = true;
     DataManager().pinnedListModels.add(listModel);
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+  }
+
+  onFavorite() {
+    for (int i = 0; i < itemControllers.length; i++) {
+      if (itemControllers.isNotEmpty) {
+        items[i].name = itemControllers[i].text.trim();
+      }
+    }
+    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    listModel.color = mainColor;
+    listModel.isFavorite = true;
+    if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
+      return;
+    }
+
+    DataManager().favoriteListModels.add(listModel);
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
 }

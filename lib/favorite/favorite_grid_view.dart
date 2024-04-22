@@ -40,9 +40,9 @@ class FavoriteGridView extends StatelessWidget {
                 child: Wrap(
                   alignment: WrapAlignment.start,
                   children: [
-                    ///PinnedNotes Archive
-                    for (int i = 0; i < DataManager().archivedNotes.length; i++)
-                      if (DataManager().archivedNotes[i].isPinned)
+                    ///PinnedNotes fav
+                    for (int i = 0; i < DataManager().favoriteNotes.length; i++)
+                      if (DataManager().favoriteNotes[i].isPinned)
                         Container(
                           width: MediaQuery.of(context).size.width / 2 - 15,
                           padding: const EdgeInsets.all(10),
@@ -51,22 +51,22 @@ class FavoriteGridView extends StatelessWidget {
                             onTap: () {
                               if (selectedIds.isEmpty) {
                                 Navigator.of(context)
-                                    .pushNamed(Routes.editOrViewNoteScreen, arguments: DataManager().archivedNotes[i]);
+                                    .pushNamed(Routes.editOrViewNoteScreen, arguments: DataManager().favoriteNotes[i]);
                               } else {
-                                if (selectedIds.contains(DataManager().archivedNotes[i].id)) {
-                                  selectedIds.remove(DataManager().archivedNotes[i].id);
+                                if (selectedIds.contains(DataManager().favoriteNotes[i].id)) {
+                                  selectedIds.remove(DataManager().favoriteNotes[i].id);
                                 } else {
-                                  selectedIds.add(DataManager().archivedNotes[i].id);
+                                  selectedIds.add(DataManager().favoriteNotes[i].id);
                                 }
                                 onUpdateRequest?.call();
                               }
                             },
                             onLongPress: () {
                               debugPrint("_HomeScreenState: build ");
-                              if (selectedIds.contains(DataManager().archivedNotes[i].id)) {
-                                selectedIds.remove(DataManager().archivedNotes[i].id);
+                              if (selectedIds.contains(DataManager().favoriteNotes[i].id)) {
+                                selectedIds.remove(DataManager().favoriteNotes[i].id);
                               } else {
-                                selectedIds.add(DataManager().archivedNotes[i].id);
+                                selectedIds.add(DataManager().favoriteNotes[i].id);
                               }
                               onUpdateRequest?.call();
                             },
@@ -74,20 +74,20 @@ class FavoriteGridView extends StatelessWidget {
                               width: double.infinity,
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: DataManager().archivedNotes[i].color,
+                                color: DataManager().favoriteNotes[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: selectedIds.contains(DataManager().archivedNotes[i].id)
+                                  color: selectedIds.contains(DataManager().favoriteNotes[i].id)
                                       ? Colors.blue.shade800
                                       : Colors.grey,
-                                  width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 1.0,
+                                  width: selectedIds.contains(DataManager().favoriteNotes[i].id) ? 3.0 : 1.0,
                                 ),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    DataManager().archivedNotes[i].title,
+                                    DataManager().favoriteNotes[i].title,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16,
@@ -96,7 +96,7 @@ class FavoriteGridView extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      DataManager().archivedNotes[i].note,
+                                      DataManager().favoriteNotes[i].note,
                                       maxLines: 5,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(color: Colors.grey.shade600),
@@ -106,7 +106,7 @@ class FavoriteGridView extends StatelessWidget {
                                     alignment: AlignmentDirectional.topStart,
                                     child: Wrap(
                                       children: [
-                                        for (String label in DataManager().archivedNotes[i].labels)
+                                        for (String label in DataManager().favoriteNotes[i].labels)
                                           Padding(
                                             padding: const EdgeInsets.all(2.0),
                                             child: Container(
@@ -128,10 +128,10 @@ class FavoriteGridView extends StatelessWidget {
                           ),
                         ),
 
-                    ///Pinned ListModel Archive
+                    ///Pinned ListModel fAV
 
-                    for (int i = 0; i < DataManager().archivedListModels.length; i++)
-                      if (DataManager().archivedListModels[i].isPinned)
+                    for (int i = 0; i < DataManager().favoriteListModels.length; i++)
+                      if (DataManager().favoriteListModels[i].isPinned)
                         Container(
                           width: MediaQuery.of(context).size.width / 2 - 15,
                           padding: const EdgeInsets.all(10),
@@ -140,22 +140,22 @@ class FavoriteGridView extends StatelessWidget {
                             onTap: () {
                               if (selectedIds.isEmpty) {
                                 Navigator.of(context).pushNamed(Routes.viewOrEditListModel,
-                                    arguments: DataManager().archivedListModels[i]);
+                                    arguments: DataManager().favoriteListModels[i]);
                               } else {
-                                if (selectedIds.contains(DataManager().archivedListModels[i].id)) {
-                                  selectedIds.remove(DataManager().archivedListModels[i].id);
+                                if (selectedIds.contains(DataManager().favoriteListModels[i].id)) {
+                                  selectedIds.remove(DataManager().favoriteListModels[i].id);
                                 } else {
-                                  selectedIds.add(DataManager().archivedListModels[i].id);
+                                  selectedIds.add(DataManager().favoriteListModels[i].id);
                                 }
                                 onUpdateRequest?.call();
                               }
                             },
                             onLongPress: () {
                               debugPrint("_HomeScreenState: build ");
-                              if (selectedIds.contains(DataManager().archivedListModels[i].id)) {
-                                selectedIds.remove(DataManager().archivedListModels[i].id);
+                              if (selectedIds.contains(DataManager().favoriteListModels[i].id)) {
+                                selectedIds.remove(DataManager().favoriteListModels[i].id);
                               } else {
-                                selectedIds.add(DataManager().archivedListModels[i].id);
+                                selectedIds.add(DataManager().favoriteListModels[i].id);
                               }
                               onUpdateRequest?.call();
                             },
@@ -163,13 +163,13 @@ class FavoriteGridView extends StatelessWidget {
                               width: double.infinity,
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: DataManager().archivedNotes[i].color,
+                                color: DataManager().favoriteListModels[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: selectedIds.contains(DataManager().archivedListModels[i].id)
+                                  color: selectedIds.contains(DataManager().favoriteListModels[i].id)
                                       ? Colors.blue.shade800
                                       : Colors.grey,
-                                  width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 1.0,
+                                  width: selectedIds.contains(DataManager().favoriteListModels[i].id) ? 3.0 : 1.0,
                                 ),
                               ),
                               child: Column(
@@ -178,7 +178,7 @@ class FavoriteGridView extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 10.0),
                                     child: Text(
-                                      DataManager().archivedListModels[i].title,
+                                      DataManager().favoriteListModels[i].title,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16,
@@ -189,7 +189,7 @@ class FavoriteGridView extends StatelessWidget {
                                     alignment: AlignmentDirectional.topStart,
                                     child: Wrap(
                                       children: [
-                                        for (ListItem listItem in DataManager().archivedListModels[i].items)
+                                        for (ListItem listItem in DataManager().favoriteListModels[i].items)
                                           Row(
                                             children: [
                                               listItem.ticked
@@ -233,9 +233,9 @@ class FavoriteGridView extends StatelessWidget {
                           ),
                         ),
 
-                    ///Note Pinned ArchiveNotes
+                    ///Note Pinned FAV
 
-                    ///Not Pinned Archived ListModel
+                    ///Not Pinned FAV ListModel
                   ],
                 ),
               ),
@@ -254,8 +254,8 @@ class FavoriteGridView extends StatelessWidget {
               alignment: AlignmentDirectional.topStart,
               child: Wrap(
                 children: [
-                  for (int i = 0; i < DataManager().archivedNotes.length; i++)
-                    if (!DataManager().archivedNotes[i].isPinned)
+                  for (int i = 0; i < DataManager().favoriteNotes.length; i++)
+                    if (!DataManager().favoriteNotes[i].isPinned)
                       Container(
                         width: MediaQuery.of(context).size.width / 2 - 15,
                         padding: const EdgeInsets.all(10),
@@ -264,22 +264,22 @@ class FavoriteGridView extends StatelessWidget {
                           onTap: () {
                             if (selectedIds.isEmpty) {
                               Navigator.of(context)
-                                  .pushNamed(Routes.editOrViewNoteScreen, arguments: DataManager().archivedNotes[i]);
+                                  .pushNamed(Routes.editOrViewNoteScreen, arguments: DataManager().favoriteNotes[i]);
                             } else {
-                              if (selectedIds.contains(DataManager().archivedNotes[i].id)) {
-                                selectedIds.remove(DataManager().archivedNotes[i].id);
+                              if (selectedIds.contains(DataManager().favoriteNotes[i].id)) {
+                                selectedIds.remove(DataManager().favoriteNotes[i].id);
                               } else {
-                                selectedIds.add(DataManager().archivedNotes[i].id);
+                                selectedIds.add(DataManager().favoriteNotes[i].id);
                               }
                               onUpdateRequest?.call();
                             }
                           },
                           onLongPress: () {
                             debugPrint("_HomeScreenState: build ");
-                            if (selectedIds.contains(DataManager().archivedNotes[i].id)) {
-                              selectedIds.remove(DataManager().archivedNotes[i].id);
+                            if (selectedIds.contains(DataManager().favoriteNotes[i].id)) {
+                              selectedIds.remove(DataManager().favoriteNotes[i].id);
                             } else {
-                              selectedIds.add(DataManager().archivedNotes[i].id);
+                              selectedIds.add(DataManager().favoriteNotes[i].id);
                             }
                             onUpdateRequest?.call();
                           },
@@ -287,27 +287,27 @@ class FavoriteGridView extends StatelessWidget {
                             width: double.infinity,
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: DataManager().archivedNotes[i].color,
+                              color: DataManager().favoriteNotes[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(DataManager().archivedNotes[i].id)
+                                color: selectedIds.contains(DataManager().favoriteNotes[i].id)
                                     ? Colors.blue.shade800
                                     : Colors.grey,
-                                width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 1.0,
+                                width: selectedIds.contains(DataManager().favoriteNotes[i].id) ? 3.0 : 1.0,
                               ),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  DataManager().archivedNotes[i].title,
+                                  DataManager().favoriteNotes[i].title,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                   ),
                                 ),
                                 Text(
-                                  DataManager().archivedNotes[i].note,
+                                  DataManager().favoriteNotes[i].note,
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -315,7 +315,7 @@ class FavoriteGridView extends StatelessWidget {
                                   alignment: AlignmentDirectional.topStart,
                                   child: Wrap(
                                     children: [
-                                      for (String label in DataManager().archivedNotes[i].labels)
+                                      for (String label in DataManager().favoriteNotes[i].labels)
                                         Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Container(
@@ -339,8 +339,8 @@ class FavoriteGridView extends StatelessWidget {
 
                   ///listModel notPinned
 
-                  for (int i = 0; i < DataManager().archivedListModels.length; i++)
-                    if (!DataManager().archivedListModels[i].isPinned)
+                  for (int i = 0; i < DataManager().favoriteListModels.length; i++)
+                    if (!DataManager().favoriteListModels[i].isPinned)
                       Container(
                         width: MediaQuery.of(context).size.width / 2 - 15,
                         padding: const EdgeInsets.all(10),
@@ -349,22 +349,22 @@ class FavoriteGridView extends StatelessWidget {
                           onTap: () {
                             if (selectedIds.isEmpty) {
                               Navigator.of(context).pushNamed(Routes.viewOrEditListModel,
-                                  arguments: DataManager().archivedListModels[i]);
+                                  arguments: DataManager().favoriteListModels[i]);
                             } else {
-                              if (selectedIds.contains(DataManager().archivedListModels[i].id)) {
-                                selectedIds.remove(DataManager().archivedListModels[i].id);
+                              if (selectedIds.contains(DataManager().favoriteListModels[i].id)) {
+                                selectedIds.remove(DataManager().favoriteListModels[i].id);
                               } else {
-                                selectedIds.add(DataManager().archivedListModels[i].id);
+                                selectedIds.add(DataManager().favoriteListModels[i].id);
                               }
                               onUpdateRequest?.call();
                             }
                           },
                           onLongPress: () {
                             debugPrint("_HomeScreenState: build ");
-                            if (selectedIds.contains(DataManager().archivedListModels[i].id)) {
-                              selectedIds.remove(DataManager().archivedListModels[i].id);
+                            if (selectedIds.contains(DataManager().favoriteListModels[i].id)) {
+                              selectedIds.remove(DataManager().favoriteListModels[i].id);
                             } else {
-                              selectedIds.add(DataManager().archivedListModels[i].id);
+                              selectedIds.add(DataManager().favoriteListModels[i].id);
                             }
                             onUpdateRequest?.call();
                           },
@@ -372,20 +372,20 @@ class FavoriteGridView extends StatelessWidget {
                             width: double.infinity,
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: DataManager().archivedListModels[i].color,
+                              color: DataManager().favoriteListModels[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(DataManager().archivedListModels[i].id)
+                                color: selectedIds.contains(DataManager().favoriteListModels[i].id)
                                     ? Colors.blue.shade800
                                     : Colors.grey,
-                                width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 1.0,
+                                width: selectedIds.contains(DataManager().favoriteListModels[i].id) ? 3.0 : 1.0,
                               ),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  DataManager().archivedListModels[i].title,
+                                  DataManager().favoriteListModels[i].title,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
@@ -395,7 +395,7 @@ class FavoriteGridView extends StatelessWidget {
                                   alignment: AlignmentDirectional.topStart,
                                   child: Wrap(
                                     children: [
-                                      for (ListItem listItem in DataManager().archivedListModels[i].items)
+                                      for (ListItem listItem in DataManager().favoriteListModels[i].items)
                                         Row(
                                           children: [
                                             listItem.ticked
@@ -419,7 +419,7 @@ class FavoriteGridView extends StatelessWidget {
                                   alignment: AlignmentDirectional.centerStart,
                                   child: Wrap(
                                     children: [
-                                      for (String label in DataManager().archivedListModels[i].labels)
+                                      for (String label in DataManager().favoriteListModels[i].labels)
                                         Padding(
                                           padding: const EdgeInsets.all(5.0),
                                           child: Container(
