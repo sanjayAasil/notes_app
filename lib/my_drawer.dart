@@ -58,6 +58,10 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
           const DrawerTile(
+            name: 'Favorites',
+            icon: Icons.favorite_border,
+          ),
+          const DrawerTile(
             name: 'Remainder',
             icon: Icons.timer_outlined,
           ),

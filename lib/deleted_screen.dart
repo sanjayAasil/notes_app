@@ -186,7 +186,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                     // SizedBox(height: 20),
                     for (Note note in DataManager().deletedNotes)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
@@ -213,6 +213,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
+                              color: note.color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
@@ -241,7 +242,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                       ),
                     for (ListModel listModel in DataManager().deletedListModel)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
@@ -270,8 +271,8 @@ class _DeletedScreenState extends State<DeletedScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(listModel.id) ? Colors.blue : Colors.black,
-                                width: selectedIds.contains(listModel.id) ? 2.0 : 1.0,
+                                color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
+                                width: selectedIds.contains(listModel.id) ? 3.0 : 1.0,
                               ),
                             ),
                             child: Column(

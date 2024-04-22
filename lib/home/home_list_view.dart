@@ -58,6 +58,7 @@ class HomeScreenListView extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
+                        color: note.color,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
@@ -148,6 +149,7 @@ class HomeScreenListView extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
+                        color: listModel.color,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
@@ -268,6 +270,7 @@ class HomeScreenListView extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
+                      color: note.color,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
@@ -360,6 +363,7 @@ class HomeScreenListView extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
+                  color: listModel.color,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,

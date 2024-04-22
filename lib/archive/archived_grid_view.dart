@@ -45,8 +45,8 @@ class ArchivedGridView extends StatelessWidget {
                     for (int i = 0; i < DataManager().archivedNotes.length; i++)
                       if (DataManager().archivedNotes[i].isPinned)
                         Container(
-                          width: MediaQuery.of(context).size.width / 2 - 5,
-                          padding: const EdgeInsets.all(5),
+                          width: MediaQuery.of(context).size.width / 2 - 15,
+                          padding: const EdgeInsets.all(10),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),
                             onTap: () {
@@ -75,6 +75,7 @@ class ArchivedGridView extends StatelessWidget {
                               width: double.infinity,
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
+                                color: DataManager().archivedNotes[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
                                   color: selectedIds.contains(DataManager().archivedNotes[i].id)
@@ -133,8 +134,8 @@ class ArchivedGridView extends StatelessWidget {
                     for (int i = 0; i < DataManager().archivedListModels.length; i++)
                       if (DataManager().archivedListModels[i].isPinned)
                         Container(
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          padding: const EdgeInsets.all(5),
+                          width: MediaQuery.of(context).size.width / 2 - 15,
+                          padding: const EdgeInsets.all(10),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),
                             onTap: () {
@@ -163,6 +164,7 @@ class ArchivedGridView extends StatelessWidget {
                               width: double.infinity,
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
+                                color: DataManager().archivedNotes[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
                                   color: selectedIds.contains(DataManager().archivedListModels[i].id)
@@ -256,10 +258,8 @@ class ArchivedGridView extends StatelessWidget {
                   for (int i = 0; i < DataManager().archivedNotes.length; i++)
                     if (!DataManager().archivedNotes[i].isPinned)
                       Container(
-                        width: MediaQuery.of(context).size.width / 2 - 10,
+                        width: MediaQuery.of(context).size.width / 2 - 15,
                         padding: const EdgeInsets.all(10),
-                        // padding: EdgeInsets.only(
-                        //     right: i.isEven ? 10 : 0, left: i.isOdd ? 10 : 0, top: 10, bottom: 10),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
@@ -288,6 +288,7 @@ class ArchivedGridView extends StatelessWidget {
                             width: double.infinity,
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
+                              color: DataManager().archivedNotes[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: selectedIds.contains(DataManager().archivedNotes[i].id)
@@ -342,8 +343,8 @@ class ArchivedGridView extends StatelessWidget {
                   for (int i = 0; i < DataManager().archivedListModels.length; i++)
                     if (!DataManager().archivedListModels[i].isPinned)
                       Container(
-                        width: MediaQuery.of(context).size.width / 2 - 20,
-                        padding: EdgeInsets.only(right: i.isEven ? 10 : 0, left: i.isOdd ? 10 : 0, top: 10, bottom: 10),
+                        width: MediaQuery.of(context).size.width / 2 - 15,
+                        padding: EdgeInsets.all(10),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
@@ -372,6 +373,7 @@ class ArchivedGridView extends StatelessWidget {
                             width: double.infinity,
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
+                              color: DataManager().archivedListModels[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: selectedIds.contains(DataManager().archivedListModels[i].id)

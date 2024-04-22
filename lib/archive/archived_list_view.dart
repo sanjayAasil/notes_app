@@ -71,6 +71,7 @@ class ArchivedListView extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
+                            color: note.color,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
@@ -154,6 +155,7 @@ class ArchivedListView extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
+                            color: listModel.color,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
@@ -257,6 +259,7 @@ class ArchivedListView extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
+                            color: note.color,
                             border: Border.all(
                               color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
                               width: selectedIds.contains(note.id) ? 3.0 : 1.0,
@@ -333,6 +336,7 @@ class ArchivedListView extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
+                            color: listModel.color,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,

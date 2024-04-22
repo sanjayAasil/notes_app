@@ -26,6 +26,7 @@ class HomeScreenGridView extends StatelessWidget {
           ),
 
         Align(
+          alignment: AlignmentDirectional.topStart,
           child: Wrap(
             children: [
               for (int i = 0; i < DataManager().pinnedNotes.length; i++)
@@ -60,6 +61,7 @@ class HomeScreenGridView extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
+                        color: DataManager().pinnedNotes[i].color,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(DataManager().pinnedNotes[i].id)
@@ -144,6 +146,7 @@ class HomeScreenGridView extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
+                        color: DataManager().pinnedListModels[i].color,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(DataManager().pinnedListModels[i].id)
@@ -218,7 +221,8 @@ class HomeScreenGridView extends StatelessWidget {
 
         ///GridView notes
 
-        if (DataManager().pinnedNotes.isNotEmpty && DataManager().notes.isNotEmpty)
+        if (DataManager().pinnedNotes.isNotEmpty && DataManager().notes.isNotEmpty ||
+            DataManager().pinnedListModels.isNotEmpty && DataManager().listModels.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Text(
@@ -231,13 +235,13 @@ class HomeScreenGridView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.topStart,
             child: Wrap(
               children: [
                 for (int i = 0; i < DataManager().notes.length; i++)
                   Container(
-                    width: MediaQuery.of(context).size.width / 2 - 20,
-                    padding: EdgeInsets.only(right: i.isEven ? 10 : 0, left: i.isOdd ? 10 : 0, top: 10, bottom: 10),
+                    width: MediaQuery.of(context).size.width / 2 - 15,
+                    padding: EdgeInsets.all(10),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(12),
                       onTap: () {
@@ -266,6 +270,7 @@ class HomeScreenGridView extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
+                          color: DataManager().notes[i].color,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: selectedIds.contains(DataManager().notes[i].id) ? Colors.blue.shade800 : Colors.grey,
@@ -342,6 +347,7 @@ class HomeScreenGridView extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
+                          color: DataManager().listModels[i].color,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: selectedIds.contains(DataManager().listModels[i].id)

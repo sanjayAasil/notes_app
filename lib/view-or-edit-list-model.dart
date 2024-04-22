@@ -14,6 +14,7 @@ class ViewOrEditListModel extends StatefulWidget {
 }
 
 class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
+  Color mainColor = Colors.white;
   List<ListItem> items = [];
   TextEditingController titleController = TextEditingController();
   List<TextEditingController> itemNameControllers = [];
@@ -23,6 +24,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   void initState() {
     super.initState();
     titleController.text = widget.listModel.title;
+    mainColor = widget.listModel.color;
 
     for (ListItem listItem in widget.listModel.items) {
       itemNameControllers.add(TextEditingController(text: listItem.name));
@@ -35,61 +37,95 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   Widget build(BuildContext context) {
     debugPrint("_ViewOrEditListModelState: build check ${itemNameControllers.length}");
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Container(
+        color: mainColor,
         child: Column(
           children: [
-            Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              height: 60,
-              alignment: AlignmentDirectional.centerStart,
-              color: Colors.grey.shade300,
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: onBackPressed,
-                    child: Padding(
+            if (widget.listModel.isDeleted)
+              Container(
+                margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                height: 60,
+                alignment: AlignmentDirectional.centerStart,
+                color: Colors.grey.shade300,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ), // SizedBox(),
+                  ],
+                ),
+              )
+            else
+              Container(
+                margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                height: 60,
+                alignment: AlignmentDirectional.centerStart,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: onBackPressed,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    const Expanded(child: SizedBox()),
+
+                    InkWell(
+                      onTap: onPinned,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: widget.listModel.isPinned
+                            ? Icon(
+                                CupertinoIcons.pin_fill,
+                                color: Colors.grey.shade800,
+                              )
+                            : Icon(
+                                CupertinoIcons.pin,
+                                color: Colors.grey.shade800,
+                              ),
+                      ),
+                    ),
+
+                    Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Icon(
-                        Icons.arrow_back,
+                        CupertinoIcons.bell,
                         color: Colors.grey.shade800,
                       ),
                     ),
-                  ),
-                  const Expanded(child: SizedBox()),
 
-                  InkWell(
-                    onTap: onPinned,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Icon(
-                        CupertinoIcons.pin,
-                        color: Colors.grey.shade800,
+                    InkWell(
+                      onTap: onArchived,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: widget.listModel.isArchive
+                            ? Icon(
+                                Icons.unarchive_outlined,
+                                color: Colors.grey.shade800,
+                              )
+                            : Icon(
+                                Icons.archive_outlined,
+                                color: Colors.grey.shade800,
+                              ),
                       ),
                     ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      CupertinoIcons.bell,
-                      color: Colors.grey.shade800,
-                    ),
-                  ),
-
-                  InkWell(
-                    onTap: onArchived,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.archive_outlined,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                  // SizedBox(),
-                ],
+                    // SizedBox(),
+                  ],
+                ),
               ),
-            ),
             Row(
               children: [
                 Expanded(
@@ -117,127 +153,254 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                 ),
               ],
             ),
-            Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    itemNameControllers.add(TextEditingController());
-                    itemTicked.add(false);
-                    setState(() {});
-                  },
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 40,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 65.0),
-                          child: Icon(
-                            CupertinoIcons.plus,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 15.0),
-                          child: Text(
-                            'List item',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ],
+            InkWell(
+              onTap: () {
+                itemNameControllers.add(TextEditingController());
+                itemTicked.add(false);
+                setState(() {});
+              },
+              child: SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 65.0),
+                      child: Icon(
+                        CupertinoIcons.plus,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
-                  ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15.0),
+                      child: Text(
+                        'List item',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
                 ),
-                for (int i = 0; i < itemNameControllers.length; i++)
-                  SizedBox(
-                    height: 40,
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20.0, right: 10),
-                          child: Icon(
-                            Icons.drag_indicator_sharp,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                        InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10.0, right: 10),
-                            child: itemTicked[i]
-                                ? Icon(
-                                    Icons.check_box_outlined,
-                                    color: Colors.grey.shade800,
-                                  )
-                                : Icon(
-                                    Icons.check_box_outline_blank,
-                                    color: Colors.grey.shade800,
-                                  ),
-                          ),
-                          onTap: () {
-                            itemTicked[i] = !itemTicked[i];
-                            debugPrint("_NewListScreenState: build ${itemTicked[i]}");
-                            setState(() {});
-                          },
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: itemNameControllers[i],
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(40),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(
-                              CupertinoIcons.xmark,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                          onTap: () {
-                            itemNameControllers.removeAt(i);
-                            itemTicked.removeAt(i);
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
+              ),
             ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Wrap(
-                      children: [
-                        for (String label in widget.listModel.labels)
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(5),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (int i = 0; i < itemNameControllers.length; i++)
+                      SizedBox(
+                        height: 40,
+                        width: double.infinity,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0, right: 10),
+                              child: Icon(
+                                Icons.drag_indicator_sharp,
+                                color: Colors.grey.shade800,
                               ),
-                              child: Text('  $label  '),
                             ),
-                          ),
-                      ],
+                            InkWell(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0, right: 10),
+                                child: itemTicked[i]
+                                    ? Icon(
+                                        Icons.check_box_outlined,
+                                        color: Colors.grey.shade800,
+                                      )
+                                    : Icon(
+                                        Icons.check_box_outline_blank,
+                                        color: Colors.grey.shade800,
+                                      ),
+                              ),
+                              onTap: () {
+                                itemTicked[i] = !itemTicked[i];
+                                setState(() {});
+                              },
+                            ),
+                            Expanded(
+                              child: TextField(
+                                controller: itemNameControllers[i],
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              borderRadius: BorderRadius.circular(40),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  CupertinoIcons.xmark,
+                                  color: Colors.grey.shade800,
+                                ),
+                              ),
+                              onTap: () {
+                                itemNameControllers.removeAt(i);
+                                itemTicked.removeAt(i);
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Wrap(
+                          children: [
+                            for (String label in widget.listModel.labels)
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text('  $label  '),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              height: 45,
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    borderRadius: BorderRadius.circular(40),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.add_box_outlined,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  InkWell(
+                    onTap: _pickAColor,
+                    borderRadius: BorderRadius.circular(40),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        CupertinoIcons.paintbrush,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(40),
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Icon(
+                        Icons.more_vert_rounded,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  _pickAColor() => showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+          color: Colors.grey.shade300,
+          height: MediaQueryData().padding.bottom + 150,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Colours',
+                  style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () => setState(() {
+                            mainColor = Colors.white;
+                          }),
+                          child: Container(
+                            child: Icon(
+                              Icons.format_color_reset_outlined,
+                              size: 50,
+                              color: Colors.grey.shade800,
+                            ),
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ColorsTile(
+                        color: Colors.yellow.shade200,
+                        onColorChanging: () => setState(() {
+                          mainColor = Colors.yellow.shade200;
+                        }),
+                      ),
+                      ColorsTile(
+                        color: Colors.green.shade200,
+                        onColorChanging: () => setState(() {
+                          mainColor = Colors.green.shade200;
+                        }),
+                      ),
+                      ColorsTile(
+                        color: Colors.blue.shade200,
+                        onColorChanging: () => setState(() {
+                          mainColor = Colors.blue.shade200;
+                        }),
+                      ),
+                      ColorsTile(
+                        color: Colors.pink.shade200,
+                        onColorChanging: () => setState(() {
+                          mainColor = Colors.pink.shade200;
+                        }),
+                      ),
+                      ColorsTile(
+                        color: Colors.deepOrange,
+                        onColorChanging: () => setState(() {
+                          mainColor = Colors.deepOrange.shade200;
+                        }),
+                      ),
+                      ColorsTile(
+                        color: Colors.brown.shade200,
+                        onColorChanging: () => setState(() {
+                          mainColor = Colors.brown.shade200;
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 
   onBackPressed() {
     for (int i = 0; i < itemNameControllers.length; i++) {
@@ -247,6 +410,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     widget.listModel.title = titleController.text.trim();
     widget.listModel.items.clear();
     widget.listModel.items.addAll(items);
+    widget.listModel.color = mainColor;
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
@@ -362,5 +526,33 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     } else {
       return;
     }
+  }
+}
+
+class ColorsTile extends StatelessWidget {
+  final Color color;
+
+  final Function? onColorChanging;
+
+  const ColorsTile({Key? key, required this.color, this.onColorChanging}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onColorChanging?.call();
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: 80,
+          width: 80,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(40),
+          ),
+        ),
+      ),
+    );
   }
 }

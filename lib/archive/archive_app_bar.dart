@@ -105,6 +105,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
               ),
             )),
             InkWell(
+              onTap: onPinned,
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
@@ -112,7 +113,6 @@ class SelectedArchiveAppBar extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              onTap: () {},
             ),
             InkWell(
               child: const Padding(
@@ -204,5 +204,27 @@ class SelectedArchiveAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  onPinned() {
+    List<Note> notes = DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+
+    for (Note note in notes) {
+      note.isPinned = true;
+      DataManager().archivedNotes.remove(note);
+      DataManager().archivedNotes.add(note);
+    }
+
+    List<ListModel> listModels =
+        DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+
+    for (ListModel listModel in listModels) {
+      listModel.isPinned = true;
+      DataManager().archivedListModels.remove(listModel);
+      DataManager().archivedListModels.add(listModel);
+    }
+
+    selectedIds.clear();
+    onSelectedIdsCleared?.call();
   }
 }

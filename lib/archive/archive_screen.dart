@@ -50,7 +50,6 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
         children: [
           if (selectedIds.isEmpty)
             DefaultArchiveAppBar(onViewChanged: () {
-              debugPrint("_ArchiveScreenState build: check calling");
               setState(() {});
             })
           else

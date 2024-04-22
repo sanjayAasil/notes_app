@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class ListModel {
@@ -8,10 +9,12 @@ class ListModel {
   bool isArchive = false;
   bool isPinned = false;
   bool isDeleted = false;
+  Color color;
 
   ListModel({
     required this.title,
     required this.items,
+    this.color = Colors.white,
   }) : id = const Uuid().v4();
 }
 
