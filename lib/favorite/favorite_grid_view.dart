@@ -343,7 +343,7 @@ class FavoriteGridView extends StatelessWidget {
                     if (!DataManager().archivedListModels[i].isPinned)
                       Container(
                         width: MediaQuery.of(context).size.width / 2 - 15,
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
                           onTap: () {
