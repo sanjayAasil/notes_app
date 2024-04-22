@@ -62,7 +62,6 @@ class _DeletedScreenState extends State<DeletedScreen> {
           else
             Container(
               alignment: Alignment.centerLeft,
-              color: Colors.grey.shade300,
               width: double.infinity,
               height: const MediaQueryData().padding.top + 100,
               child: Padding(
@@ -269,6 +268,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
+                              color: listModel.color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,

@@ -9,6 +9,7 @@ class ListModel {
   bool isArchive = false;
   bool isPinned = false;
   bool isDeleted = false;
+  bool isFavorite = false;
   Color color;
 
   ListModel({

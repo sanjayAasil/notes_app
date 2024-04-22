@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/archive/archive_screen.dart';
 import 'package:sanjay_notes/create_new_label.dart';
 import 'package:sanjay_notes/deleted_screen.dart';
+import 'package:sanjay_notes/favorite/favorite_screen.dart';
 import 'package:sanjay_notes/label_screen.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/view-or-edit-list-model.dart';
@@ -20,9 +21,10 @@ class Routes {
   static const String editOrViewNoteScreen = '/edit-or-view-note-screen';
   static const String archiveScreen = '/archive-screen';
   static const String deletedScreen = '/deleted-screen';
-  static const String createNewLabelScreen = 'create-new-label-screen';
-  static const String labelScreen = 'label-screen';
-  static const String viewOrEditListModel = 'view-or-edit-list-model';
+  static const String createNewLabelScreen = '/create-new-label-screen';
+  static const String labelScreen = '/label-screen';
+  static const String viewOrEditListModel = '/view-or-edit-list-model';
+  static const String favoriteScreen = '/favorite-screen';
 
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
@@ -45,9 +47,9 @@ class Routes {
         return MaterialPageRoute(builder: (context) => const CreateNewLabelScreen());
       case labelScreen:
         List<String> selectedIds = settings.arguments as List<String>;
-
         return MaterialPageRoute(builder: (context) => LabelScreen(selectedIds: selectedIds));
-
+      case favoriteScreen:
+        return MaterialPageRoute(builder: (context) =>   const FavoriteScreen());
       case viewOrEditListModel:
         ListModel listModel = settings.arguments as ListModel;
         return MaterialPageRoute(builder: (context) => ViewOrEditListModel(listModel: listModel));

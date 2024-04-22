@@ -11,6 +11,8 @@ class DataManager {
 
   List<Note> notes = [];
 
+  List<Note> favoriteNotes = [];
+
   List<Note> archivedNotes = [];
 
   List<Note> pinnedNotes = [];
@@ -18,6 +20,8 @@ class DataManager {
   List<Note> deletedNotes = [];
 
   List<ListModel> listModels = [];
+
+  List<ListModel> favoriteListModels = [];
 
   List<ListModel> archivedListModels = [];
 
@@ -30,4 +34,6 @@ class DataManager {
   bool homeScreenView = true;
 
   bool archiveScreenView = true;
+
+  bool favoriteScreenView = true;
 }

@@ -57,13 +57,22 @@ class MyDrawer extends StatelessWidget {
               isSelected: selectedTab == 'homeScreen',
             ),
           ),
-          const DrawerTile(
-            name: 'Favorites',
-            icon: Icons.favorite_border,
+          InkWell(
+            onTap: selectedTab != 'favoriteScreen'
+                ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false)
+                : null,
+            child: DrawerTile(
+              name: 'Favorites',
+              icon: Icons.favorite_border,
+              isSelected: selectedTab == 'favoriteScreen',
+            ),
           ),
-          const DrawerTile(
-            name: 'Remainder',
-            icon: Icons.timer_outlined,
+          InkWell(
+            onTap: () {},
+            child: const DrawerTile(
+              name: 'Remainder',
+              icon: Icons.timer_outlined,
+            ),
           ),
           if (DataManager().labels.isNotEmpty)
             Column(

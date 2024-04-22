@@ -10,6 +10,7 @@ class Note {
   bool isPinned;
   bool isDeleted;
   Color color;
+  bool isFavorite;
 
   Note({
     required this.title,
@@ -18,6 +19,7 @@ class Note {
     this.isPinned = false,
     this.isDeleted = false,
     this.color = Colors.white,
+    this.isFavorite = false,
   })  : id = const Uuid().v4(),
         labels = [];
 }
