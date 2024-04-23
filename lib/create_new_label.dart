@@ -120,7 +120,9 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                             ),
                             InkWell(
                               borderRadius: BorderRadius.circular(40),
-                              onTap: () {},
+                              onTap: () {
+
+                              },
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Icon(

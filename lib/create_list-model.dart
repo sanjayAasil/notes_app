@@ -210,7 +210,7 @@ class _NewListScreenState extends State<NewListScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(
-                        Icons.add_box_outlined,
+                        Icons.list,
                         color: Colors.grey.shade800,
                       ),
                     ),
