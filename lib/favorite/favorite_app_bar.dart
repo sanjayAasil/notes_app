@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/notes_db.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
 import '../note.dart';
@@ -148,8 +149,8 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                     DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isArchive = true;
-                  DataManager().archivedNotes.add(note);
-                  DataManager().favoriteNotes.removeWhere((element) => element == note);
+                  NotesDb.addNote(NotesDb.archivedNotesKey, note);
+                  NotesDb.removeNote(NotesDb.favoriteNotesKey, note.id);
                 }
 
                 List<ListModel> listModels =
@@ -176,10 +177,10 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                     DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isDeleted = true;
+                  NotesDb.addNote(NotesDb.deletedNotesKey, note);
                 }
+                NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);
 
-                DataManager().favoriteNotes.removeWhere((element) => selectedIds.contains(element.id));
-                DataManager().deletedNotes.addAll(notes);
                 List<ListModel> listModels =
                     DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
@@ -202,8 +203,8 @@ class SelectedFavoriteAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isPinned = true;
-      DataManager().favoriteNotes.remove(note);
-      DataManager().favoriteNotes.add(note);
+      NotesDb.removeNote(NotesDb.favoriteNotesKey, note.id);
+      NotesDb.addNote(NotesDb.favoriteNotesKey, note);
     }
 
     List<ListModel> listModels =

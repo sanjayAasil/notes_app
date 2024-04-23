@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/notes_db.dart';
 
 import '../data_manager.dart';
 import '../list_model.dart';
@@ -195,9 +196,11 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isArchive = true;
+      NotesDb.addNote(NotesDb.archivedNotesKey, note);
     }
     for (Note note in pinnedNotes) {
       note.isArchive = true;
+      NotesDb.addNote(NotesDb.archivedNotesKey, note);
     }
     for (ListModel listModel in listModels) {
       listModel.isArchive = true;
@@ -205,14 +208,12 @@ class SelectedHomeAppBar extends StatelessWidget {
     for (ListModel listModel in pinnedListModels) {
       listModel.isArchive = true;
     }
-
-    DataManager().archivedNotes.addAll(notes);
-    DataManager().archivedNotes.addAll(pinnedNotes);
     DataManager().archivedListModels.addAll(listModels);
     DataManager().archivedListModels.addAll(pinnedListModels);
 
-    DataManager().notes.removeWhere((element) => selectedIds.contains(element.id));
-    DataManager().pinnedNotes.removeWhere((element) => selectedIds.contains(element.id));
+    NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
+    NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
+
     DataManager().listModels.removeWhere((element) => selectedIds.contains(element.id));
     DataManager().pinnedListModels.removeWhere((element) => selectedIds.contains(element.id));
 
@@ -230,7 +231,7 @@ class SelectedHomeAppBar extends StatelessWidget {
     for (Note note in notes) {
       note.isDeleted = true;
       DataManager().deletedNotes.add(note);
-      DataManager().notes.remove(note);
+      NotesDb.removeNote(NotesDb.notesKey, note.id);
     }
     for (Note note in pinnedNotes) {
       note.isDeleted = true;
@@ -258,7 +259,7 @@ class SelectedHomeAppBar extends StatelessWidget {
     for (Note note in notes) {
       note.isPinned = true;
       DataManager().pinnedNotes.add(note);
-      DataManager().notes.remove(note);
+      NotesDb.removeNote(NotesDb.notesKey, note.id);
     }
 
     List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/notes_db.dart';
 
 import '../data_manager.dart';
 import '../list_model.dart';
@@ -152,7 +153,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
                   if (note.isPinned) {
                     DataManager().pinnedNotes.add(note);
                   } else {
-                    DataManager().notes.add(note);
+                    NotesDb.addNote(NotesDb.notesKey, note);
                   }
                   DataManager().archivedNotes.removeWhere((element) => element == note);
                 }

@@ -39,7 +39,7 @@ class Note {
         isDeleted: json['isDeleted'],
         color: Color(json['color']),
         isFavorite: json['isFavorite'],
-        labels: json['labels'],
+        labels: List.from(json['labels']),
       );
 
   Map<String, dynamic> get json => {

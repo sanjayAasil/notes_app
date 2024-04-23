@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
+import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
 
 class ManageNotePage extends StatefulWidget {
@@ -330,7 +331,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
         //
         //
         note.color = mainColor;
-        DataManager().notes.add(note);
+        NotesDb.addNote(NotesDb.notesKey, note);
       } else {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
@@ -339,21 +340,21 @@ class _ManageNotePageState extends State<ManageNotePage> {
           DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
           DataManager().archivedNotes.add(widget.note!);
         } else if (widget.note!.isFavorite) {
-          DataManager().favoriteNotes.removeWhere((element) => element.id == widget.note!.id);
-          DataManager().favoriteNotes.add(widget.note!);
+          NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+          NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
         } else if (widget.note!.isPinned) {
           DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
           DataManager().pinnedNotes.add(widget.note!);
         } else {
-          DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
-          DataManager().notes.add(widget.note!);
+          NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
+          NotesDb.addNote(NotesDb.notesKey, widget.note!);
         }
       }
     } else {
       if (widget.note != null) {
         DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
         DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-        DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
+        NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
       }
     }
 
@@ -384,7 +385,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
             widget.note!.color = mainColor;
             widget.note!.isArchive = false;
-            DataManager().favoriteNotes.add(widget.note!);
+            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
           } else if (widget.note!.isPinned) {
             DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
             widget.note!.color = mainColor;
@@ -394,11 +395,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
             DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
             widget.note!.color = mainColor;
             widget.note!.isArchive = false;
-            DataManager().notes.add(widget.note!);
+            NotesDb.addNote(NotesDb.notesKey, widget.note!);
           }
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         } else if (widget.note!.isFavorite) {
-          DataManager().favoriteNotes.removeWhere((element) => element.id == widget.note!.id);
+          NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+
           widget.note!.color = mainColor;
           widget.note!.isArchive = true;
           DataManager().archivedNotes.add(widget.note!);
@@ -410,7 +412,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           DataManager().archivedNotes.add(widget.note!);
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
         } else {
-          DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
+          NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
           widget.note!.color = mainColor;
           widget.note!.isArchive = true;
           DataManager().archivedNotes.add(widget.note!);
@@ -428,7 +430,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
         note.isFavorite = true;
-        DataManager().favoriteNotes.add(note);
+        NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
         widget.note!.title = titleController.text.trim();
@@ -439,23 +442,23 @@ class _ManageNotePageState extends State<ManageNotePage> {
           widget.note!.color = mainColor;
           DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.isFavorite = true;
-          DataManager().favoriteNotes.add(widget.note!);
+          NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         } else if (widget.note!.isFavorite) {
-          DataManager().favoriteNotes.removeWhere((element) => element.id == widget.note!.id);
+          NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
           widget.note!.isFavorite = false;
-          DataManager().notes.add(widget.note!);
+          NotesDb.addNote(NotesDb.notesKey, widget.note!);
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
         } else if (widget.note!.isPinned) {
           DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.color = mainColor;
           widget.note!.isFavorite = true;
-          DataManager().favoriteNotes.add(widget.note!);
+          NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
         } else {
-          DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
+          NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
           widget.note!.color = mainColor;
           widget.note!.isFavorite = true;
-          DataManager().favoriteNotes.add(widget.note!);
+          NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
         }
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
@@ -478,12 +481,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
         if (widget.note!.isFavorite) {
           if (widget.note!.isPinned) {
             widget.note!.isPinned = false;
-            DataManager().favoriteNotes.removeWhere((element) => widget.note!.id == element.id);
-            DataManager().favoriteNotes.add(widget.note!);
+            NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
           } else {
             widget.note!.isPinned = true;
-            DataManager().favoriteNotes.removeWhere((element) => widget.note!.id == element.id);
-            DataManager().favoriteNotes.add(widget.note!);
+            NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
           }
         } else if (widget.note!.isArchive) {
           if (widget.note!.isPinned) {
@@ -501,9 +504,9 @@ class _ManageNotePageState extends State<ManageNotePage> {
           DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.isPinned = false;
           widget.note!.color = mainColor;
-          DataManager().notes.add(widget.note!);
+          NotesDb.addNote(NotesDb.notesKey, widget.note!);
         } else {
-          DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
+          NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
           widget.note!.isPinned = true;
           widget.note!.color = mainColor;
           DataManager().pinnedNotes.add(widget.note!);
@@ -610,7 +613,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                     DataManager().pinnedNotes.add(note);
                     DataManager().deletedNotes.remove(note);
                   } else {
-                    DataManager().notes.add(note);
+                    NotesDb.addNote(NotesDb.notesKey, note);
                     DataManager().deletedNotes.remove(note);
                   }
                   Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);

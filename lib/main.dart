@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance();
+  DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
+  DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
+  DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
+  DataManager().pinnedNotes = NotesDb.getAllNotes(NotesDb.pinnedNotesKey);
+  DataManager().deletedNotes = NotesDb.getAllNotes(NotesDb.deletedNotesKey);
   runApp(const MyApp());
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/my_drawer.dart';
+import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
 
 import 'list_model.dart';
@@ -109,7 +110,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                               DataManager().pinnedNotes.add(note);
                             } else {
                               note.isDeleted = false;
-                              DataManager().notes.add(note);
+                              NotesDb.addNote(NotesDb.notesKey, note);
                             }
                           }
                           DataManager().deletedNotes.remove(note);
