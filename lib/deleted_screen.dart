@@ -103,17 +103,17 @@ class _DeletedScreenState extends State<DeletedScreen> {
                         for (Note note in notes) {
                           if (note.isArchive) {
                             note.isDeleted = false;
-                            DataManager().archivedNotes.add(note);
+                            NotesDb.addNote(NotesDb.archivedNotesKey, note);
+                          } else if (note.isFavorite) {
+                            note.isDeleted = false;
+                          } else if (note.isPinned) {
+                            note.isDeleted = false;
+                            NotesDb.addNote(NotesDb.pinnedNotesKey, note);
                           } else {
-                            if (note.isPinned) {
-                              note.isDeleted = false;
-                              DataManager().pinnedNotes.add(note);
-                            } else {
-                              note.isDeleted = false;
-                              NotesDb.addNote(NotesDb.notesKey, note);
-                            }
+                            note.isDeleted = false;
+                            NotesDb.addNote(NotesDb.notesKey, note);
                           }
-                          DataManager().deletedNotes.remove(note);
+                          NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
                         }
 
                         List<ListModel> listModels = DataManager()
@@ -151,7 +151,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                         ),
                       ),
                       onTap: () {
-                        DataManager().deletedNotes.removeWhere((element) => selectedIds.contains(element.id));
+                        NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
                         DataManager().deletedListModel.removeWhere((element) => selectedIds.contains(element.id));
                         selectedIds.clear();
                         setState(() {});

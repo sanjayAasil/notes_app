@@ -151,11 +151,12 @@ class SelectedArchiveAppBar extends StatelessWidget {
                 for (Note note in notes) {
                   note.isArchive = false;
                   if (note.isPinned) {
-                    DataManager().pinnedNotes.add(note);
+
+                   NotesDb.addNote(NotesDb.pinnedNotesKey, note);
                   } else {
                     NotesDb.addNote(NotesDb.notesKey, note);
                   }
-                  DataManager().archivedNotes.removeWhere((element) => element == note);
+                  NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
                 }
 
                 List<ListModel> listModels =
@@ -186,10 +187,11 @@ class SelectedArchiveAppBar extends StatelessWidget {
                     DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isDeleted = true;
+                  NotesDb.addNote(NotesDb.deletedNotesKey, note);
                 }
 
-                DataManager().archivedNotes.removeWhere((element) => selectedIds.contains(element.id));
-                DataManager().deletedNotes.addAll(notes);
+                NotesDb.removeNotes(NotesDb.archivedNotesKey, selectedIds);
+
                 List<ListModel> listModels =
                     DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
@@ -212,8 +214,8 @@ class SelectedArchiveAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isPinned = true;
-      DataManager().archivedNotes.remove(note);
-      DataManager().archivedNotes.add(note);
+      NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
+      NotesDb.addNote(NotesDb.archivedNotesKey, note);
     }
 
     List<ListModel> listModels =

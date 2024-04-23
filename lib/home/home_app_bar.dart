@@ -215,7 +215,7 @@ class SelectedHomeAppBar extends StatelessWidget {
     NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
 
     DataManager().listModels.removeWhere((element) => selectedIds.contains(element.id));
-    DataManager().pinnedListModels.removeWhere((element) => selectedIds.contains(element.id));
+    NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
 
     selectedIds.clear();
     onSelectedIdsCleared?.call();
@@ -230,13 +230,13 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isDeleted = true;
-      DataManager().deletedNotes.add(note);
+      NotesDb.addNote(NotesDb.deletedNotesKey, note);
       NotesDb.removeNote(NotesDb.notesKey, note.id);
     }
     for (Note note in pinnedNotes) {
       note.isDeleted = true;
-      DataManager().deletedNotes.add(note);
-      DataManager().pinnedNotes.remove(note);
+     NotesDb.addNote(NotesDb.deletedNotesKey, note);
+      NotesDb.removeNote(NotesDb.pinnedNotesKey, note.id);
     }
     for (ListModel listModel in listModels) {
       listModel.isDeleted = true;
@@ -258,7 +258,7 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isPinned = true;
-      DataManager().pinnedNotes.add(note);
+      NotesDb.addNote(NotesDb.pinnedNotesKey, note);
       NotesDb.removeNote(NotesDb.notesKey, note.id);
     }
 
