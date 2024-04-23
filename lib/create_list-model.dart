@@ -339,7 +339,7 @@ class _NewListScreenState extends State<NewListScreen> {
       if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
     }
 
-    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
     listModel.color = mainColor;
     if (listModel.items.isEmpty || titleController.text.trim().isEmpty) {
       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
@@ -355,7 +355,7 @@ class _NewListScreenState extends State<NewListScreen> {
       if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
     }
 
-    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
     listModel.color = mainColor;
     if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
       return;
@@ -372,7 +372,7 @@ class _NewListScreenState extends State<NewListScreen> {
         items[i].name = itemControllers[i].text.trim();
       }
     }
-    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
     listModel.color = mainColor;
     if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
       return;
@@ -388,7 +388,7 @@ class _NewListScreenState extends State<NewListScreen> {
         items[i].name = itemControllers[i].text.trim();
       }
     }
-    ListModel listModel = ListModel(title: titleController.text.trim(), items: items);
+    ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
     listModel.color = mainColor;
     listModel.isFavorite = true;
     if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {

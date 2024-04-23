@@ -12,7 +12,8 @@ class Note {
   Color color;
   bool isFavorite;
 
-  Note({
+  Note._({
+    required this.id,
     required this.title,
     required this.note,
     this.isArchive = false,
@@ -20,6 +21,36 @@ class Note {
     this.isDeleted = false,
     this.color = Colors.white,
     this.isFavorite = false,
-  })  : id = const Uuid().v4(),
-        labels = [];
+    this.labels = const [],
+  });
+
+  factory Note.create({
+    required String title,
+    required String note,
+  }) =>
+      Note._(id: const Uuid().v4(), title: title, note: note);
+
+  factory Note.fromJson(Map<String, dynamic> json) => Note._(
+        id: json['id'],
+        title: json['title'],
+        note: json['note'],
+        isArchive: json['isArchive'],
+        isPinned: json['isPinned'],
+        isDeleted: json['isDeleted'],
+        color: Color(json['color']),
+        isFavorite: json['isFavorite'],
+        labels: json['labels'],
+      );
+
+  Map<String, dynamic> get json => {
+        'id': id,
+        'title': title,
+        'note': note,
+        'isArchive': isArchive,
+        'isPinned': isPinned,
+        'isDeleted': isDeleted,
+        'color': color.value,
+        'isFavorite': isFavorite,
+        'labels': labels,
+      };
 }

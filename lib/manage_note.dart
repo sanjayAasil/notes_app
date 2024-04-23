@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -318,7 +320,15 @@ class _ManageNotePageState extends State<ManageNotePage> {
   void onBackPressed() {
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
-        Note note = Note(title: titleController.text.trim(), note: noteController.text.trim());
+        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
+        //
+        // String data = '{}';
+        // Map<String, dynamic> decoded = jsonDecode(data);
+        // Note note2 = Note(title: decoded['title'], note: decoded['note'], id: decoded['id']);
+        //
+        // note2.id;
+        //
+        //
         note.color = mainColor;
         DataManager().notes.add(note);
       } else {
@@ -363,7 +373,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
   void archiveButton() {
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
-        Note note = Note(title: titleController.text.trim(), note: noteController.text.trim());
+        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
         note.isArchive = true;
         DataManager().archivedNotes.add(note);
@@ -415,7 +425,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
   void onFavorite() {
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
-        Note note = Note(title: titleController.text.trim(), note: noteController.text.trim());
+        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
         note.isFavorite = true;
         DataManager().favoriteNotes.add(note);
@@ -457,7 +467,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
   void onPinned() {
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
-        Note note = Note(title: titleController.text.trim(), note: noteController.text.trim());
+        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
         note.isPinned = true;
         DataManager().pinnedNotes.add(note);
