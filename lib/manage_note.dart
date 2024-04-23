@@ -367,53 +367,48 @@ class _ManageNotePageState extends State<ManageNotePage> {
         note.color = mainColor;
         note.isArchive = true;
         DataManager().archivedNotes.add(note);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
-        if (widget.note!.isFavorite) {
-          widget.note!.isFavorite = false;
+        if (widget.note!.isArchive) {
+          if (widget.note!.isFavorite) {
+            DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
+            widget.note!.color = mainColor;
+            widget.note!.isArchive = false;
+            DataManager().favoriteNotes.add(widget.note!);
+          } else if (widget.note!.isPinned) {
+            DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
+            widget.note!.color = mainColor;
+            widget.note!.isArchive = false;
+            DataManager().pinnedNotes.add(widget.note!);
+          } else {
+            DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
+            widget.note!.color = mainColor;
+            widget.note!.isArchive = false;
+            DataManager().notes.add(widget.note!);
+          }
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+        } else if (widget.note!.isFavorite) {
+          DataManager().favoriteNotes.removeWhere((element) => element.id == widget.note!.id);
+          widget.note!.color = mainColor;
           widget.note!.isArchive = true;
-          DataManager().favoriteNotes.removeWhere((element) => widget.note!.id == element.id);
           DataManager().archivedNotes.add(widget.note!);
-        }
-        if (widget.note!.isArchive && widget.note!.isPinned) {
-          DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-          widget.note!.color = mainColor;
-          widget.note!.isArchive = false;
-          DataManager().pinnedNotes.add(widget.note!);
-        } else if (widget.note!.isArchive && !widget.note!.isPinned) {
-          DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-          widget.note!.color = mainColor;
-          widget.note!.isArchive = false;
-          DataManager().notes.add(widget.note!);
-        } else if (!widget.note!.isArchive && widget.note!.isPinned) {
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+        } else if (widget.note!.isPinned) {
           DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.color = mainColor;
           widget.note!.isArchive = true;
           DataManager().archivedNotes.add(widget.note!);
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
         } else {
           DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.color = mainColor;
           widget.note!.isArchive = true;
           DataManager().archivedNotes.add(widget.note!);
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
         }
       }
     } else {
       return;
-    }
-
-    if (widget.note != null) {
-      if (!widget.note!.isFavorite) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
-      } else if (widget.note!.isArchive && widget.note!.isPinned) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-      } else if (widget.note!.isArchive && !widget.note!.isPinned) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-      } else if (!widget.note!.isArchive && widget.note!.isPinned) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
-      } else {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
-      }
-    } else {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
     }
   }
 
@@ -424,54 +419,38 @@ class _ManageNotePageState extends State<ManageNotePage> {
         note.color = mainColor;
         note.isFavorite = true;
         DataManager().favoriteNotes.add(note);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
         widget.note!.color = mainColor;
 
         if (widget.note!.isArchive) {
-          if (widget.note!.isPinned) {
-            widget.note!.color = mainColor;
-            DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-            DataManager().favoriteNotes.add(widget.note!);
-          } else {
-            widget.note!.color = mainColor;
-            DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-            DataManager().favoriteNotes.add(widget.note!);
-          }
+          widget.note!.color = mainColor;
+          DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
+          widget.note!.isFavorite = true;
+          DataManager().favoriteNotes.add(widget.note!);
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         } else if (widget.note!.isFavorite) {
+          DataManager().favoriteNotes.removeWhere((element) => element.id == widget.note!.id);
           widget.note!.isFavorite = false;
           DataManager().notes.add(widget.note!);
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
         } else if (widget.note!.isPinned) {
           DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
-          widget.note!.isPinned = false;
           widget.note!.color = mainColor;
+          widget.note!.isFavorite = true;
           DataManager().favoriteNotes.add(widget.note!);
         } else {
           DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
-          widget.note!.isPinned = true;
           widget.note!.color = mainColor;
-          DataManager().pinnedNotes.add(widget.note!);
+          widget.note!.isFavorite = true;
+          DataManager().favoriteNotes.add(widget.note!);
         }
-      }
-    } else {
-      if (widget.note != null) {
-        DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
-        DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
-        DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-      } else {
-        return;
-      }
-    }
-
-    if (widget.note != null) {
-      if (widget.note!.isArchive) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
-      } else {
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      return;
     }
   }
 
@@ -521,14 +500,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
         }
       }
     } else {
-      if (widget.note != null) {
-        DataManager().notes.removeWhere((element) => element.id == widget.note!.id);
-        DataManager().pinnedNotes.removeWhere((element) => element.id == widget.note!.id);
-        DataManager().favoriteNotes.removeWhere((element) => element.id == widget.note!.id);
-        DataManager().archivedNotes.removeWhere((element) => element.id == widget.note!.id);
-      } else {
-        return;
-      }
+      return;
     }
 
     if (widget.note != null) {

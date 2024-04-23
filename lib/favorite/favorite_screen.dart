@@ -3,6 +3,8 @@ import 'package:sanjay_notes/favorite/favorite_app_bar.dart';
 import 'package:sanjay_notes/favorite/favorite_grid_view.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import '../data_manager.dart';
+import '../list_model.dart';
+import '../note.dart';
 import 'favorite_list_view.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -16,6 +18,27 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   List<String> selectedIds = [];
   bool isPinned = false;
   bool others = false;
+
+  @override
+  void initState() {
+    super.initState();
+    for (Note note in DataManager().favoriteNotes) {
+      if (note.isPinned) {
+        isPinned = true;
+      } else {
+        others = true;
+      }
+    }
+    if (!isPinned || !others) {
+      for (ListModel listModel in DataManager().favoriteListModels) {
+        if (listModel.isPinned) {
+          isPinned = true;
+        } else {
+          others = true;
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
