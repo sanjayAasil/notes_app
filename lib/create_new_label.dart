@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/label_db.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/routes.dart';
 
@@ -27,7 +28,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 InkWell(
                   onTap: () {
                     if (controller.text.isNotEmpty && !DataManager().labels.contains(controller.text.trim())) {
-                      DataManager().labels.add(controller.text.trim());
+                      LabelsDb.addLabel(LabelsDb.labelsKey, controller.text.trim());
                       setState(() {});
                     }
                     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
@@ -78,7 +79,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
               InkWell(
                 onTap: () {
                   if (controller.text.isNotEmpty && !DataManager().labels.contains(controller.text.trim())) {
-                    DataManager().labels.add(controller.text.trim());
+                    LabelsDb.addLabel(LabelsDb.labelsKey, controller.text.trim());
                     controller.clear();
                     setState(() {});
                   }
@@ -120,9 +121,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                             ),
                             InkWell(
                               borderRadius: BorderRadius.circular(40),
-                              onTap: () {
-
-                              },
+                              onTap: () {},
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Icon(

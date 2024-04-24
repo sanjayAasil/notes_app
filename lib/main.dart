@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/label_db.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -20,6 +21,8 @@ void main() async {
   DataManager().pinnedListModels = ListModelsDb.getAllListModels(ListModelsDb.pinnedListModelKey);
   DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
   DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
+
+  DataManager().labels = LabelsDb.getAllLabels(LabelsDb.labelsKey);
 
   runApp(const MyApp());
 }

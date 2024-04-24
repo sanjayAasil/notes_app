@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
-
 import 'data_manager.dart';
-
 import 'note.dart';
 
 class LabelScreen extends StatefulWidget {
@@ -27,12 +26,13 @@ class _LabelScreenState extends State<LabelScreen> {
           Container(
             color: Colors.grey.shade200,
             child: Padding(
-              padding: EdgeInsets.only(top: MediaQueryData().padding.top + 40),
+              padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 40),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     InkWell(
+                      onTap: onBackPress,
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Icon(
@@ -40,11 +40,10 @@ class _LabelScreenState extends State<LabelScreen> {
                           color: Colors.grey.shade800,
                         ),
                       ),
-                      onTap: onBackPress,
                     ),
-                    Expanded(
+                    const Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.only(left: 10),
                         child: TextField(
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -70,11 +69,14 @@ class _LabelScreenState extends State<LabelScreen> {
   }
 
   onBackPress() {
+
     for (int i = 0; i < selectedLabels.length; i++) {
       for (Note note in DataManager().notes) {
         if (widget.selectedIds.contains(note.id)) {
           if (!note.labels.contains(selectedLabels[i])) {
             note.labels.add(selectedLabels[i]);
+            NotesDb.removeNote(NotesDb.notesKey, note.id);
+            NotesDb.addNote(NotesDb.notesKey, note);
           }
         }
       }
