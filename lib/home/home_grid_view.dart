@@ -67,7 +67,7 @@ class HomeScreenGridView extends StatelessWidget {
                           color: selectedIds.contains(DataManager().pinnedNotes[i].id)
                               ? Colors.blue.shade800
                               : Colors.grey,
-                          width: selectedIds.contains(DataManager().pinnedNotes[i].id) ? 3.0 : 1.0,
+                          width: selectedIds.contains(DataManager().pinnedNotes[i].id) ? 3.0 : 0,
                         ),
                       ),
                       child: Column(
@@ -152,7 +152,7 @@ class HomeScreenGridView extends StatelessWidget {
                           color: selectedIds.contains(DataManager().pinnedListModels[i].id)
                               ? Colors.blue.shade800
                               : Colors.grey,
-                          width: selectedIds.contains(DataManager().pinnedListModels[i].id) ? 3.0 : 1.0,
+                          width: selectedIds.contains(DataManager().pinnedListModels[i].id) ? 3.0 : 0,
                         ),
                       ),
                       child: Column(
@@ -274,7 +274,7 @@ class HomeScreenGridView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: selectedIds.contains(DataManager().notes[i].id) ? Colors.blue.shade800 : Colors.grey,
-                            width: selectedIds.contains(DataManager().notes[i].id) ? 3.0 : 1.0,
+                            width: selectedIds.contains(DataManager().notes[i].id) ? 3.0 : 0,
                           ),
                         ),
                         child: Column(
@@ -353,7 +353,7 @@ class HomeScreenGridView extends StatelessWidget {
                             color: selectedIds.contains(DataManager().listModels[i].id)
                                 ? Colors.blue.shade800
                                 : Colors.grey,
-                            width: selectedIds.contains(DataManager().listModels[i].id) ? 3.0 : 1.0,
+                            width: selectedIds.contains(DataManager().listModels[i].id) ? 3.0 : 0,
                           ),
                         ),
                         child: Column(

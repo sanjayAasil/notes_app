@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -40,173 +36,177 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: mainColor,
-        child: widget.note != null && widget.note!.isDeleted
-            ? NoteForDeletedScreen(note: widget.note!)
-            : Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                    height: 60,
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: onBackPressed,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Icon(
-                              Icons.arrow_back_outlined,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        const Expanded(child: SizedBox()),
-
-                        InkWell(
-                          onTap: onFavorite,
-                          borderRadius: BorderRadius.circular(40),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: onPinned,
-                          borderRadius: BorderRadius.circular(40),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              CupertinoIcons.pin,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            CupertinoIcons.bell,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: archiveButton,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.archive_outlined,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        // SizedBox(),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool value) => onBackPressed(),
+      child: Scaffold(
+        body: Container(
+          color: mainColor,
+          child: widget.note != null && widget.note!.isDeleted
+              ? NoteForDeletedScreen(note: widget.note!)
+              : Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                      height: 60,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 20),
-                            child: TextField(
-                              style: const TextStyle(
-                                fontSize: 30,
+                          InkWell(
+                            onTap: onBackPressed,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.arrow_back_outlined,
+                                color: Colors.grey.shade800,
                               ),
-                              controller: titleController,
-                              decoration: const InputDecoration(
-                                hintText: 'Title',
-                                border: InputBorder.none,
-                                hintStyle: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 25,
+                            ),
+                          ),
+                          const Expanded(child: SizedBox()),
+
+                          InkWell(
+                            onTap: onFavorite,
+                            borderRadius: BorderRadius.circular(40),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: onPinned,
+                            borderRadius: BorderRadius.circular(40),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                CupertinoIcons.pin,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              CupertinoIcons.bell,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: archiveButton,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.archive_outlined,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          // SizedBox(),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20, left: 20),
+                              child: TextField(
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                ),
+                                controller: titleController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Title',
+                                  border: InputBorder.none,
+                                  hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 25,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: TextField(
-                              controller: noteController,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                hintText: 'Note',
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                                border: InputBorder.none,
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: TextField(
+                                controller: noteController,
+                                maxLines: null,
+                                decoration: const InputDecoration(
+                                  hintText: 'Note',
+                                  hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Wrap(
+                                children: [
+                                  if (widget.note != null)
+                                    for (String label in widget.note!.labels)
+                                      Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Text('  $label  '),
+                                        ),
+                                      ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 45,
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {},
+                            borderRadius: BorderRadius.circular(40),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.add_box_outlined,
+                                color: Colors.grey.shade800,
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Wrap(
-                              children: [
-                                if (widget.note != null)
-                                  for (String label in widget.note!.labels)
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade300,
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Text('  $label  '),
-                                      ),
-                                    ),
-                              ],
+                          InkWell(
+                            onTap: _pickAColor,
+                            borderRadius: BorderRadius.circular(40),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Icon(
+                                CupertinoIcons.paintbrush,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          const Expanded(child: SizedBox()),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(40),
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Icon(
+                                Icons.more_vert_rounded,
+                                color: Colors.grey.shade800,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  Container(
-                    height: 45,
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          borderRadius: BorderRadius.circular(40),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.add_box_outlined,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: _pickAColor,
-                          borderRadius: BorderRadius.circular(40),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Icon(
-                              CupertinoIcons.paintbrush,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        const Expanded(child: SizedBox()),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(40),
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Icon(
-                              Icons.more_vert_rounded,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }
@@ -473,7 +473,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
         note.isPinned = true;
-        NotesDb.addNote(NotesDb.pinnedNotesKey,note);
+        NotesDb.addNote(NotesDb.pinnedNotesKey, note);
       } else {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();

@@ -1,19 +1,28 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'data_manager.dart';
 import 'note.dart';
 
 late SharedPreferences prefs;
 
 class NotesDb {
-  static const String notesKey = 'notes';
+  NotesDb._();
+
+  static const notesKey = 'notes';
   static const archivedNotesKey = 'archivedNotes';
   static const favoriteNotesKey = 'favoriteNotes';
   static const pinnedNotesKey = 'pinnedNotes';
   static const deletedNotesKey = 'deletedNotes';
+
+  static List<Note> getAllNotes(String key) {
+    String? data = prefs.getString(key);
+
+    if (data == null) return [];
+
+    List decoded = jsonDecode(data);
+
+    return decoded.map((e) => Note.fromJson(e)).toList();
+  }
 
   static addNote(String key, Note note) {
     List<Note> notes = getAllNotes(key);
@@ -25,6 +34,7 @@ class NotesDb {
     String encoded = jsonEncode(jsonList);
 
     prefs.setString(key, encoded);
+
     if (key == notesKey) {
       DataManager().notes.add(note);
     } else if (key == archivedNotesKey) {
@@ -38,16 +48,28 @@ class NotesDb {
     }
   }
 
-  static List<Note> getAllNotes(String key) {
-    String? data = prefs.getString(key);
+  static addNotes(String key, List<Note> notes) {
+    List<Note> noteS = getAllNotes(key);
 
-    log('database data $data');
+    noteS.addAll(notes);
 
-    if (data == null) return [];
+    List<Map<String, dynamic>> jsonList = noteS.map((e) => e.json).toList();
 
-    List decoded = jsonDecode(data);
+    String encoded = jsonEncode(jsonList);
 
-    return decoded.map((e) => Note.fromJson(e)).toList();
+    prefs.setString(key, encoded);
+
+    if (key == notesKey) {
+      DataManager().notes.addAll(notes);
+    } else if (key == archivedNotesKey) {
+      DataManager().archivedNotes.addAll(notes);
+    } else if (key == favoriteNotesKey) {
+      DataManager().favoriteNotes.addAll(notes);
+    } else if (key == pinnedNotesKey) {
+      DataManager().pinnedNotes.addAll(notes);
+    } else {
+      DataManager().deletedNotes.addAll(notes);
+    }
   }
 
   static removeNote(String key, String noteId) {
@@ -57,7 +79,7 @@ class NotesDb {
 
     List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();
 
-    prefs.setString(notesKey, jsonEncode(jsonList));
+    prefs.setString(key, jsonEncode(jsonList));
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => element.id == noteId);
     } else if (key == favoriteNotesKey) {
@@ -77,7 +99,7 @@ class NotesDb {
 
     List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();
 
-    prefs.setString(notesKey, jsonEncode(jsonList));
+    prefs.setString(key, jsonEncode(jsonList));
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => noteIds.contains(element.id));
     } else if (key == favoriteNotesKey) {

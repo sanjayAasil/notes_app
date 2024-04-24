@@ -62,7 +62,7 @@ class HomeScreenListView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
-                          width: selectedIds.contains(note.id) ? 3.0 : 1,
+                          width: selectedIds.contains(note.id) ? 3.0 : 0,
                         ),
                       ),
                       child: Column(
@@ -153,7 +153,7 @@ class HomeScreenListView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
-                          width: selectedIds.contains(listModel.id) ? 3.0 : 1,
+                          width: selectedIds.contains(listModel.id) ? 3.0 : 0,
                         ),
                       ),
                       child: Column(
@@ -274,7 +274,7 @@ class HomeScreenListView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
-                        width: selectedIds.contains(note.id) ? 3.0 : 1,
+                        width: selectedIds.contains(note.id) ? 3.0 : 0,
                       ),
                     ),
                     child: Column(
@@ -367,7 +367,7 @@ class HomeScreenListView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
-                    width: selectedIds.contains(listModel.id) ? 3.0 : 1.0,
+                    width: selectedIds.contains(listModel.id) ? 3.0 : 0,
                   ),
                 ),
                 child: Column(

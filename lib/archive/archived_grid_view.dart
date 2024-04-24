@@ -81,7 +81,7 @@ class ArchivedGridView extends StatelessWidget {
                                   color: selectedIds.contains(DataManager().archivedNotes[i].id)
                                       ? Colors.blue.shade800
                                       : Colors.grey,
-                                  width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 1.0,
+                                  width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 0,
                                 ),
                               ),
                               child: Column(
@@ -170,7 +170,7 @@ class ArchivedGridView extends StatelessWidget {
                                   color: selectedIds.contains(DataManager().archivedListModels[i].id)
                                       ? Colors.blue.shade800
                                       : Colors.grey,
-                                  width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 1.0,
+                                  width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 0,
                                 ),
                               ),
                               child: Column(
@@ -294,7 +294,7 @@ class ArchivedGridView extends StatelessWidget {
                                 color: selectedIds.contains(DataManager().archivedNotes[i].id)
                                     ? Colors.blue.shade800
                                     : Colors.grey,
-                                width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 1.0,
+                                width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 0,
                               ),
                             ),
                             child: Column(
@@ -379,7 +379,7 @@ class ArchivedGridView extends StatelessWidget {
                                 color: selectedIds.contains(DataManager().archivedListModels[i].id)
                                     ? Colors.blue.shade800
                                     : Colors.grey,
-                                width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 1.0,
+                                width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 0,
                               ),
                             ),
                             child: Column(
