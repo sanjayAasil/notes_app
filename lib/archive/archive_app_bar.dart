@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 
 import '../data_manager.dart';
@@ -151,8 +152,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
                 for (Note note in notes) {
                   note.isArchive = false;
                   if (note.isPinned) {
-
-                   NotesDb.addNote(NotesDb.pinnedNotesKey, note);
+                    NotesDb.addNote(NotesDb.pinnedNotesKey, note);
                   } else {
                     NotesDb.addNote(NotesDb.notesKey, note);
                   }
@@ -164,11 +164,11 @@ class SelectedArchiveAppBar extends StatelessWidget {
                 for (ListModel listModel in listModels) {
                   listModel.isArchive = false;
                   if (listModel.isPinned) {
-                    DataManager().pinnedListModels.add(listModel);
+                    ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
                   } else {
-                    DataManager().listModels.add(listModel);
+                    ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
                   }
-                  DataManager().archivedListModels.removeWhere((element) => element == listModel);
+                  ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
                 }
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
@@ -197,7 +197,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
                 for (ListModel listModel in listModels) {
                   listModel.isDeleted = true;
                 }
-                DataManager().archivedListModels.removeWhere((element) => selectedIds.contains(element.id));
+                ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
                 DataManager().deletedListModel.addAll(listModels);
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
@@ -223,8 +223,8 @@ class SelectedArchiveAppBar extends StatelessWidget {
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
-      DataManager().archivedListModels.remove(listModel);
-      DataManager().archivedListModels.add(listModel);
+      ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
+      ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
     }
 
     selectedIds.clear();

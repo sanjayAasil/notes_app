@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 
 import '../data_manager.dart';
@@ -208,13 +209,13 @@ class SelectedHomeAppBar extends StatelessWidget {
     for (ListModel listModel in pinnedListModels) {
       listModel.isArchive = true;
     }
-    DataManager().archivedListModels.addAll(listModels);
-    DataManager().archivedListModels.addAll(pinnedListModels);
+    ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
+    ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, pinnedListModels);
 
     NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
     NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
 
-    DataManager().listModels.removeWhere((element) => selectedIds.contains(element.id));
+    ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
     NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
 
     selectedIds.clear();
@@ -235,18 +236,19 @@ class SelectedHomeAppBar extends StatelessWidget {
     }
     for (Note note in pinnedNotes) {
       note.isDeleted = true;
-     NotesDb.addNote(NotesDb.deletedNotesKey, note);
+      NotesDb.addNote(NotesDb.deletedNotesKey, note);
       NotesDb.removeNote(NotesDb.pinnedNotesKey, note.id);
     }
     for (ListModel listModel in listModels) {
       listModel.isDeleted = true;
-      DataManager().deletedListModel.add(listModel);
-      DataManager().listModels.remove(listModel);
+
+      ListModelsDb.addListModel(NotesDb.deletedNotesKey, listModel);
+      ListModelsDb.removeListModel(ListModelsDb.listModelKey, listModel.id);
     }
     for (ListModel listModel in pinnedListModels) {
       listModel.isDeleted = true;
-      DataManager().deletedListModel.add(listModel);
-      DataManager().pinnedListModels.remove(listModel);
+      ListModelsDb.addListModel(NotesDb.deletedNotesKey, listModel);
+      ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, listModel.id);
     }
 
     selectedIds.clear();
@@ -266,8 +268,8 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
-      DataManager().pinnedListModels.add(listModel);
-      DataManager().listModels.remove(listModel);
+      ListModelsDb.addListModel(NotesDb.pinnedNotesKey, listModel);
+      ListModelsDb.removeListModel(ListModelsDb.listModelKey, listModel.id);
     }
 
     selectedIds.clear();

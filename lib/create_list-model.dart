@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/routes.dart';
 
 class NewListScreen extends StatefulWidget {
@@ -345,7 +346,7 @@ class _NewListScreenState extends State<NewListScreen> {
       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       return;
     }
-    DataManager().listModels.add(listModel);
+    ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
 
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
@@ -361,7 +362,7 @@ class _NewListScreenState extends State<NewListScreen> {
       return;
     }
     listModel.isArchive = true;
-    DataManager().archivedListModels.add(listModel);
+   ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
 
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
@@ -378,7 +379,7 @@ class _NewListScreenState extends State<NewListScreen> {
       return;
     }
     listModel.isPinned = true;
-    DataManager().pinnedListModels.add(listModel);
+    ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
 
@@ -395,7 +396,7 @@ class _NewListScreenState extends State<NewListScreen> {
       return;
     }
 
-    DataManager().favoriteListModels.add(listModel);
+    ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
 }

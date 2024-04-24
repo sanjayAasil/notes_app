@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -125,15 +126,14 @@ class _DeletedScreenState extends State<DeletedScreen> {
                           if (listModel.isArchive) {
                             debugPrint("_DeletedScreenState build: check ${listModel.isArchive}");
                             listModel.isDeleted = false;
-                            DataManager().archivedListModels.add(listModel);
+                            ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
                           } else {
                             if (listModel.isPinned) {
                               listModel.isDeleted = false;
-                              DataManager().pinnedListModels.add(listModel);
+                              ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
                             } else {
                               listModel.isDeleted = false;
-                              DataManager().listModels.add(listModel);
-                            }
+                              ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);                         }
                           }
                           DataManager().deletedListModel.remove(listModel);
                         }

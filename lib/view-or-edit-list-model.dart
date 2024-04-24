@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/routes.dart';
 
 class ViewOrEditListModel extends StatefulWidget {
@@ -406,27 +407,32 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
-        DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
-        DataManager().archivedListModels.add(widget.listModel);
+        ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+        ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
       } else if (widget.listModel.isFavorite) {
-        DataManager().favoriteListModels.removeWhere((element) => element.id == widget.listModel.id);
-        DataManager().favoriteListModels.add(widget.listModel);
+        ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.listModel.isPinned) {
-        DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
-        DataManager().pinnedListModels.add(widget.listModel);
+        ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+        ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
-        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
-        DataManager().listModels.add(widget.listModel);
+        ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+        ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
     } else {
-      DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
-      DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
-      DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
-      DataManager().favoriteListModels.removeWhere((element) => element.id == widget.listModel.id);
+      ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+      ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+      ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+      ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+
       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
     }
   }
@@ -443,35 +449,37 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     if (titleController.text.isNotEmpty || itemNameControllers.isNotEmpty) {
       if (widget.listModel.isArchive) {
         if (widget.listModel.isPinned) {
-          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isFavorite = true;
-          DataManager().favoriteListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
         } else {
-          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isFavorite = true;
-          DataManager().favoriteListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
         }
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
       } else if (widget.listModel.isFavorite) {
         if (widget.listModel.isPinned) {
-          DataManager().favoriteListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
           widget.listModel.isFavorite = false;
-          DataManager().pinnedListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
         } else {
-          DataManager().favoriteListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
           widget.listModel.isFavorite = false;
-          DataManager().listModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
         }
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.listModel.isPinned) {
-        DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+        ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
         widget.listModel.isFavorite = true;
-        DataManager().favoriteListModels.add(widget.listModel);
+        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
-        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+        ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
         widget.listModel.isFavorite = true;
-        DataManager().favoriteListModels.add(widget.listModel);
+        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
     } else {
@@ -491,35 +499,37 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     if (titleController.text.isNotEmpty || itemNameControllers.isNotEmpty) {
       if (widget.listModel.isArchive) {
         if (widget.listModel.isPinned) {
-          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isPinned = false;
-          DataManager().archivedListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
         } else {
-          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isPinned = true;
-          DataManager().archivedListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
         }
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
       } else if (widget.listModel.isFavorite) {
         if (widget.listModel.isPinned) {
-          DataManager().favoriteListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
           widget.listModel.isPinned = false;
-          DataManager().favoriteListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
         } else {
-          DataManager().favoriteListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
           widget.listModel.isPinned = true;
-          DataManager().favoriteListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
         }
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.listModel.isPinned) {
-        DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+        ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
         widget.listModel.isPinned = false;
-        DataManager().listModels.add(widget.listModel);
+        ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
-        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+        ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
         widget.listModel.isPinned = true;
-        DataManager().pinnedListModels.add(widget.listModel);
+        ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
     } else {
@@ -539,30 +549,35 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
         if (widget.listModel.isPinned) {
-          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isArchive = false;
-          DataManager().pinnedListModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         } else {
-          DataManager().archivedListModels.removeWhere((element) => element.id == widget.listModel.id);
+          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isArchive = false;
-          DataManager().listModels.add(widget.listModel);
+          ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
+
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         }
       } else if (widget.listModel.isFavorite) {
-        DataManager().favoriteListModels.removeWhere((element) => element.id == widget.listModel.id);
+        ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
         widget.listModel.isArchive = true;
-        DataManager().archivedListModels.add(widget.listModel);
+        ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.listModel.isPinned) {
-        DataManager().pinnedListModels.removeWhere((element) => element.id == widget.listModel.id);
+        ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
         widget.listModel.isArchive = true;
-        DataManager().archivedListModels.add(widget.listModel);
+        ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
-        DataManager().listModels.removeWhere((element) => element.id == widget.listModel.id);
+        ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
         widget.listModel.isArchive = true;
-        DataManager().archivedListModels.add(widget.listModel);
+        ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
     } else {

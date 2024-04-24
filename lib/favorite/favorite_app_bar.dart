@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
@@ -157,8 +158,8 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                     DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
                   listModel.isArchive = true;
-                  DataManager().archivedListModels.add(listModel);
-                  DataManager().favoriteListModels.removeWhere((element) => element == listModel);
+                  ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
+                  ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
                 }
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
@@ -186,8 +187,8 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                 for (ListModel listModel in listModels) {
                   listModel.isDeleted = true;
                 }
-                DataManager().favoriteListModels.removeWhere((element) => selectedIds.contains(element.id));
-                DataManager().deletedListModel.addAll(listModels);
+                ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
+                ListModelsDb.addListModels(NotesDb.deletedNotesKey, listModels);
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
               },
@@ -212,8 +213,8 @@ class SelectedFavoriteAppBar extends StatelessWidget {
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
-      DataManager().favoriteListModels.remove(listModel);
-      DataManager().favoriteListModels.add(listModel);
+      ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
+      ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
     }
 
     selectedIds.clear();
