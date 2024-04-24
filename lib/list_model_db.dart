@@ -93,6 +93,7 @@ class ListModelsDb {
   }
 
   static removeListModels(String key, List<String> listModelIds) {
+
     List<ListModel> listModels = getAllListModels(key);
 
     listModels.removeWhere((element) => listModelIds.contains(element.id));
@@ -102,15 +103,15 @@ class ListModelsDb {
     prefs.setString(key, jsonEncode(jsonList));
 
     if (key == listModelKey) {
-      DataManager().listModels.removeWhere((element) => listModels.contains(element.id));
+      DataManager().listModels.removeWhere((element) => listModelIds.contains(element.id));
     } else if (key == archivedListModelKey) {
-      DataManager().archivedListModels.removeWhere((element) => listModels.contains(element.id));
+      DataManager().archivedListModels.removeWhere((element) => listModelIds.contains(element.id));
     } else if (key == favoriteListModelKey) {
-      DataManager().favoriteListModels.removeWhere((element) => listModels.contains(element.id));
+      DataManager().favoriteListModels.removeWhere((element) => listModelIds.contains(element.id));
     } else if (key == deletedListModelKey) {
-      DataManager().deletedListModel.removeWhere((element) => listModels.contains(element.id));
+      DataManager().deletedListModel.removeWhere((element) => listModelIds.contains(element.id));
     } else {
-      DataManager().pinnedListModels.removeWhere((element) => listModels.contains(element.id));
+      DataManager().pinnedListModels.removeWhere((element) => listModelIds.contains(element.id));
     }
   }
 }

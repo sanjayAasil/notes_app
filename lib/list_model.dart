@@ -33,13 +33,13 @@ class ListModel {
   factory ListModel.fromJson(Map<String, dynamic> json) => ListModel._(
         id: json['id'],
         title: json['title'],
-        items: json['items'].map((e) => ListItem.fromJson(e)).toList(),
+        items: List.from(json['items']).map((e) => ListItem.fromJson(e)).toList(),
         color: Color(json['color']),
         isArchive: json['isArchive'],
         isDeleted: json['isDeleted'],
         isPinned: json['isPinned'],
         isFavorite: json['isFavorite'],
-        labels: json['labels'],
+        labels: List.from(json['labels']),
       );
 
   Map<String, dynamic> get json => {

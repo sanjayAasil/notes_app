@@ -133,9 +133,10 @@ class _DeletedScreenState extends State<DeletedScreen> {
                               ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
                             } else {
                               listModel.isDeleted = false;
-                              ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);                         }
+                              ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
+                            }
                           }
-                          DataManager().deletedListModel.remove(listModel);
+                          ListModelsDb.removeListModel(NotesDb.deletedNotesKey, listModel.id);
                         }
                         selectedIds.clear();
                         setState(() {});
@@ -152,7 +153,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                       ),
                       onTap: () {
                         NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
-                        DataManager().deletedListModel.removeWhere((element) => selectedIds.contains(element.id));
+                        ListModelsDb.removeListModels(NotesDb.deletedNotesKey, selectedIds);
                         selectedIds.clear();
                         setState(() {});
                       },

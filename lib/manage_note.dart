@@ -322,14 +322,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
-        //
-        // String data = '{}';
-        // Map<String, dynamic> decoded = jsonDecode(data);
-        // Note note2 = Note(title: decoded['title'], note: decoded['note'], id: decoded['id']);
-        //
-        // note2.id;
-        //
-        //
         note.color = mainColor;
         NotesDb.addNote(NotesDb.notesKey, note);
       } else {

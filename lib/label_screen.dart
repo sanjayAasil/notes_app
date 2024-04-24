@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'data_manager.dart';
@@ -69,7 +70,6 @@ class _LabelScreenState extends State<LabelScreen> {
   }
 
   onBackPress() {
-
     for (int i = 0; i < selectedLabels.length; i++) {
       for (Note note in DataManager().notes) {
         if (widget.selectedIds.contains(note.id)) {
@@ -84,6 +84,8 @@ class _LabelScreenState extends State<LabelScreen> {
         if (widget.selectedIds.contains(note.id)) {
           if (!note.labels.contains(selectedLabels[i])) {
             note.labels.add(selectedLabels[i]);
+            NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
+            NotesDb.addNote(NotesDb.archivedNotesKey, note);
           }
         }
       }
@@ -91,6 +93,8 @@ class _LabelScreenState extends State<LabelScreen> {
         if (widget.selectedIds.contains(note.id)) {
           if (!note.labels.contains(selectedLabels[i])) {
             note.labels.add(selectedLabels[i]);
+            NotesDb.removeNote(NotesDb.pinnedNotesKey, note.id);
+            NotesDb.addNote(NotesDb.pinnedNotesKey, note);
           }
         }
       }
@@ -98,6 +102,8 @@ class _LabelScreenState extends State<LabelScreen> {
         if (widget.selectedIds.contains(listModel.id)) {
           if (!listModel.labels.contains(selectedLabels[i])) {
             listModel.labels.add(selectedLabels[i]);
+            ListModelsDb.removeListModel(ListModelsDb.listModelKey, listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
           }
         }
       }
@@ -105,6 +111,8 @@ class _LabelScreenState extends State<LabelScreen> {
         if (widget.selectedIds.contains(listModel.id)) {
           if (!listModel.labels.contains(selectedLabels[i])) {
             listModel.labels.add(selectedLabels[i]);
+            ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
           }
         }
       }
@@ -112,6 +120,8 @@ class _LabelScreenState extends State<LabelScreen> {
         if (widget.selectedIds.contains(listModel.id)) {
           if (!listModel.labels.contains(selectedLabels[i])) {
             listModel.labels.add(selectedLabels[i]);
+            ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
           }
         }
       }

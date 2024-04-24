@@ -223,33 +223,30 @@ class SelectedHomeAppBar extends StatelessWidget {
   }
 
   onDeleted() {
+
     List<Note> notes = DataManager().notes.where((element) => selectedIds.contains(element.id)).toList();
     List<Note> pinnedNotes = DataManager().pinnedNotes.where((element) => selectedIds.contains(element.id)).toList();
     List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();
     List<ListModel> pinnedListModels =
         DataManager().pinnedListModels.where((element) => selectedIds.contains(element.id)).toList();
 
-    for (Note note in notes) {
-      note.isDeleted = true;
-      NotesDb.addNote(NotesDb.deletedNotesKey, note);
-      NotesDb.removeNote(NotesDb.notesKey, note.id);
-    }
-    for (Note note in pinnedNotes) {
-      note.isDeleted = true;
-      NotesDb.addNote(NotesDb.deletedNotesKey, note);
-      NotesDb.removeNote(NotesDb.pinnedNotesKey, note.id);
-    }
-    for (ListModel listModel in listModels) {
-      listModel.isDeleted = true;
+    notes.map((e) => e.isDeleted = true);
+    debugPrint("SelectedHomeAppBar onDeleted: ererergrg  ${notes.map((e) => e.isDeleted)}");
+    pinnedNotes.map((e) => e.isDeleted = true);
+    listModels.map((e) => e.isDeleted = true);
+    pinnedListModels.map((e) => e.isDeleted = true);
 
-      ListModelsDb.addListModel(NotesDb.deletedNotesKey, listModel);
-      ListModelsDb.removeListModel(ListModelsDb.listModelKey, listModel.id);
-    }
-    for (ListModel listModel in pinnedListModels) {
-      listModel.isDeleted = true;
-      ListModelsDb.addListModel(NotesDb.deletedNotesKey, listModel);
-      ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, listModel.id);
-    }
+    NotesDb.addNotes(NotesDb.deletedNotesKey, notes);
+    NotesDb.addNotes(NotesDb.deletedNotesKey, pinnedNotes);
+    ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
+    ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, pinnedListModels);
+
+    NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
+    NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
+    ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
+    ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, selectedIds);
+
+    debugPrint("SelectedHomeAppBar onDeleted: ${DataManager().deletedNotes.map((e) => e.isDeleted)}");
 
     selectedIds.clear();
     onSelectedIdsCleared?.call();
