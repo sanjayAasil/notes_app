@@ -152,7 +152,9 @@ class SelectedArchiveAppBar extends StatelessWidget {
                     DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isArchive = false;
-                  if (note.isPinned) {
+                  if (note.isFavorite) {
+                    NotesDb.addNote(NotesDb.favoriteNotesKey, note);
+                  } else if (note.isPinned) {
                     NotesDb.addNote(NotesDb.pinnedNotesKey, note);
                   } else {
                     NotesDb.addNote(NotesDb.notesKey, note);
@@ -164,7 +166,9 @@ class SelectedArchiveAppBar extends StatelessWidget {
                     DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
                   listModel.isArchive = false;
-                  if (listModel.isPinned) {
+                  if (listModel.isFavorite) {
+                    ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
+                  } else if (listModel.isPinned) {
                     ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
                   } else {
                     ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);

@@ -272,23 +272,17 @@ class SelectedHomeAppBar extends StatelessWidget {
   onPinned() {
     List<Note> notes = DataManager().notes.where((element) => selectedIds.contains(element.id)).toList();
 
-    for (Note note in notes) {
-      note.isPinned = true;
-    }
-    if (notes.isNotEmpty) {
-      NotesDb.addNotes(NotesDb.pinnedNotesKey, notes);
-      NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
-    }
+    NotesDb.addNotes(NotesDb.pinnedNotesKey, notes);
+    NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
 
     List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
     }
-    if (listModels.isNotEmpty) {
-      ListModelsDb.addListModels(NotesDb.pinnedNotesKey, listModels);
-      ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
-    }
+
+    ListModelsDb.addListModels(ListModelsDb.pinnedListModelKey, listModels);
+    ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
 
     selectedIds.clear();
     onSelectedIdsCleared?.call();

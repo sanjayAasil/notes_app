@@ -107,6 +107,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                             NotesDb.addNote(NotesDb.archivedNotesKey, note);
                           } else if (note.isFavorite) {
                             note.isDeleted = false;
+                            NotesDb.addNote(NotesDb.favoriteNotesKey, note);
                           } else if (note.isPinned) {
                             note.isDeleted = false;
                             NotesDb.addNote(NotesDb.pinnedNotesKey, note);
@@ -124,18 +125,19 @@ class _DeletedScreenState extends State<DeletedScreen> {
 
                         for (ListModel listModel in listModels) {
                           if (listModel.isArchive) {
-                            debugPrint("_DeletedScreenState build: check ${listModel.isArchive}");
                             listModel.isDeleted = false;
                             ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
+                          } else if (listModel.isFavorite) {
+                            listModel.isDeleted = false;
+                            ListModelsDb.addListModel(NotesDb.favoriteNotesKey, listModel);
+                          } else if (listModel.isPinned) {
+                            listModel.isDeleted = false;
+                            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
                           } else {
-                            if (listModel.isPinned) {
-                              listModel.isDeleted = false;
-                              ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
-                            } else {
-                              listModel.isDeleted = false;
-                              ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
-                            }
+                            listModel.isDeleted = false;
+                            ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
                           }
+
                           ListModelsDb.removeListModel(NotesDb.deletedNotesKey, listModel.id);
                         }
                         selectedIds.clear();

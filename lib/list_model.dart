@@ -21,8 +21,8 @@ class ListModel {
     this.isDeleted = false,
     this.isFavorite = false,
     this.color = Colors.white,
-    this.labels = const [],
-  });
+    List<String>? labels,
+  }) : labels = labels ?? [];
 
   factory ListModel.create({
     required String title,
