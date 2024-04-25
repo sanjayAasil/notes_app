@@ -95,7 +95,8 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+                selectedIds.clear();
+                onSelectedIdsCleared?.call();
               },
             ),
             Expanded(
@@ -174,23 +175,31 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
+                debugPrint("SelectedFavoriteAppBar build: start");
                 List<Note> notes =
                     DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isDeleted = true;
-                  NotesDb.addNote(NotesDb.deletedNotesKey, note);
                 }
-                NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);
+                if (notes.isNotEmpty) {
+                  NotesDb.addNotes(ListModelsDb.deletedListModelKey, notes);
+                  NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);
+                }
 
                 List<ListModel> listModels =
                     DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
                   listModel.isDeleted = true;
                 }
-                ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
-                ListModelsDb.addListModels(NotesDb.deletedNotesKey, listModels);
+                if (listModels.isNotEmpty) {
+                  ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
+                  ListModelsDb.addListModels(NotesDb.deletedNotesKey, listModels);
+                }
+
                 selectedIds.clear();
+                debugPrint("SelectedFavoriteAppBar build: end1");
                 onSelectedIdsCleared?.call();
+                debugPrint("SelectedFavoriteAppBar build: end2");
               },
             ),
           ],
@@ -204,8 +213,10 @@ class SelectedFavoriteAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isPinned = true;
-      NotesDb.removeNote(NotesDb.favoriteNotesKey, note.id);
-      NotesDb.addNote(NotesDb.favoriteNotesKey, note);
+    }
+    if (notes.isNotEmpty) {
+      NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);
+      NotesDb.addNotes(NotesDb.favoriteNotesKey, notes);
     }
 
     List<ListModel> listModels =
@@ -213,11 +224,14 @@ class SelectedFavoriteAppBar extends StatelessWidget {
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
-      ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
-      ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
+      ListModelsDb.addListModels(ListModelsDb.listModelKey, listModels);
     }
 
     selectedIds.clear();
     onSelectedIdsCleared?.call();
+    debugPrint("SelectedFavoriteAppBar onPinned: pinned");
   }
 }

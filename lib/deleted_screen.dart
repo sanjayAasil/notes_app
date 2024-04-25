@@ -153,7 +153,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                       ),
                       onTap: () {
                         NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
-                        ListModelsDb.removeListModels(NotesDb.deletedNotesKey, selectedIds);
+                        ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
                         selectedIds.clear();
                         setState(() {});
                       },

@@ -21,8 +21,8 @@ class Note {
     this.isDeleted = false,
     this.color = Colors.white,
     this.isFavorite = false,
-    this.labels = const [],
-  });
+    List<String>? labels,
+  }) : labels = labels ?? [];
 
   factory Note.create({
     required String title,

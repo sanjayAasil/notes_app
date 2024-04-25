@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -37,273 +36,282 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   @override
   Widget build(BuildContext context) {
     debugPrint("_ViewOrEditListModelState: build check ${itemNameControllers.length}");
-    return Scaffold(
-      body: Container(
-        color: mainColor,
-        child: widget.listModel.isDeleted
-            ? ListModelForDeletedScreen(listModel: widget.listModel)
-            : Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                    height: 60,
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: onBackPressed,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+    return PopScope(
+      canPop: widget.listModel.isDeleted,
+      onPopInvoked: (bool value) {
+        if (!widget.listModel.isDeleted) {
+          debugPrint("_ManageNotePageState build: check onBack ");
+          onBackPressed();
+        }
+      },
+      child: Scaffold(
+        body: Container(
+          color: mainColor,
+          child: widget.listModel.isDeleted
+              ? ListModelForDeletedScreen(listModel: widget.listModel)
+              : Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                      height: 60,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: onBackPressed,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          const Expanded(child: SizedBox()),
+                          InkWell(
+                            onTap: onFavorite,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: widget.listModel.isFavorite
+                                  ? Icon(
+                                      Icons.favorite,
+                                      color: Colors.grey.shade800,
+                                    )
+                                  : Icon(
+                                      Icons.favorite_border,
+                                      color: Colors.grey.shade800,
+                                    ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: onPinned,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: widget.listModel.isPinned
+                                  ? Icon(
+                                      CupertinoIcons.pin_fill,
+                                      color: Colors.grey.shade800,
+                                    )
+                                  : Icon(
+                                      CupertinoIcons.pin,
+                                      color: Colors.grey.shade800,
+                                    ),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Icon(
-                              Icons.arrow_back,
+                              CupertinoIcons.bell,
                               color: Colors.grey.shade800,
                             ),
                           ),
-                        ),
-                        const Expanded(child: SizedBox()),
-                        InkWell(
-                          onTap: onFavorite,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: widget.listModel.isFavorite
-                                ? Icon(
-                                    Icons.favorite,
-                                    color: Colors.grey.shade800,
-                                  )
-                                : Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.grey.shade800,
-                                  ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: onPinned,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: widget.listModel.isPinned
-                                ? Icon(
-                                    CupertinoIcons.pin_fill,
-                                    color: Colors.grey.shade800,
-                                  )
-                                : Icon(
-                                    CupertinoIcons.pin,
-                                    color: Colors.grey.shade800,
-                                  ),
-                          ),
-                        ),
 
+                          InkWell(
+                            onTap: onArchived,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: widget.listModel.isArchive
+                                  ? Icon(
+                                      Icons.unarchive_outlined,
+                                      color: Colors.grey.shade800,
+                                    )
+                                  : Icon(
+                                      Icons.archive_outlined,
+                                      color: Colors.grey.shade800,
+                                    ),
+                            ),
+                          ),
+                          // SizedBox(),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: TextField(
+                              controller: titleController,
+                              style: const TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w300,
+                              ),
+                              decoration: const InputDecoration(
+                                hintText: 'Title',
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(10),
                           child: Icon(
-                            CupertinoIcons.bell,
+                            Icons.more_vert_rounded,
                             color: Colors.grey.shade800,
                           ),
                         ),
-
-                        InkWell(
-                          onTap: onArchived,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: widget.listModel.isArchive
-                                ? Icon(
-                                    Icons.unarchive_outlined,
-                                    color: Colors.grey.shade800,
-                                  )
-                                : Icon(
-                                    Icons.archive_outlined,
-                                    color: Colors.grey.shade800,
-                                  ),
-                          ),
-                        ),
-                        // SizedBox(),
                       ],
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: TextField(
-                            controller: titleController,
-                            style: const TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w300,
+                    InkWell(
+                      onTap: () {
+                        itemNameControllers.add(TextEditingController());
+                        itemTicked.add(false);
+                        setState(() {});
+                      },
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 40,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 65.0),
+                              child: Icon(
+                                CupertinoIcons.plus,
+                                color: Colors.grey.shade800,
+                              ),
                             ),
-                            decoration: const InputDecoration(
-                              hintText: 'Title',
-                              border: InputBorder.none,
+                            const Padding(
+                              padding: EdgeInsets.only(left: 15.0),
+                              child: Text(
+                                'List item',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Icon(
-                          Icons.more_vert_rounded,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () {
-                      itemNameControllers.add(TextEditingController());
-                      itemTicked.add(false);
-                      setState(() {});
-                    },
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 40,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 65.0),
-                            child: Icon(
-                              CupertinoIcons.plus,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              'List item',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          for (int i = 0; i < itemNameControllers.length; i++)
-                            SizedBox(
-                              height: 40,
-                              width: double.infinity,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20.0, right: 10),
-                                    child: Icon(
-                                      Icons.drag_indicator_sharp,
-                                      color: Colors.grey.shade800,
-                                    ),
-                                  ),
-                                  InkWell(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 10.0, right: 10),
-                                      child: itemTicked[i]
-                                          ? Icon(
-                                              Icons.check_box_outlined,
-                                              color: Colors.grey.shade800,
-                                            )
-                                          : Icon(
-                                              Icons.check_box_outline_blank,
-                                              color: Colors.grey.shade800,
-                                            ),
-                                    ),
-                                    onTap: () {
-                                      itemTicked[i] = !itemTicked[i];
-                                      setState(() {});
-                                    },
-                                  ),
-                                  Expanded(
-                                    child: TextField(
-                                      controller: itemNameControllers[i],
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            for (int i = 0; i < itemNameControllers.length; i++)
+                              SizedBox(
+                                height: 40,
+                                width: double.infinity,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 20.0, right: 10),
                                       child: Icon(
-                                        CupertinoIcons.xmark,
+                                        Icons.drag_indicator_sharp,
                                         color: Colors.grey.shade800,
                                       ),
                                     ),
-                                    onTap: () {
-                                      itemNameControllers.removeAt(i);
-                                      itemTicked.removeAt(i);
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Wrap(
-                                children: [
-                                  for (String label in widget.listModel.labels)
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade300,
-                                          borderRadius: BorderRadius.circular(5),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 10.0, right: 10),
+                                        child: itemTicked[i]
+                                            ? Icon(
+                                                Icons.check_box_outlined,
+                                                color: Colors.grey.shade800,
+                                              )
+                                            : Icon(
+                                                Icons.check_box_outline_blank,
+                                                color: Colors.grey.shade800,
+                                              ),
+                                      ),
+                                      onTap: () {
+                                        itemTicked[i] = !itemTicked[i];
+                                        setState(() {});
+                                      },
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: itemNameControllers[i],
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
                                         ),
-                                        child: Text('  $label  '),
                                       ),
                                     ),
-                                ],
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Icon(
+                                          CupertinoIcons.xmark,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        itemNameControllers.removeAt(i);
+                                        itemTicked.removeAt(i);
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Wrap(
+                                  children: [
+                                    for (String label in widget.listModel.labels)
+                                      Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Text('  $label  '),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 45,
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {},
+                            borderRadius: BorderRadius.circular(40),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.add_box_outlined,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: _pickAColor,
+                            borderRadius: BorderRadius.circular(40),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Icon(
+                                CupertinoIcons.paintbrush,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                          ),
+                          const Expanded(child: SizedBox()),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(40),
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Icon(
+                                Icons.more_vert_rounded,
+                                color: Colors.grey.shade800,
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 45,
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          borderRadius: BorderRadius.circular(40),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.add_box_outlined,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: _pickAColor,
-                          borderRadius: BorderRadius.circular(40),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Icon(
-                              CupertinoIcons.paintbrush,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                        const Expanded(child: SizedBox()),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(40),
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Icon(
-                              Icons.more_vert_rounded,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }
@@ -641,6 +649,47 @@ class ListModelForDeletedScreen extends StatelessWidget {
                     color: Colors.grey.shade800,
                   ),
                 ),
+              ),
+              Expanded(child: SizedBox()),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Icon(
+                    Icons.restore_outlined,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                onTap: () {
+                  listModel.isDeleted = false;
+                  if (listModel.isArchive) {
+                    ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
+                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
+                  } else if (listModel.isFavorite) {
+                    ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
+                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
+                  } else if (listModel.isPinned) {
+                    ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
+                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
+                  } else {
+                    ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
+                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
+                  }
+                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+                },
+              ),
+              InkWell(
+                borderRadius: BorderRadius.circular(40),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Icon(
+                    Icons.delete_outline,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                onTap: () {
+                  ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
+                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+                },
               ), // SizedBox(),
             ],
           ),

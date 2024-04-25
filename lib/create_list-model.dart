@@ -20,229 +20,235 @@ class _NewListScreenState extends State<NewListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: mainColor,
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              height: 60,
-              alignment: AlignmentDirectional.centerStart,
-              // color: Colors.grey.shade300,
-              child: Row(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool value) {
+        onBackPressed();
+      },
+      child: Scaffold(
+        body: Container(
+          color: mainColor,
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                height: 60,
+                alignment: AlignmentDirectional.centerStart,
+                // color: Colors.grey.shade300,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: onBackPressed,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    InkWell(
+                      onTap: onFavorite,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(40),
+                      onTap: onPinned,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          CupertinoIcons.pin,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        CupertinoIcons.bell,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: onArchived,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.archive_outlined,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    // SizedBox(),
+                  ],
+                ),
+              ),
+              Row(
                 children: [
-                  InkWell(
-                    onTap: onBackPressed,
+                  Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                  const Expanded(child: SizedBox()),
-                  InkWell(
-                    onTap: onFavorite,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.favorite_border,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(40),
-                    onTap: onPinned,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        CupertinoIcons.pin,
-                        color: Colors.grey.shade800,
+                      padding: const EdgeInsets.all(20.0),
+                      child: TextField(
+                        controller: titleController,
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        decoration: const InputDecoration(
+                          hintText: 'Title',
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(10),
                     child: Icon(
-                      CupertinoIcons.bell,
+                      Icons.more_vert_rounded,
                       color: Colors.grey.shade800,
                     ),
                   ),
-                  InkWell(
-                    onTap: onArchived,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.archive_outlined,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                  // SizedBox(),
                 ],
               ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: TextField(
-                      controller: titleController,
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w300,
+              InkWell(
+                onTap: () {
+                  itemControllers.add(TextEditingController());
+                  ListItem item = ListItem(name: '');
+                  items.add(item);
+                  debugPrint("_NewListScreenState: build $items");
+                  setState(() {});
+                },
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 40,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 65.0),
+                        child: Icon(
+                          CupertinoIcons.plus,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
-                      decoration: const InputDecoration(
-                        hintText: 'Title',
-                        border: InputBorder.none,
+                      const Padding(
+                        padding: EdgeInsets.only(left: 15.0),
+                        child: Text(
+                          'List item',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Icon(
-                    Icons.more_vert_rounded,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-              ],
-            ),
-            InkWell(
-              onTap: () {
-                itemControllers.add(TextEditingController());
-                ListItem item = ListItem(name: '');
-                items.add(item);
-                debugPrint("_NewListScreenState: build $items");
-                setState(() {});
-              },
-              child: SizedBox(
-                width: double.infinity,
-                height: 40,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 65.0),
-                      child: Icon(
-                        CupertinoIcons.plus,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 15.0),
-                      child: Text(
-                        'List item',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ],
                 ),
               ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for (int i = 0; i < itemControllers.length; i++)
-                      SizedBox(
-                        height: 40,
-                        width: double.infinity,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 10),
-                              child: Icon(
-                                Icons.drag_indicator_sharp,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                            InkWell(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10.0, right: 10),
-                                  child: items[i].ticked
-                                      ? const Icon(Icons.check_box_outlined)
-                                      : const Icon(Icons.check_box_outline_blank),
-                                ),
-                                onTap: () {
-                                  items[i].ticked = !items[i].ticked;
-                                  debugPrint("_NewListScreenState: build ${items[i].ticked}");
-                                  setState(() {});
-                                }),
-                            Expanded(
-                              child: TextField(
-                                controller: itemControllers[i],
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0, right: 10),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < itemControllers.length; i++)
+                        SizedBox(
+                          height: 40,
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20.0, right: 10),
                                 child: Icon(
-                                  CupertinoIcons.xmark,
+                                  Icons.drag_indicator_sharp,
                                   color: Colors.grey.shade800,
                                 ),
                               ),
-                              onTap: () {
-                                itemControllers.removeAt(i);
-                                items.removeAt(i);
-                                setState(() {});
-                              },
-                            ),
-                          ],
+                              InkWell(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0, right: 10),
+                                    child: items[i].ticked
+                                        ? const Icon(Icons.check_box_outlined)
+                                        : const Icon(Icons.check_box_outline_blank),
+                                  ),
+                                  onTap: () {
+                                    items[i].ticked = !items[i].ticked;
+                                    debugPrint("_NewListScreenState: build ${items[i].ticked}");
+                                    setState(() {});
+                                  }),
+                              Expanded(
+                                child: TextField(
+                                  controller: itemControllers[i],
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10.0, right: 10),
+                                  child: Icon(
+                                    CupertinoIcons.xmark,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                                onTap: () {
+                                  itemControllers.removeAt(i);
+                                  items.removeAt(i);
+                                  setState(() {});
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: 45,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      borderRadius: BorderRadius.circular(40),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.list,
+                          color: Colors.grey.shade800,
                         ),
                       ),
+                    ),
+                    InkWell(
+                      onTap: _pickAColor,
+                      borderRadius: BorderRadius.circular(40),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          CupertinoIcons.paintbrush,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(40),
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Icon(
+                          Icons.more_vert_rounded,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              height: 45,
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(40),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.list,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: _pickAColor,
-                    borderRadius: BorderRadius.circular(40),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        CupertinoIcons.paintbrush,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                  Expanded(child: SizedBox()),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(40),
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Icon(
-                        Icons.more_vert_rounded,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -362,7 +368,7 @@ class _NewListScreenState extends State<NewListScreen> {
       return;
     }
     listModel.isArchive = true;
-   ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
+    ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
 
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }

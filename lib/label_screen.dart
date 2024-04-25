@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/list_model.dart';
-import 'package:sanjay_notes/list_model_db.dart';
-import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'data_manager.dart';
+import 'list_model.dart';
+import 'list_model_db.dart';
 import 'note.dart';
+import 'notes_db.dart';
 
 class LabelScreen extends StatefulWidget {
   final List<String> selectedIds;
@@ -70,62 +70,69 @@ class _LabelScreenState extends State<LabelScreen> {
   }
 
   onBackPress() {
+    List<Note> notes = DataManager().notes.where((element) => widget.selectedIds.contains(element.id)).toList();
+    List<Note> pinnedNotes =
+        DataManager().pinnedNotes.where((element) => widget.selectedIds.contains(element.id)).toList();
+    List<Note> archivedNotes =
+        DataManager().archivedNotes.where((element) => widget.selectedIds.contains(element.id)).toList();
+    List<Note> favoriteNotes =
+        DataManager().favoriteNotes.where((element) => widget.selectedIds.contains(element.id)).toList();
+
+    List<ListModel> listModels =
+        DataManager().listModels.where((element) => widget.selectedIds.contains(element.id)).toList();
+    List<ListModel> pinnedListModels =
+        DataManager().pinnedListModels.where((element) => widget.selectedIds.contains(element.id)).toList();
+    List<ListModel> archivedListModels =
+        DataManager().archivedListModels.where((element) => widget.selectedIds.contains(element.id)).toList();
+    List<ListModel> favoriteListModels =
+        DataManager().favoriteListModels.where((element) => widget.selectedIds.contains(element.id)).toList();
+
     for (int i = 0; i < selectedLabels.length; i++) {
-      for (Note note in DataManager().notes) {
-        if (widget.selectedIds.contains(note.id)) {
-          if (!note.labels.contains(selectedLabels[i])) {
-            note.labels.add(selectedLabels[i]);
-            NotesDb.removeNote(NotesDb.notesKey, note.id);
-            NotesDb.addNote(NotesDb.notesKey, note);
-          }
-        }
+      for (Note note in notes) {
+        if (!note.labels.contains(selectedLabels[i])) note.labels.add(selectedLabels[i]);
       }
-      for (Note note in DataManager().archivedNotes) {
-        if (widget.selectedIds.contains(note.id)) {
-          if (!note.labels.contains(selectedLabels[i])) {
-            note.labels.add(selectedLabels[i]);
-            NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
-            NotesDb.addNote(NotesDb.archivedNotesKey, note);
-          }
-        }
+      for (Note note in archivedNotes) {
+        if (!note.labels.contains(selectedLabels[i])) note.labels.add(selectedLabels[i]);
       }
-      for (Note note in DataManager().pinnedNotes) {
-        if (widget.selectedIds.contains(note.id)) {
-          if (!note.labels.contains(selectedLabels[i])) {
-            note.labels.add(selectedLabels[i]);
-            NotesDb.removeNote(NotesDb.pinnedNotesKey, note.id);
-            NotesDb.addNote(NotesDb.pinnedNotesKey, note);
-          }
-        }
+      for (Note note in pinnedNotes) {
+        if (!note.labels.contains(selectedLabels[i])) note.labels.add(selectedLabels[i]);
       }
-      for (ListModel listModel in DataManager().listModels) {
-        if (widget.selectedIds.contains(listModel.id)) {
-          if (!listModel.labels.contains(selectedLabels[i])) {
-            listModel.labels.add(selectedLabels[i]);
-            ListModelsDb.removeListModel(ListModelsDb.listModelKey, listModel.id);
-            ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
-          }
-        }
+      for (Note note in favoriteNotes) {
+        if (!note.labels.contains(selectedLabels[i])) note.labels.add(selectedLabels[i]);
       }
-      for (ListModel listModel in DataManager().archivedListModels) {
-        if (widget.selectedIds.contains(listModel.id)) {
-          if (!listModel.labels.contains(selectedLabels[i])) {
-            listModel.labels.add(selectedLabels[i]);
-            ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
-            ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
-          }
-        }
+      for (ListModel listModel in listModels) {
+        if (!listModel.labels.contains(selectedLabels[i])) listModel.labels.add(selectedLabels[i]);
       }
-      for (ListModel listModel in DataManager().pinnedListModels) {
-        if (widget.selectedIds.contains(listModel.id)) {
-          if (!listModel.labels.contains(selectedLabels[i])) {
-            listModel.labels.add(selectedLabels[i]);
-            ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, listModel.id);
-            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
-          }
-        }
+      for (ListModel listModel in archivedListModels) {
+        if (!listModel.labels.contains(selectedLabels[i])) listModel.labels.add(selectedLabels[i]);
+      }
+      for (ListModel listModel in pinnedListModels) {
+        if (!listModel.labels.contains(selectedLabels[i])) listModel.labels.add(selectedLabels[i]);
+      }
+      for (ListModel listModel in favoriteListModels) {
+        if (!listModel.labels.contains(selectedLabels[i])) listModel.labels.add(selectedLabels[i]);
       }
     }
+
+    NotesDb.removeNotes(NotesDb.notesKey, widget.selectedIds);
+    NotesDb.addNotes(NotesDb.notesKey, notes);
+
+    NotesDb.removeNotes(NotesDb.archivedNotesKey, widget.selectedIds);
+    NotesDb.addNotes(NotesDb.archivedNotesKey, archivedNotes);
+    NotesDb.removeNotes(NotesDb.pinnedNotesKey, widget.selectedIds);
+    NotesDb.addNotes(NotesDb.pinnedNotesKey, pinnedNotes);
+    NotesDb.removeNotes(NotesDb.favoriteNotesKey, widget.selectedIds);
+    NotesDb.addNotes(NotesDb.favoriteNotesKey, favoriteNotes);
+
+    ListModelsDb.removeListModels(ListModelsDb.listModelKey, widget.selectedIds);
+    ListModelsDb.addListModels(ListModelsDb.listModelKey, listModels);
+    ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, widget.selectedIds);
+    ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, archivedListModels);
+    ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, widget.selectedIds);
+    ListModelsDb.addListModels(ListModelsDb.pinnedListModelKey, pinnedListModels);
+    ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, widget.selectedIds);
+    ListModelsDb.addListModels(ListModelsDb.favoriteListModelKey, favoriteListModels);
+
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
 }

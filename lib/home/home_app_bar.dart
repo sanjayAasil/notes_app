@@ -197,11 +197,9 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isArchive = true;
-      NotesDb.addNote(NotesDb.archivedNotesKey, note);
     }
     for (Note note in pinnedNotes) {
       note.isArchive = true;
-      NotesDb.addNote(NotesDb.archivedNotesKey, note);
     }
     for (ListModel listModel in listModels) {
       listModel.isArchive = true;
@@ -209,44 +207,63 @@ class SelectedHomeAppBar extends StatelessWidget {
     for (ListModel listModel in pinnedListModels) {
       listModel.isArchive = true;
     }
-    ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
-    ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, pinnedListModels);
 
-    NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
-    NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
-
-    ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
-    NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
+    if (notes.isNotEmpty) {
+      NotesDb.addNotes(NotesDb.archivedNotesKey, notes);
+      NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
+    }
+    if (pinnedNotes.isNotEmpty) {
+      NotesDb.addNotes(NotesDb.archivedNotesKey, pinnedNotes);
+      NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
+      ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
+    }
+    if (pinnedListModels.isNotEmpty) {
+      ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, pinnedListModels);
+      ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, selectedIds);
+    }
 
     selectedIds.clear();
     onSelectedIdsCleared?.call();
   }
 
   onDeleted() {
-
     List<Note> notes = DataManager().notes.where((element) => selectedIds.contains(element.id)).toList();
     List<Note> pinnedNotes = DataManager().pinnedNotes.where((element) => selectedIds.contains(element.id)).toList();
     List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();
     List<ListModel> pinnedListModels =
         DataManager().pinnedListModels.where((element) => selectedIds.contains(element.id)).toList();
 
-    notes.map((e) => e.isDeleted = true);
-    debugPrint("SelectedHomeAppBar onDeleted: ererergrg  ${notes.map((e) => e.isDeleted)}");
-    pinnedNotes.map((e) => e.isDeleted = true);
-    listModels.map((e) => e.isDeleted = true);
-    pinnedListModels.map((e) => e.isDeleted = true);
-
-    NotesDb.addNotes(NotesDb.deletedNotesKey, notes);
-    NotesDb.addNotes(NotesDb.deletedNotesKey, pinnedNotes);
-    ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
-    ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, pinnedListModels);
-
-    NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
-    NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
-    ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
-    ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, selectedIds);
-
-    debugPrint("SelectedHomeAppBar onDeleted: ${DataManager().deletedNotes.map((e) => e.isDeleted)}");
+    for (Note note in notes) {
+      note.isDeleted = true;
+    }
+    for (Note note in pinnedNotes) {
+      note.isDeleted = true;
+    }
+    for (ListModel listModel in listModels) {
+      listModel.isDeleted = true;
+    }
+    for (ListModel listModel in pinnedListModels) {
+      listModel.isDeleted = true;
+    }
+    if (notes.isNotEmpty) {
+      NotesDb.addNotes(NotesDb.deletedNotesKey, notes);
+      NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
+    }
+    if (pinnedNotes.isNotEmpty) {
+      NotesDb.addNotes(NotesDb.deletedNotesKey, pinnedNotes);
+      NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
+      ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
+    }
+    if (pinnedListModels.isNotEmpty) {
+      ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, pinnedListModels);
+      ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, selectedIds);
+    }
 
     selectedIds.clear();
     onSelectedIdsCleared?.call();
@@ -257,16 +274,20 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isPinned = true;
-      NotesDb.addNote(NotesDb.pinnedNotesKey, note);
-      NotesDb.removeNote(NotesDb.notesKey, note.id);
+    }
+    if (notes.isNotEmpty) {
+      NotesDb.addNotes(NotesDb.pinnedNotesKey, notes);
+      NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
     }
 
     List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
-      ListModelsDb.addListModel(NotesDb.pinnedNotesKey, listModel);
-      ListModelsDb.removeListModel(ListModelsDb.listModelKey, listModel.id);
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.addListModels(NotesDb.pinnedNotesKey, listModels);
+      ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
     }
 
     selectedIds.clear();

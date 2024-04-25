@@ -37,8 +37,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvoked: (bool value) => onBackPressed(),
+      canPop: widget.note != null && widget.note!.isDeleted,
+      onPopInvoked: (bool value) {
+        if (widget.note == null || (widget.note != null && !widget.note!.isDeleted)) {
+          debugPrint("_ManageNotePageState build: check onBack ");
+          onBackPressed();
+        }
+      },
       child: Scaffold(
         body: Container(
           color: mainColor,
@@ -586,7 +591,10 @@ class NoteForDeletedScreen extends StatelessWidget {
                     color: Colors.grey.shade800,
                   ),
                 ),
-                onTap: () => Navigator.of(context).pop(),
+                onTap: () {
+                  debugPrint("NoteForDeletedScreen build: checkkkkk");
+                  Navigator.of(context).pop();
+                },
               ),
               Expanded(child: SizedBox()),
               InkWell(
@@ -598,11 +606,15 @@ class NoteForDeletedScreen extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
+                  note.isDeleted = false;
                   if (note.isArchive) {
                     NotesDb.addNote(NotesDb.archivedNotesKey, note);
                     NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
                   } else if (note.isPinned) {
                     NotesDb.addNote(NotesDb.pinnedNotesKey, note);
+                    NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
+                  } else if (note.isFavorite) {
+                    NotesDb.addNote(NotesDb.favoriteNotesKey, note);
                     NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
                   } else {
                     NotesDb.addNote(NotesDb.notesKey, note);

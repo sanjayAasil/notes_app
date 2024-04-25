@@ -96,7 +96,8 @@ class SelectedArchiveAppBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+                selectedIds.clear();
+                onSelectedIdsCleared?.call();
               },
             ),
             Expanded(
@@ -214,8 +215,10 @@ class SelectedArchiveAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isPinned = true;
-      NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
-      NotesDb.addNote(NotesDb.archivedNotesKey, note);
+    }
+    if (notes.isNotEmpty) {
+      NotesDb.removeNotes(NotesDb.archivedNotesKey, selectedIds);
+      NotesDb.addNotes(NotesDb.archivedNotesKey, notes);
     }
 
     List<ListModel> listModels =
@@ -223,8 +226,10 @@ class SelectedArchiveAppBar extends StatelessWidget {
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
-      ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
-      ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
+      ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
     }
 
     selectedIds.clear();
