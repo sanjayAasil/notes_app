@@ -30,7 +30,9 @@ class Note {
   }) =>
       Note._(id: const Uuid().v4(), title: title, note: note);
 
-  factory Note.fromJson(Map<String, dynamic> json) => Note._(
+  factory Note.fromJson(Map<String, dynamic> json) {
+    debugPrint("Note fromJson: $json");
+    return Note._(
         id: json['id'],
         title: json['title'],
         note: json['note'],
@@ -41,6 +43,7 @@ class Note {
         isFavorite: json['isFavorite'],
         labels: List.from(json['labels']),
       );
+  }
 
   Map<String, dynamic> get json => {
         'id': id,

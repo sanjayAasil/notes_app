@@ -175,12 +175,14 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                 ),
               ),
               onTap: () {
+                debugPrint("SelectedFavoriteAppBar build: ");
 
                 List<Note> notes =
                     DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isDeleted = true;
                 }
+                debugPrint("SelectedFavoriteAppBar build: ${notes.map((e) => e.json)}");
                 if (notes.isNotEmpty) {
                   NotesDb.addNotes(ListModelsDb.deletedListModelKey, notes);
                   NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);

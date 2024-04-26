@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_manager.dart';
 import 'note.dart';
@@ -16,6 +17,8 @@ class NotesDb {
 
   static List<Note> getAllNotes(String key) {
     String? data = prefs.getString(key);
+
+    log('$key - $data');
 
     if (data == null) return [];
 

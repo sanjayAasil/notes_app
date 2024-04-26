@@ -36,4 +36,6 @@ class DataManager {
   bool archiveScreenView = true;
 
   bool favoriteScreenView = true;
+
+  bool addToFavorite = false;
 }
