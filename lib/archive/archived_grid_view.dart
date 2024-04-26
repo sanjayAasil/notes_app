@@ -78,11 +78,12 @@ class ArchivedGridView extends StatelessWidget {
                                 color: DataManager().archivedNotes[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: selectedIds.contains(DataManager().archivedNotes[i].id)
-                                      ? Colors.blue.shade800
-                                      : Colors.grey,
-                                  width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 0,
-                                ),
+                                    color: selectedIds.contains(DataManager().archivedNotes[i].id)
+                                        ? Colors.blue.shade800
+                                        : DataManager().archivedNotes[i].color == Colors.white
+                                        ? Colors.grey
+                                        : Colors.transparent,
+                                    width: selectedIds.contains( DataManager().archivedNotes[i].id) ? 3.0 : 0),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,14 +165,15 @@ class ArchivedGridView extends StatelessWidget {
                               width: double.infinity,
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: DataManager().archivedNotes[i].color,
+                                color: DataManager().archivedListModels[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: selectedIds.contains(DataManager().archivedListModels[i].id)
-                                      ? Colors.blue.shade800
-                                      : Colors.grey,
-                                  width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 0,
-                                ),
+                                    color: selectedIds.contains(DataManager().archivedListModels[i].id)
+                                        ? Colors.blue.shade800
+                                        : DataManager().archivedListModels[i].color == Colors.white
+                                        ? Colors.grey
+                                        : Colors.transparent,
+                                    width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 0),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,11 +293,12 @@ class ArchivedGridView extends StatelessWidget {
                               color: DataManager().archivedNotes[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(DataManager().archivedNotes[i].id)
-                                    ? Colors.blue.shade800
-                                    : Colors.grey,
-                                width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 0,
-                              ),
+                                  color: selectedIds.contains(DataManager().archivedNotes[i].id)
+                                      ? Colors.blue.shade800
+                                      : DataManager().archivedNotes[i].color == Colors.white
+                                      ? Colors.grey
+                                      : Colors.transparent,
+                                  width: selectedIds.contains(DataManager().archivedNotes[i].id) ? 3.0 : 0),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,11 +379,12 @@ class ArchivedGridView extends StatelessWidget {
                               color: DataManager().archivedListModels[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(DataManager().archivedListModels[i].id)
-                                    ? Colors.blue.shade800
-                                    : Colors.grey,
-                                width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 0,
-                              ),
+                                  color: selectedIds.contains(DataManager().archivedListModels[i].id)
+                                      ? Colors.blue.shade800
+                                      : DataManager().archivedListModels[i].color == Colors.white
+                                      ? Colors.grey
+                                      : Colors.transparent,
+                                  width: selectedIds.contains(DataManager().archivedListModels[i].id) ? 3.0 : 0),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

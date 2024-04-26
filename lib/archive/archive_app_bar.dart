@@ -195,15 +195,19 @@ class SelectedArchiveAppBar extends StatelessWidget {
                   NotesDb.addNote(NotesDb.deletedNotesKey, note);
                 }
 
-                NotesDb.removeNotes(NotesDb.archivedNotesKey, selectedIds);
+                if (notes.isNotEmpty) {
+                  NotesDb.removeNotes(NotesDb.archivedNotesKey, selectedIds);
+                }
 
                 List<ListModel> listModels =
                     DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
                   listModel.isDeleted = true;
                 }
-                ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
-                ListModelsDb.addListModels(NotesDb.deletedNotesKey, listModels);
+                if (listModels.isNotEmpty) {
+                  ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
+                  ListModelsDb.addListModels(NotesDb.deletedNotesKey, listModels);
+                }
                 selectedIds.clear();
                 onSelectedIdsCleared?.call();
               },

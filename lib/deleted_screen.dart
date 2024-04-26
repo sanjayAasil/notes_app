@@ -115,7 +115,9 @@ class _DeletedScreenState extends State<DeletedScreen> {
                             note.isDeleted = false;
                             NotesDb.addNote(NotesDb.notesKey, note);
                           }
-                          NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
+                        }
+                        if (notes.isNotEmpty) {
+                          NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
                         }
 
                         List<ListModel> listModels = DataManager()
@@ -137,8 +139,9 @@ class _DeletedScreenState extends State<DeletedScreen> {
                             listModel.isDeleted = false;
                             ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
                           }
-
-                          ListModelsDb.removeListModel(NotesDb.deletedNotesKey, listModel.id);
+                        }
+                        if (listModels.isNotEmpty) {
+                          ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
                         }
                         selectedIds.clear();
                         setState(() {});
@@ -154,8 +157,12 @@ class _DeletedScreenState extends State<DeletedScreen> {
                         ),
                       ),
                       onTap: () {
-                        NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
-                        ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
+                        if (DataManager().deletedNotes.isNotEmpty) {
+                          NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
+                        }
+                        if (DataManager().deletedListModel.isNotEmpty) {
+                          ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
+                        }
                         selectedIds.clear();
                         setState(() {});
                       },
@@ -219,9 +226,12 @@ class _DeletedScreenState extends State<DeletedScreen> {
                               color: note.color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
-                                width: selectedIds.contains(note.id) ? 3.0 : 0,
-                              ),
+                                  color: selectedIds.contains(note.id)
+                                      ? Colors.blue.shade800
+                                      : note.color == Colors.white
+                                          ? Colors.grey
+                                          : Colors.transparent,
+                                  width: selectedIds.contains(note.id) ? 3.0 : 0),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,9 +285,12 @@ class _DeletedScreenState extends State<DeletedScreen> {
                               color: listModel.color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
-                                width: selectedIds.contains(listModel.id) ? 3.0 : 0,
-                              ),
+                                  color: selectedIds.contains(listModel.id)
+                                      ? Colors.blue.shade800
+                                      : listModel.color == Colors.white
+                                          ? Colors.grey
+                                          : Colors.transparent,
+                                  width: selectedIds.contains(listModel.id) ? 3.0 : 0),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

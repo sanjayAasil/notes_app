@@ -77,11 +77,12 @@ class FavoriteGridView extends StatelessWidget {
                                 color: DataManager().favoriteNotes[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: selectedIds.contains(DataManager().favoriteNotes[i].id)
-                                      ? Colors.blue.shade800
-                                      : Colors.grey,
-                                  width: selectedIds.contains(DataManager().favoriteNotes[i].id) ? 3.0 : 1.0,
-                                ),
+                                    color: selectedIds.contains(DataManager().favoriteNotes[i].id)
+                                        ? Colors.blue.shade800
+                                        : DataManager().favoriteNotes[i].color == Colors.white
+                                            ? Colors.grey
+                                            : Colors.transparent,
+                                    width: selectedIds.contains(DataManager().favoriteNotes[i].id) ? 3.0 : 0),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,11 +167,12 @@ class FavoriteGridView extends StatelessWidget {
                                 color: DataManager().favoriteListModels[i].color,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: selectedIds.contains(DataManager().favoriteListModels[i].id)
-                                      ? Colors.blue.shade800
-                                      : Colors.grey,
-                                  width: selectedIds.contains(DataManager().favoriteListModels[i].id) ? 3.0 : 1.0,
-                                ),
+                                    color: selectedIds.contains(DataManager().favoriteListModels[i].id)
+                                        ? Colors.blue.shade800
+                                        : DataManager().favoriteListModels[i].color == Colors.white
+                                            ? Colors.grey
+                                            : Colors.transparent,
+                                    width: selectedIds.contains(DataManager().favoriteListModels[i].id) ? 3.0 : 0),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,11 +292,12 @@ class FavoriteGridView extends StatelessWidget {
                               color: DataManager().favoriteNotes[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(DataManager().favoriteNotes[i].id)
-                                    ? Colors.blue.shade800
-                                    : Colors.grey,
-                                width: selectedIds.contains(DataManager().favoriteNotes[i].id) ? 3.0 : 1.0,
-                              ),
+                                  color: selectedIds.contains(DataManager().favoriteNotes[i].id)
+                                      ? Colors.blue.shade800
+                                      : DataManager().favoriteNotes[i].color == Colors.white
+                                          ? Colors.grey
+                                          : Colors.transparent,
+                                  width: selectedIds.contains(DataManager().favoriteNotes[i].id) ? 3.0 : 0),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,11 +378,12 @@ class FavoriteGridView extends StatelessWidget {
                               color: DataManager().favoriteListModels[i].color,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selectedIds.contains(DataManager().favoriteListModels[i].id)
-                                    ? Colors.blue.shade800
-                                    : Colors.grey,
-                                width: selectedIds.contains(DataManager().favoriteListModels[i].id) ? 3.0 : 1.0,
-                              ),
+                                  color: selectedIds.contains(DataManager().favoriteNotes[i].id)
+                                      ? Colors.blue.shade800
+                                      : DataManager().favoriteNotes[i].color == Colors.white
+                                          ? Colors.grey
+                                          : Colors.transparent,
+                                  width: selectedIds.contains(DataManager().favoriteNotes[i].id) ? 3.0 : 0),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

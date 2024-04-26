@@ -64,11 +64,12 @@ class HomeScreenGridView extends StatelessWidget {
                         color: DataManager().pinnedNotes[i].color,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: selectedIds.contains(DataManager().pinnedNotes[i].id)
-                              ? Colors.blue.shade800
-                              : Colors.grey,
-                          width: selectedIds.contains(DataManager().pinnedNotes[i].id) ? 3.0 : 0,
-                        ),
+                            color: selectedIds.contains(DataManager().pinnedNotes[i].id)
+                                ? Colors.blue.shade800
+                                : DataManager().pinnedNotes[i].color == Colors.white
+                                    ? Colors.grey
+                                    : Colors.transparent,
+                            width: selectedIds.contains(DataManager().pinnedNotes[i].id) ? 3.0 : 0),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,11 +150,12 @@ class HomeScreenGridView extends StatelessWidget {
                         color: DataManager().pinnedListModels[i].color,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: selectedIds.contains(DataManager().pinnedListModels[i].id)
-                              ? Colors.blue.shade800
-                              : Colors.grey,
-                          width: selectedIds.contains(DataManager().pinnedListModels[i].id) ? 3.0 : 0,
-                        ),
+                            color: selectedIds.contains(DataManager().pinnedListModels[i].id)
+                                ? Colors.blue.shade800
+                                : DataManager().pinnedListModels[i].color == Colors.white
+                                    ? Colors.grey
+                                    : Colors.transparent,
+                            width: selectedIds.contains(DataManager().pinnedListModels[i].id) ? 3.0 : 0),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,9 +275,12 @@ class HomeScreenGridView extends StatelessWidget {
                           color: DataManager().notes[i].color,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: selectedIds.contains(DataManager().notes[i].id) ? Colors.blue.shade800 : Colors.grey,
-                            width: selectedIds.contains(DataManager().notes[i].id) ? 3.0 : 0,
-                          ),
+                              color: selectedIds.contains(DataManager().notes[i].id)
+                                  ? Colors.blue.shade800
+                                  : DataManager().notes[i].color == Colors.white
+                                      ? Colors.grey
+                                      : Colors.transparent,
+                              width: selectedIds.contains(DataManager().notes[i].id) ? 3.0 : 0),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,11 +355,12 @@ class HomeScreenGridView extends StatelessWidget {
                           color: DataManager().listModels[i].color,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: selectedIds.contains(DataManager().listModels[i].id)
-                                ? Colors.blue.shade800
-                                : Colors.grey,
-                            width: selectedIds.contains(DataManager().listModels[i].id) ? 3.0 : 0,
-                          ),
+                              color: selectedIds.contains(DataManager().listModels[i].id)
+                                  ? Colors.blue.shade800
+                                  : DataManager().listModels[i].color == Colors.white
+                                      ? Colors.grey
+                                      : Colors.transparent,
+                              width: selectedIds.contains(DataManager().listModels[i].id) ? 3.0 : 0),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

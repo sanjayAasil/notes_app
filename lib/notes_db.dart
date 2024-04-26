@@ -95,6 +95,7 @@ class NotesDb {
 
   static removeNotes(String key, List<String> noteIds) {
     List<Note> notes = getAllNotes(key);
+
     notes.removeWhere((element) => noteIds.contains(element.id));
 
     List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();

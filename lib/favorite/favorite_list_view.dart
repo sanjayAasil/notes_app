@@ -73,9 +73,12 @@ class FavoriteListView extends StatelessWidget {
                             color: note.color,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
-                              width: selectedIds.contains(note.id) ? 3.0 : 1.0,
-                            ),
+                                color: selectedIds.contains(note.id)
+                                    ? Colors.blue.shade800
+                                    : note.color == Colors.white
+                                    ? Colors.grey
+                                    : Colors.transparent,
+                                width: selectedIds.contains(note.id) ? 3.0 : 0),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,9 +160,12 @@ class FavoriteListView extends StatelessWidget {
                             color: listModel.color,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
-                              width: selectedIds.contains(listModel.id) ? 3.0 : 1.0,
-                            ),
+                                color: selectedIds.contains(listModel.id)
+                                    ? Colors.blue.shade800
+                                    : listModel.color == Colors.white
+                                    ? Colors.grey
+                                    : Colors.transparent,
+                                width: selectedIds.contains(listModel.id) ? 3.0 : 0),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,9 +266,12 @@ class FavoriteListView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                             color: note.color,
                             border: Border.all(
-                              color: selectedIds.contains(note.id) ? Colors.blue.shade800 : Colors.grey,
-                              width: selectedIds.contains(note.id) ? 3.0 : 1.0,
-                            ),
+                                color: selectedIds.contains(note.id)
+                                    ? Colors.blue.shade800
+                                    : note.color == Colors.white
+                                    ? Colors.grey
+                                    : Colors.transparent,
+                                width: selectedIds.contains(note.id) ? 3.0 : 0),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,9 +347,12 @@ class FavoriteListView extends StatelessWidget {
                             color: listModel.color,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: selectedIds.contains(listModel.id) ? Colors.blue.shade800 : Colors.grey,
-                              width: selectedIds.contains(listModel.id) ? 3.0 : 1.0,
-                            ),
+                                color: selectedIds.contains(listModel.id)
+                                    ? Colors.blue.shade800
+                                    : listModel.color == Colors.white
+                                    ? Colors.grey
+                                    : Colors.transparent,
+                                width: selectedIds.contains(listModel.id) ? 3.0 : 0),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
