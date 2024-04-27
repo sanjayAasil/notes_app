@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -16,6 +18,13 @@ class _NewListScreenState extends State<NewListScreen> {
   List<TextEditingController> itemControllers = [];
   TextEditingController titleController = TextEditingController();
   List<ListItem> items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    DataManager().addToFavorite = false;
+    DataManager().addToPin = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,25 +56,37 @@ class _NewListScreenState extends State<NewListScreen> {
                       ),
                     ),
                     const Expanded(child: SizedBox()),
-                    InkWell(
-                      onTap: onFavorite,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.favorite_border,
-                          color: Colors.grey.shade800,
+                    StatefulBuilder(builder: (context, stateful) {
+                      return InkWell(
+                        onTap: () {
+                          DataManager().addToFavorite = !DataManager().addToFavorite;
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DataManager().addToFavorite
+                              ? Icon(
+                                  Icons.favorite,
+                                  color: Colors.red.shade800,
+                                )
+                              : Icon(Icons.favorite_border),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                     InkWell(
                       borderRadius: BorderRadius.circular(40),
-                      onTap: onPinned,
+                      onTap: () {
+                        DataManager().addToPin = !DataManager().addToPin;
+                        setState(() {});
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          CupertinoIcons.pin,
-                          color: Colors.grey.shade800,
-                        ),
+                        child: DataManager().addToPin
+                            ? Icon(
+                                CupertinoIcons.pin_fill,
+                                color: Colors.grey.shade800,
+                              )
+                            : Icon(CupertinoIcons.pin),
                       ),
                     ),
                     Padding(
@@ -351,7 +372,22 @@ class _NewListScreenState extends State<NewListScreen> {
       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       return;
     }
-    ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
+    if (DataManager().addToFavorite) {
+      if (DataManager().addToPin) {
+        listModel.isPinned = true;
+        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
+      } else {
+        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
+      }
+    } else {
+      if (DataManager().addToPin) {
+        listModel.isPinned = true;
+        ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
+      } else {
+        ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
+      }
+    }
+
 
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
@@ -369,39 +405,6 @@ class _NewListScreenState extends State<NewListScreen> {
     listModel.isArchive = true;
     ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
 
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-  }
-
-  onPinned() {
-    for (int i = 0; i < itemControllers.length; i++) {
-      if (itemControllers.isNotEmpty) {
-        items[i].name = itemControllers[i].text.trim();
-      }
-    }
-    ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
-    listModel.color = mainColor;
-    if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
-      return;
-    }
-    listModel.isPinned = true;
-    ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-  }
-
-  onFavorite() {
-    for (int i = 0; i < itemControllers.length; i++) {
-      if (itemControllers.isNotEmpty) {
-        items[i].name = itemControllers[i].text.trim();
-      }
-    }
-    ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
-    listModel.color = mainColor;
-    listModel.isFavorite = true;
-    if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
-      return;
-    }
-
-    ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
 }

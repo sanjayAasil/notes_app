@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -31,6 +32,8 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
       itemTicked.add(listItem.ticked);
       debugPrint("_ViewOrEditListModelState: initState $itemNameControllers");
     }
+    DataManager().addToFavorite = widget.listModel.isFavorite ? true : false;
+    DataManager().addToPin = widget.listModel.isPinned ? true : false;
   }
 
   @override
@@ -69,13 +72,16 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           ),
                           const Expanded(child: SizedBox()),
                           InkWell(
-                            onTap: onFavorite,
+                            onTap: () {
+                              DataManager().addToFavorite = !DataManager().addToFavorite;
+                              setState(() {});
+                            },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: widget.listModel.isFavorite
+                              child: DataManager().addToFavorite
                                   ? Icon(
                                       Icons.favorite,
-                                      color: Colors.grey.shade800,
+                                      color: Colors.red.shade800,
                                     )
                                   : Icon(
                                       Icons.favorite_border,
@@ -84,10 +90,13 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                             ),
                           ),
                           InkWell(
-                            onTap: onPinned,
+                            onTap: () {
+                              DataManager().addToPin = !DataManager().addToPin;
+                              setState(() {});
+                            },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: widget.listModel.isPinned
+                              child: DataManager().addToPin
                                   ? Icon(
                                       CupertinoIcons.pin_fill,
                                       color: Colors.grey.shade800,
@@ -415,23 +424,101 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
-        ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
-        ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
+        if (DataManager().addToFavorite) {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+            widget.listModel.isFavorite = true;
+            widget.listModel.isPinned = true;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+            widget.listModel.isFavorite = true;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          }
+        } else {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+            widget.listModel.isPinned = true;
+            ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+            widget.listModel.isPinned = false;
+            ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
+          }
+        }
 
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
       } else if (widget.listModel.isFavorite) {
-        ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
-        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+        if (DataManager().addToFavorite) {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+            widget.listModel.isPinned = true;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+            widget.listModel.isPinned = false;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          }
+        } else {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+            widget.listModel.isPinned = true;
+            widget.listModel.isFavorite = false;
+            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+            widget.listModel.isFavorite = false;
+            widget.listModel.isPinned = false;
+            ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
+          }
+        }
 
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.listModel.isPinned) {
-        ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
-        ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+        if (DataManager().addToFavorite) {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+            widget.listModel.isFavorite = true;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+            widget.listModel.isFavorite = true;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          }
+        } else {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+            widget.listModel.isPinned = false;
+            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+          }
+        }
 
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
-        ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
-        ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
+        if (DataManager().addToFavorite) {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+            widget.listModel.isFavorite = true;
+            widget.listModel.isPinned = true;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+            widget.listModel.isFavorite = true;
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
+          }
+        } else {
+          if (DataManager().addToPin) {
+            ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+            widget.listModel.isPinned = true;
+            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
+          }
+        }
 
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }

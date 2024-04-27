@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_manager.dart';
 import 'note.dart';
@@ -23,6 +24,7 @@ class NotesDb {
     if (data == null) return [];
 
     List decoded = jsonDecode(data);
+    debugPrint("NotesDb getAllNotes: checkzzz $key = ${data}");
 
     return decoded.map((e) => Note.fromJson(e)).toList();
   }

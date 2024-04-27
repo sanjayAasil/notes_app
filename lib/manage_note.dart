@@ -1,5 +1,3 @@
-import 'dart:js_util';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,6 +31,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
     DataManager().addToFavorite = widget.note == null
         ? false
         : widget.note!.isFavorite
+            ? true
+            : false;
+    DataManager().addToPin = widget.note == null
+        ? false
+        : widget.note!.isPinned
             ? true
             : false;
     if (widget.note == null) {
@@ -80,14 +83,17 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
                           StatefulBuilder(builder: (context, setState) {
                             return InkWell(
-                              onTap: () => onFavorite(setState),
+                              onTap: () {
+                                DataManager().addToFavorite = !DataManager().addToFavorite;
+                                setState(() {});
+                              },
                               borderRadius: BorderRadius.circular(40),
                               child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: DataManager().addToFavorite
                                       ? Icon(
                                           Icons.favorite,
-                                          color: Colors.grey.shade800,
+                                          color: Colors.red.shade800,
                                         )
                                       : Icon(
                                           Icons.favorite_border,
@@ -95,17 +101,23 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                         )),
                             );
                           }),
-                          InkWell(
-                            onTap: onPinned,
-                            borderRadius: BorderRadius.circular(40),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                CupertinoIcons.pin,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                          ),
+                          StatefulBuilder(builder: (context, setState) {
+                            return InkWell(
+                              onTap: () {
+                                DataManager().addToPin = !DataManager().addToPin;
+                                setState(() {});
+                              },
+                              borderRadius: BorderRadius.circular(40),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DataManager().addToPin
+                                      ? Icon(
+                                          CupertinoIcons.pin_fill,
+                                          color: Colors.grey.shade800,
+                                        )
+                                      : Icon(CupertinoIcons.pin)),
+                            );
+                          }),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Icon(
@@ -114,15 +126,23 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             ),
                           ),
                           InkWell(
-                            onTap: archiveButton,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.archive_outlined,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                          ),
+                              onTap: archiveButton,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: widget.note == null
+                                      ? Icon(
+                                          Icons.archive_outlined,
+                                          color: Colors.grey.shade800,
+                                        )
+                                      : widget.note!.isArchive
+                                          ? Icon(
+                                              Icons.unarchive_outlined,
+                                              color: Colors.grey.shade800,
+                                            )
+                                          : Icon(
+                                              Icons.archive_outlined,
+                                              color: Colors.grey.shade800,
+                                            ))),
                           // SizedBox(),
                         ],
                       ),
@@ -183,7 +203,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 45,
                       child: Row(
                         children: [
@@ -344,10 +364,20 @@ class _ManageNotePageState extends State<ManageNotePage> {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
         if (DataManager().addToFavorite) {
-          note.isFavorite = true;
+          if (DataManager().addToPin) {
+            note.isPinned = true;
+            note.isFavorite = true;
+          } else {
+            note.isFavorite = true;
+          }
           NotesDb.addNote(NotesDb.favoriteNotesKey, note);
         } else {
-          NotesDb.addNote(NotesDb.notesKey, note);
+          if (DataManager().addToPin) {
+            note.isPinned = true;
+            NotesDb.addNote(NotesDb.pinnedNotesKey, note);
+          } else {
+            NotesDb.addNote(NotesDb.notesKey, note);
+          }
         }
 
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
@@ -357,44 +387,101 @@ class _ManageNotePageState extends State<ManageNotePage> {
         widget.note!.color = mainColor;
         if (widget.note!.isArchive) {
           if (DataManager().addToFavorite) {
-            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-            widget.note!.isFavorite = true;
-            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+              widget.note!.isFavorite = true;
+              widget.note!.isPinned = true;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+              widget.note!.isFavorite = true;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            }
           } else {
-            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+              widget.note!.isPinned = true;
+              NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+              widget.note!.isPinned = false;
+              NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
+            }
           }
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         } else if (widget.note!.isFavorite) {
           if (DataManager().addToFavorite) {
-            NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+              widget.note!.isPinned = true;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+              widget.note!.isPinned = false;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            }
           } else {
-            NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-            widget.note!.isFavorite = false;
-            NotesDb.addNote(NotesDb.notesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+              widget.note!.isPinned = true;
+              widget.note!.isFavorite = false;
+              NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+              widget.note!.isFavorite = false;
+              widget.note!.isPinned = false;
+              NotesDb.addNote(NotesDb.notesKey, widget.note!);
+            }
           }
+
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
         } else if (widget.note!.isPinned) {
           if (DataManager().addToFavorite) {
-            NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
-            widget.note!.isFavorite = true;
-            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
+              widget.note!.isFavorite = true;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
+              widget.note!.isFavorite = true;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            }
           } else {
-            NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
+              NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
+              widget.note!.isPinned = false;
+              NotesDb.addNote(NotesDb.notesKey, widget.note!);
+            }
           }
+
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
         } else {
           if (DataManager().addToFavorite) {
-            NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
-            widget.note!.isFavorite = true;
-            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
+              widget.note!.isFavorite = true;
+              widget.note!.isPinned = true;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
+              widget.note!.isFavorite = true;
+              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+            }
           } else {
-            NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.notesKey, widget.note!);
+            if (DataManager().addToPin) {
+              NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
+              widget.note!.isPinned = true;
+              NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
+            } else {
+              NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
+              NotesDb.addNote(NotesDb.notesKey, widget.note!);
+            }
           }
+
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
         }
       }
@@ -452,10 +539,10 @@ class _ManageNotePageState extends State<ManageNotePage> {
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         } else if (widget.note!.isFavorite) {
           NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-
           widget.note!.color = mainColor;
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
+
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
         } else if (widget.note!.isPinned) {
           NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
@@ -473,115 +560,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
       }
     } else {
       return;
-    }
-  }
-
-  void onFavorite(Function(Function()) setState) {
-    DataManager().addToFavorite = !DataManager().addToFavorite;
-
-    setState(() {});
-
-    // if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
-    //   if (widget.note == null) {
-    //     Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
-    //     note.color = mainColor;
-    //     note.isFavorite = true;
-    //     NotesDb.addNote(NotesDb.favoriteNotesKey, note);
-    //
-    //     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-    //   } else {
-    //     widget.note!.title = titleController.text.trim();
-    //     widget.note!.note = noteController.text.trim();
-    //     widget.note!.color = mainColor;
-    //
-    //     if (widget.note!.isArchive) {
-    //       widget.note!.color = mainColor;
-    //       NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-    //       widget.note!.isFavorite = true;
-    //       NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-    //       Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
-    //     } else if (widget.note!.isFavorite) {
-    //       NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-    //       widget.note!.isFavorite = false;
-    //       NotesDb.addNote(NotesDb.notesKey, widget.note!);
-    //       Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
-    //     } else if (widget.note!.isPinned) {
-    //       NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
-    //       widget.note!.color = mainColor;
-    //       widget.note!.isFavorite = true;
-    //       NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-    //     } else {
-    //       NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
-    //       widget.note!.color = mainColor;
-    //       widget.note!.isFavorite = true;
-    //       NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-    //     }
-    //     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-    //   }
-    // } else {
-    //   return;
-    // }
-  }
-
-  void onPinned() {
-    if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
-      if (widget.note == null) {
-        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
-        note.color = mainColor;
-        note.isPinned = true;
-        NotesDb.addNote(NotesDb.pinnedNotesKey, note);
-      } else {
-        widget.note!.title = titleController.text.trim();
-        widget.note!.note = noteController.text.trim();
-        widget.note!.color = mainColor;
-        if (widget.note!.isFavorite) {
-          if (widget.note!.isPinned) {
-            widget.note!.isPinned = false;
-            NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-          } else {
-            widget.note!.isPinned = true;
-            NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-          }
-        } else if (widget.note!.isArchive) {
-          if (widget.note!.isPinned) {
-            widget.note!.isPinned = false;
-            widget.note!.color = mainColor;
-            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
-          } else {
-            widget.note!.isPinned = true;
-            widget.note!.color = mainColor;
-            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-            NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
-          }
-        } else if (widget.note!.isPinned) {
-          NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
-          widget.note!.isPinned = false;
-          widget.note!.color = mainColor;
-          NotesDb.addNote(NotesDb.notesKey, widget.note!);
-        } else {
-          NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
-          widget.note!.isPinned = true;
-          widget.note!.color = mainColor;
-          NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
-        }
-      }
-    } else {
-      return;
-    }
-
-    if (widget.note != null) {
-      if (widget.note!.isArchive) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
-      } else if (widget.note!.isFavorite) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
-      } else {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-      }
-    } else {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
     }
   }
 }
@@ -655,7 +633,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
               InkWell(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -708,7 +686,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   child: Text(
                     note.title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 25,
                     ),
                   ),
@@ -717,7 +695,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     note.note,
-                    style: TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 15),
                   ),
                 ),
               ],

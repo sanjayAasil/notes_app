@@ -38,4 +38,6 @@ class DataManager {
   bool favoriteScreenView = true;
 
   bool addToFavorite = false;
+
+  bool addToPin = false;
 }

@@ -184,7 +184,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                 }
                 debugPrint("SelectedFavoriteAppBar build: ${notes.map((e) => e.json)}");
                 if (notes.isNotEmpty) {
-                  NotesDb.addNotes(ListModelsDb.deletedListModelKey, notes);
+                  NotesDb.addNotes(NotesDb.deletedNotesKey, notes);
                   NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);
                 }
 
@@ -195,7 +195,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                 }
                 if (listModels.isNotEmpty) {
                   ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
-                  ListModelsDb.addListModels(NotesDb.deletedNotesKey, listModels);
+                  ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
                 }
 
                 selectedIds.clear();
