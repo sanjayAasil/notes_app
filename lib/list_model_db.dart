@@ -93,7 +93,6 @@ class ListModelsDb {
   }
 
   static removeListModels(String key, List<String> listModelIds) {
-
     List<ListModel> listModels = getAllListModels(key);
 
     listModels.removeWhere((element) => listModelIds.contains(element.id));

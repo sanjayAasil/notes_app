@@ -131,7 +131,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                             ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
                           } else if (listModel.isFavorite) {
                             listModel.isDeleted = false;
-                            ListModelsDb.addListModel(NotesDb.favoriteNotesKey, listModel);
+                            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
                           } else if (listModel.isPinned) {
                             listModel.isDeleted = false;
                             ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
