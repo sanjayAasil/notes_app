@@ -11,6 +11,7 @@ class ListModel {
   bool isDeleted;
   bool isFavorite;
   Color color;
+  DateTime createdAt;
 
   ListModel._({
     required this.id,
@@ -22,13 +23,15 @@ class ListModel {
     this.isFavorite = false,
     this.color = Colors.white,
     List<String>? labels,
+    required this.createdAt,
   }) : labels = labels ?? [];
 
   factory ListModel.create({
     required String title,
     required List<ListItem> items,
+    re
   }) =>
-      ListModel._(id: const Uuid().v4(), title: title, items: items);
+      ListModel._(id: const Uuid().v4(), title: title, items: items, createdAt: DateTime.now());
 
   factory ListModel.fromJson(Map<String, dynamic> json) => ListModel._(
         id: json['id'],
@@ -40,6 +43,7 @@ class ListModel {
         isPinned: json['isPinned'],
         isFavorite: json['isFavorite'],
         labels: List.from(json['labels']),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
       );
 
   Map<String, dynamic> get json => {
@@ -52,6 +56,7 @@ class ListModel {
         'isFavorite': isFavorite,
         'labels': labels,
         'items': items.map((e) => e.json).toList(),
+        'createdAt': createdAt.millisecondsSinceEpoch,
       };
 }
 

@@ -26,7 +26,9 @@ class NotesDb {
     List decoded = jsonDecode(data);
     debugPrint("NotesDb getAllNotes: checkzzz $key = ${data}");
 
-    return decoded.map((e) => Note.fromJson(e)).toList();
+    List<Note> result = decoded.map((e) => Note.fromJson(e)).toList();
+    result.sort((a, b) => -1 * a.createdAt.compareTo(b.createdAt));
+    return result;
   }
 
   static addNote(String key, Note note) {

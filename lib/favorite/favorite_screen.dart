@@ -3,8 +3,6 @@ import 'package:sanjay_notes/favorite/favorite_app_bar.dart';
 import 'package:sanjay_notes/favorite/favorite_grid_view.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import '../data_manager.dart';
-import '../list_model.dart';
-import '../note.dart';
 import 'favorite_list_view.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -19,29 +17,21 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   bool isPinned = false;
   bool others = false;
 
-  @override
-  void initState() {
-    super.initState();
-    for (Note note in DataManager().favoriteNotes) {
-      if (note.isPinned) {
-        isPinned = true;
-      } else {
-        others = true;
-      }
+  _handlePinned() {
+    isPinned = DataManager().favoriteNotes.any((element) => element.isPinned);
+    others = DataManager().favoriteNotes.any((element) => !element.isPinned);
+
+    if (!isPinned) {
+      isPinned = DataManager().favoriteListModels.any((element) => element.isPinned);
     }
-    if (!isPinned || !others) {
-      for (ListModel listModel in DataManager().favoriteListModels) {
-        if (listModel.isPinned) {
-          isPinned = true;
-        } else {
-          others = true;
-        }
-      }
+    if (!others) {
+      others = DataManager().favoriteListModels.any((element) => !element.isPinned);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _handlePinned();
     return Scaffold(
       drawer: const MyDrawer(
         selectedTab: 'favoriteScreen',
@@ -55,7 +45,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           else
             SelectedFavoriteAppBar(
               selectedIds: selectedIds,
-              onSelectedIdsCleared: () => setState(() {}),
+              onSelectedIdsCleared: () {
+                debugPrint("_FavoriteScreenState build: call check");
+                setState(() {});
+              },
             ),
           if (DataManager().favoriteNotes.isEmpty && DataManager().favoriteListModels.isEmpty)
             Expanded(
