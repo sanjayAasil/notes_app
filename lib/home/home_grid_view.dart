@@ -62,30 +62,25 @@ class _HomeScreenGridViewState extends State<HomeScreenGridView> {
               ),
             ),
           ),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Align(
-            alignment: AlignmentDirectional.topStart,
-            child: Wrap(
-              children: [
-                for (int i = 0; i < DataManager().notes.length; i++)
-                  NoteTileGridView(
-                    selectedIds: widget.selectedIds,
-                    onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
-                    note: DataManager().notes[i],
-                  ),
-                for (int i = 0; i < DataManager().listModels.length; i++)
-                  ListModelTileGridView(
-                    selectedIds: widget.selectedIds,
-                    listModel: DataManager().listModels[i],
-                    onUpdateRequest: () => setState(() {
-                      widget.onUpdateRequest?.call();
-                    }),
-                  ),
-
-                ///Grid view listModel
-              ],
-            ),
+        Align(
+          alignment: AlignmentDirectional.topStart,
+          child: Wrap(
+            children: [
+              for (int i = 0; i < DataManager().notes.length; i++)
+                NoteTileGridView(
+                  selectedIds: widget.selectedIds,
+                  onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
+                  note: DataManager().notes[i],
+                ),
+              for (int i = 0; i < DataManager().listModels.length; i++)
+                ListModelTileGridView(
+                  selectedIds: widget.selectedIds,
+                  listModel: DataManager().listModels[i],
+                  onUpdateRequest: () => setState(() {
+                    widget.onUpdateRequest?.call();
+                  }),
+                ),
+            ],
           ),
         ),
       ],

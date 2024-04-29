@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/archive/archive_app_bar.dart';
-import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import '../data_manager.dart';
-import '../note.dart';
 import 'archived_grid_view.dart';
 import 'archived_list_view.dart';
 
@@ -19,29 +17,21 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   bool isPinned = false;
   bool others = false;
 
-  @override
-  void initState() {
-    super.initState();
-    for (Note note in DataManager().archivedNotes) {
-      if (note.isPinned) {
-        isPinned = true;
-      } else {
-        others = true;
-      }
+  _handlePinned() {
+    isPinned = DataManager().archivedNotes.any((element) => element.isPinned);
+    others = DataManager().archivedNotes.any((element) => !element.isPinned);
+
+    if (!isPinned) {
+      isPinned = DataManager().archivedListModels.any((element) => element.isPinned);
     }
-    if (!isPinned || !others) {
-      for (ListModel listModel in DataManager().archivedListModels) {
-        if (listModel.isPinned) {
-          isPinned = true;
-        } else {
-          others = true;
-        }
-      }
+    if (!others) {
+      others = DataManager().archivedListModels.any((element) => !element.isPinned);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _handlePinned();
     return Scaffold(
       drawer: const MyDrawer(
         selectedTab: 'archiveScreen',
@@ -76,19 +66,13 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             )
           else
             DataManager().archiveScreenView
-                ?
-
-                ///ListView of archived Notes
-                ArchivedListView(
+                ? ArchivedListView(
                     selectedIds: selectedIds,
                     isPinned: isPinned,
                     others: others,
                     onUpdateRequest: () => setState(() {}),
                   )
-                :
-
-                ///GRID VIEW
-                ArchivedGridView(
+                : ArchivedGridView(
                     selectedIds: selectedIds,
                     isPinned: isPinned,
                     others: others,

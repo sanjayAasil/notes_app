@@ -5,6 +5,7 @@ import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:sanjay_notes/widget_helper.dart';
 
 import 'list_model.dart';
 import 'note.dart';
@@ -195,145 +196,16 @@ class _DeletedScreenState extends State<DeletedScreen> {
                   children: [
                     // SizedBox(height: 20),
                     for (Note note in DataManager().deletedNotes)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () {
-                            if (selectedIds.isEmpty) {
-                              Navigator.of(context).pushNamed(Routes.editOrViewNoteScreen, arguments: note);
-                            } else {
-                              if (selectedIds.contains(note.id)) {
-                                selectedIds.remove(note.id);
-                              } else {
-                                selectedIds.add(note.id);
-                              }
-                              setState(() {});
-                            }
-                          },
-                          onLongPress: () {
-                            if (selectedIds.contains(note.id)) {
-                              selectedIds.remove(note.id);
-                            } else {
-                              selectedIds.add(note.id);
-                            }
-                            setState(() {});
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: note.color,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                  color: selectedIds.contains(note.id)
-                                      ? Colors.blue.shade800
-                                      : note.color == Colors.white
-                                          ? Colors.grey
-                                          : Colors.transparent,
-                                  width: selectedIds.contains(note.id) ? 3.0 : 0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  note.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17,
-                                  ),
-                                ),
-                                Text(
-                                  note.note,
-                                  maxLines: 10,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      NoteTileListView(
+                        note: note,
+                        selectedIds: selectedIds,
+                        onUpdateRequest: () => setState(() {}),
                       ),
                     for (ListModel listModel in DataManager().deletedListModel)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () {
-                            if (selectedIds.isEmpty) {
-                              Navigator.of(context).pushNamed(Routes.viewOrEditListModel, arguments: listModel);
-                            } else {
-                              if (selectedIds.contains(listModel.id)) {
-                                selectedIds.remove(listModel.id);
-                              } else {
-                                selectedIds.add(listModel.id);
-                              }
-                              setState(() {});
-                            }
-                          },
-                          onLongPress: () {
-                            if (selectedIds.contains(listModel.id)) {
-                              selectedIds.remove(listModel.id);
-                            } else {
-                              selectedIds.add(listModel.id);
-                            }
-                            setState(() {});
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: listModel.color,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                  color: selectedIds.contains(listModel.id)
-                                      ? Colors.blue.shade800
-                                      : listModel.color == Colors.white
-                                          ? Colors.grey
-                                          : Colors.transparent,
-                                  width: selectedIds.contains(listModel.id) ? 3.0 : 0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  listModel.title,
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.grey.shade800),
-                                ),
-                                for (ListItem item in listModel.items)
-                                  Row(
-                                    children: [
-                                      item.ticked
-                                          ? Icon(
-                                              Icons.check_box_outlined,
-                                              color: Colors.grey.shade500,
-                                            )
-                                          : Icon(Icons.check_box_outline_blank, color: Colors.grey.shade500),
-                                      Text(item.name),
-                                    ],
-                                  ),
-                                Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Wrap(
-                                    children: [
-                                      for (String label in listModel.labels)
-                                        Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade300,
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                            child: Text('  $label  '),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      ListModelTileListView(
+                        selectedIds: selectedIds,
+                        listModel: listModel,
+                        onUpdateRequest: () => setState(() {}),
                       ),
                   ],
                 ),

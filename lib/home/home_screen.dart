@@ -55,15 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: DataManager().homeScreenView
-                    ?
-
-                    ///ListView Pinned notes
-                    HomeScreenListView(
+                    ? HomeScreenListView(
                         selectedIds: selectedIds,
                         onUpdateRequest: () => setState(() {}),
                       )
-
-                    ///Grid View pinned-notes
                     : HomeScreenGridView(
                         selectedIds: selectedIds,
                         onUpdateRequest: () => setState(() {}),

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:sanjay_notes/utils.dart';
-
-import 'data_manager.dart';
 import 'list_model.dart';
 
 class NoteTileListView extends StatelessWidget {
@@ -119,6 +117,8 @@ class NoteTileListView extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                               child: Text(
                                 '  $label  ',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w300,
@@ -196,15 +196,34 @@ class NoteTileGridView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                note.title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      note.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      Utils.getFormattedDateTime(note.createdAt),
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
                 child: Text(
                   note.note,
                   maxLines: 5,
@@ -295,35 +314,59 @@ class ListModelTileListView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  listModel.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        listModel.title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
                   ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      Utils.getFormattedDateTime(listModel.createdAt),
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, left: 5, bottom: 10),
+                child: Column(
+                  children: [
+                    for (ListItem item in listModel.items)
+                      Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Row(
+                          children: [
+                            item.ticked
+                                ? Icon(
+                                    Icons.check_box_outlined,
+                                    color: Colors.grey.shade500,
+                                    size: 20,
+                                  )
+                                : Icon(Icons.check_box_outline_blank, size: 20, color: Colors.grey.shade500),
+                            Text(
+                              item.name,
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
               ),
-              for (ListItem item in listModel.items)
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Row(
-                    children: [
-                      item.ticked
-                          ? Icon(
-                              Icons.check_box_outlined,
-                              color: Colors.grey.shade500,
-                              size: 20,
-                            )
-                          : Icon(Icons.check_box_outline_blank, size: 20, color: Colors.grey.shade500),
-                      Text(
-                        item.name,
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
-                    ],
-                  ),
-                ),
               Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Wrap(
@@ -349,13 +392,6 @@ class ListModelTileListView extends StatelessWidget {
                         ),
                       ),
                   ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  Utils.getFormattedDateTime(listModel.createdAt),
-                  textAlign: TextAlign.end,
                 ),
               ),
             ],
@@ -428,15 +464,32 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Text(
-                  widget.listModel.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        widget.listModel.title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      Utils.getFormattedDateTime(widget.listModel.createdAt),
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Align(
                 alignment: AlignmentDirectional.topStart,
@@ -462,22 +515,25 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
                   ],
                 ),
               ),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Wrap(
-                  children: [
-                    for (String label in widget.listModel.labels)
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(5),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Wrap(
+                    children: [
+                      for (String label in widget.listModel.labels)
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text('  $label  '),
                           ),
-                          child: Text('  $label  '),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
