@@ -568,7 +568,6 @@ class ColorsTile extends StatelessWidget {
   final Color color;
   final bool isSelected;
   final Icon? icon;
-
   final Function? onColorChanging;
 
   const ColorsTile({
@@ -582,9 +581,7 @@ class ColorsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        onColorChanging?.call();
-      },
+      onTap: () => onColorChanging?.call(),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -598,7 +595,13 @@ class ColorsTile extends StatelessWidget {
             color: color,
             borderRadius: BorderRadius.circular(40),
           ),
-          child: icon,
+          child: isSelected
+              ? Icon(
+                  Icons.check,
+                  color: Colors.blue.shade900,
+                  size: 40,
+                )
+              : null,
         ),
       ),
     );

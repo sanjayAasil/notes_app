@@ -151,6 +151,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                     DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
                 for (Note note in notes) {
                   note.isArchive = true;
+                  note.isFavorite = false;
                   NotesDb.addNote(NotesDb.archivedNotesKey, note);
                   NotesDb.removeNote(NotesDb.favoriteNotesKey, note.id);
                 }
@@ -159,6 +160,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                     DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
                 for (ListModel listModel in listModels) {
                   listModel.isArchive = true;
+                  listModel.isFavorite = false;
                   ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
                   ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
                 }

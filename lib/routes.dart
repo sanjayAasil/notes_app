@@ -6,6 +6,7 @@ import 'package:sanjay_notes/deleted_screen.dart';
 import 'package:sanjay_notes/favorite/favorite_screen.dart';
 import 'package:sanjay_notes/label_screen.dart';
 import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/settings_screen.dart';
 import 'package:sanjay_notes/view-or-edit-list-model.dart';
 import 'package:sanjay_notes/manage_note.dart';
 import 'package:sanjay_notes/home/home_screen.dart';
@@ -25,6 +26,7 @@ class Routes {
   static const String labelScreen = '/label-screen';
   static const String viewOrEditListModel = '/view-or-edit-list-model';
   static const String favoriteScreen = '/favorite-screen';
+  static const String settingsScreen = '/settings-screen';
 
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
@@ -49,10 +51,12 @@ class Routes {
         List<String> selectedIds = settings.arguments as List<String>;
         return MaterialPageRoute(builder: (context) => LabelScreen(selectedIds: selectedIds));
       case favoriteScreen:
-        return MaterialPageRoute(builder: (context) =>   const FavoriteScreen());
+        return MaterialPageRoute(builder: (context) => const FavoriteScreen());
       case viewOrEditListModel:
         ListModel listModel = settings.arguments as ListModel;
         return MaterialPageRoute(builder: (context) => ViewOrEditListModel(listModel: listModel));
+      case settingsScreen:
+        return MaterialPageRoute(builder: (context) => const SettingsScreen());
       default:
         return MaterialPageRoute(
           builder: (context) => const Scaffold(

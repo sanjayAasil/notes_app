@@ -40,4 +40,8 @@ class DataManager {
   bool addToFavorite = false;
 
   bool addToPin = false;
+
+  bool showTimeForNotes = true;
+
+  bool olderNotesFirst = false;
 }

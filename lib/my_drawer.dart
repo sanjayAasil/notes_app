@@ -175,9 +175,15 @@ class MyDrawer extends StatelessWidget {
                 isSelected: selectedTab == 'deletedScreen',
               ),
             ),
-            const DrawerTile(
-              name: 'Settings',
-              icon: Icons.settings,
+            InkWell(
+              onTap: selectedTab != 'Settings'
+                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.settingsScreen, (route) => false)
+                  : null,
+              child: DrawerTile(
+                name: 'Settings',
+                icon: Icons.settings,
+                isSelected: selectedTab == 'Settings',
+              ),
             ),
             const DrawerTile(
               name: 'Help & feedback',
