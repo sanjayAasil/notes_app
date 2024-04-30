@@ -171,7 +171,7 @@ class NoteTileGridView extends StatelessWidget {
           }
         },
         onLongPress: () {
-          debugPrint("_HomeScreenState: build ");
+
           if (selectedIds.contains(note.id)) {
             selectedIds.remove(note.id);
           } else {

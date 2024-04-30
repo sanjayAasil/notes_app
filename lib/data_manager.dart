@@ -11,6 +11,7 @@ class DataManager {
 
   List<Note> notes = [];
 
+
   List<Note> favoriteNotes = [];
 
   List<Note> archivedNotes = [];

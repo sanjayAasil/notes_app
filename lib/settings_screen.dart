@@ -57,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: Text(
                     'Show Time for Notes',
                     style: TextStyle(fontSize: 17),
@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: Text(
                     'Show older notes first',
                     style: TextStyle(fontSize: 17),

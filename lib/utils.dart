@@ -9,7 +9,7 @@ class Utils {
     if (date.day != now.day) {
       if (date.day + 1 == now.day) {
         isYesterday = true;
-        format = 'hh:mm a';
+        format = 'HH:mm';
       } else if (date.year == now.year) {
         format = 'dd-MMMM \n HH:mm';
       } else {

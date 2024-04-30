@@ -15,8 +15,12 @@ class HomeScreenListView extends StatefulWidget {
 }
 
 class _HomeScreenListViewState extends State<HomeScreenListView> {
+
+
   @override
   Widget build(BuildContext context) {
+    DataManager().pinnedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    debugPrint("_HomeScreenListViewState build: checkk");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
