@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:sanjay_notes/utils.dart';
@@ -75,17 +76,19 @@ class NoteTileListView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      Utils.getFormattedDateTime(note.createdAt),
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
+                  DataManager().settingsModel.showTimeChecked
+                      ? Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            Utils.getFormattedDateTime(note.createdAt),
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
               Padding(
@@ -171,7 +174,6 @@ class NoteTileGridView extends StatelessWidget {
           }
         },
         onLongPress: () {
-
           if (selectedIds.contains(note.id)) {
             selectedIds.remove(note.id);
           } else {
@@ -209,17 +211,19 @@ class NoteTileGridView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      Utils.getFormattedDateTime(note.createdAt),
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
+                  DataManager().settingsModel.showTimeChecked
+                      ? Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            Utils.getFormattedDateTime(note.createdAt),
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
               Padding(
@@ -328,17 +332,19 @@ class ListModelTileListView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      Utils.getFormattedDateTime(listModel.createdAt),
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
+                  DataManager().settingsModel.showTimeChecked
+                      ? Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            Utils.getFormattedDateTime(listModel.createdAt),
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                        )
+                      : const SizedBox()
                 ],
               ),
               Padding(
@@ -478,17 +484,19 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      Utils.getFormattedDateTime(widget.listModel.createdAt),
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade800,
-                      ),
-                    ),
-                  ),
+                  DataManager().settingsModel.showTimeChecked
+                      ? Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            Utils.getFormattedDateTime(widget.listModel.createdAt),
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                        )
+                      : const SizedBox()
                 ],
               ),
               Align(

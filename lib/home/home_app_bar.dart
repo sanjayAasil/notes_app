@@ -271,6 +271,10 @@ class SelectedHomeAppBar extends StatelessWidget {
   onPinned() {
     List<Note> notes = DataManager().notes.where((element) => selectedIds.contains(element.id)).toList();
 
+    for (Note note in notes) {
+      note.isPinned = true;
+    }
+
     NotesDb.addNotes(NotesDb.pinnedNotesKey, notes);
     NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
 

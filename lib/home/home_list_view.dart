@@ -15,12 +15,9 @@ class HomeScreenListView extends StatefulWidget {
 }
 
 class _HomeScreenListViewState extends State<HomeScreenListView> {
-
-
   @override
   Widget build(BuildContext context) {
-    DataManager().pinnedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    debugPrint("_HomeScreenListViewState build: checkk");
+    _timeSorting();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -89,5 +86,23 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
           ),
       ],
     );
+  }
+
+  _timeSorting() {
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().notes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().notes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().pinnedNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().pinnedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().listModels.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().listModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().pinnedListModels.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().pinnedListModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 }

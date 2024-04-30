@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
-
+import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/settings_model.dart';
 import 'my_drawer.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -11,6 +13,20 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
+
+  late ValueNotifier<bool> showTimeChecked;
+  late ValueNotifier<bool> olderNotesChecked;
+
+  @override
+  void initState() {
+    showTimeChecked = ValueNotifier(settingsModel.showTimeChecked);
+    olderNotesChecked = ValueNotifier(settingsModel.olderNotesChecked);
+    super.initState();
+  }
+
+  SettingsModel get settingsModel => DataManager().settingsModel;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,23 +79,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(40),
-                  onTap: () {
-                    DataManager().showTimeForNotes = !DataManager().showTimeForNotes;
-                    setState(() {});
+                ValueListenableBuilder(
+                  valueListenable: showTimeChecked,
+                  builder: (context, value, child) {
+                    return Switch(
+                      value: showTimeChecked.value,
+                      onChanged: (bool value) {
+                        showTimeChecked.value = value;
+                        settingsModel.showTimeChecked = showTimeChecked.value;
+                        prefs.setString('settings', jsonEncode(settingsModel.json));
+                      },
+                    );
                   },
-                  child: DataManager().showTimeForNotes
-                      ? Icon(
-                          Icons.toggle_on_outlined,
-                          size: 50,
-                          color: Colors.blue.shade600,
-                        )
-                      : Icon(
-                          Icons.toggle_off_outlined,
-                          size: 50,
-                          color: Colors.grey.shade600,
-                        ),
                 ),
               ],
             ),
@@ -94,23 +105,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(40),
-                  onTap: () {
-                    DataManager().olderNotesFirst = !DataManager().olderNotesFirst;
-                    setState(() {});
+                ValueListenableBuilder(
+                  valueListenable: olderNotesChecked,
+                  builder: (context, value, child) {
+                    return Switch(
+                      value: olderNotesChecked.value,
+                      onChanged: (bool value) {
+                        olderNotesChecked.value = value;
+                        settingsModel.olderNotesChecked = olderNotesChecked.value;
+                        prefs.setString('settings', jsonEncode(settingsModel.json));
+                      },
+                    );
                   },
-                  child: DataManager().olderNotesFirst
-                      ? Icon(
-                          Icons.toggle_on_outlined,
-                          size: 50,
-                          color: Colors.blue.shade600,
-                        )
-                      : Icon(
-                          Icons.toggle_off_outlined,
-                          size: 50,
-                          color: Colors.grey.shade600,
-                        ),
                 ),
               ],
             ),

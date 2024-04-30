@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/settings_model.dart';
 
 import 'note.dart';
+import 'notes_db.dart';
 
 class DataManager {
+  final SettingsModel settingsModel;
   static final DataManager _instance = DataManager._();
 
-  DataManager._();
+  DataManager._() : settingsModel = SettingsModel.fromJson(jsonDecode(prefs.getString('settings') ?? '{}'));
 
   factory DataManager() => _instance;
 
