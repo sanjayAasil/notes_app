@@ -24,6 +24,14 @@ class ArchivedListView extends StatefulWidget {
 class _ArchivedListViewState extends State<ArchivedListView> {
   @override
   Widget build(BuildContext context) {
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().archivedNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().archivedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().archivedListModels.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().archivedListModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
     return Expanded(
       child: SingleChildScrollView(
         child: Column(

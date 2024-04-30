@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/widget_helper.dart';
-
 import '../data_manager.dart';
-import '../list_model.dart';
-import '../routes.dart';
 
 class FavoriteGridView extends StatefulWidget {
   final List<String> selectedIds;

@@ -22,6 +22,14 @@ class _DeletedScreenState extends State<DeletedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().deletedNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().deletedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().deletedListModel.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().deletedListModel.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
     return Scaffold(
       drawer: const MyDrawer(
         selectedTab: 'deletedScreen',

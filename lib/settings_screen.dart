@@ -13,15 +13,15 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
-
   late ValueNotifier<bool> showTimeChecked;
   late ValueNotifier<bool> olderNotesChecked;
+  late ValueNotifier<bool> showLabelsOnHomeScreen;
 
   @override
   void initState() {
     showTimeChecked = ValueNotifier(settingsModel.showTimeChecked);
     olderNotesChecked = ValueNotifier(settingsModel.olderNotesChecked);
+    showLabelsOnHomeScreen = ValueNotifier(settingsModel.showLabelsOnHomeScreen);
     super.initState();
   }
 
@@ -34,6 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         selectedTab: 'Settings',
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.only(
@@ -67,6 +68,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 25.0),
+            child: Text(
+              'Sort',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           Padding(
@@ -113,6 +124,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onChanged: (bool value) {
                         olderNotesChecked.value = value;
                         settingsModel.olderNotesChecked = olderNotesChecked.value;
+                        prefs.setString('settings', jsonEncode(settingsModel.json));
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Show labels on home screen',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: showLabelsOnHomeScreen,
+                  builder: (context, value, child) {
+                    return Switch(
+                      value: showLabelsOnHomeScreen.value,
+                      onChanged: (bool value) {
+                        showLabelsOnHomeScreen.value = value;
+                        settingsModel.showLabelsOnHomeScreen = showLabelsOnHomeScreen.value;
                         prefs.setString('settings', jsonEncode(settingsModel.json));
                       },
                     );

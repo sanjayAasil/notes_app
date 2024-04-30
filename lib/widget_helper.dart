@@ -102,38 +102,62 @@ class NoteTileListView extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Wrap(
-                    children: [
-                      for (String label in note.labels)
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
-                              child: Text(
-                                '  $label  ',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ),
-                          ),
+              DataManager().settingsModel.showLabelsOnHomeScreen
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Wrap(
+                          children: [
+                            for (int i = 0; i < note.labels.length; i++)
+                              i < 3
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade300,
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                          child: Text(
+                                            '  ${note.labels[i]}  ',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : i == 4
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade300,
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                              child: Text(
+                                                '  +${note.labels.length - 3}  ',
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w300,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox()
+                          ],
                         ),
-                    ],
-                  ),
-                ),
-              ),
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),
@@ -235,26 +259,50 @@ class NoteTileGridView extends StatelessWidget {
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
               ),
-              Align(
-                alignment: AlignmentDirectional.topStart,
-                child: Wrap(
-                  children: [
-                    for (String label in note.labels)
-                      Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            '  $label  ',
-                          ),
-                        ),
+              DataManager().settingsModel.showLabelsOnHomeScreen
+                  ? Align(
+                      alignment: AlignmentDirectional.topStart,
+                      child: Wrap(
+                        children: [
+                          for (int i = 0; i < note.labels.length; i++)
+                            i < 3
+                                ? Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade300,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Text(
+                                        '  ${note.labels[i]}  ',
+                                      ),
+                                    ),
+                                  )
+                                : i == 4
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                            child: Text(
+                                              '  +${note.labels.length - 3}  ',
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                        ],
                       ),
-                  ],
-                ),
-              ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),
@@ -373,33 +421,57 @@ class ListModelTileListView extends StatelessWidget {
                   ],
                 ),
               ),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Wrap(
-                  children: [
-                    for (String label in listModel.labels)
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
-                            child: Text(
-                              '  $label  ',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ),
-                        ),
+              DataManager().settingsModel.showLabelsOnHomeScreen
+                  ? Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Wrap(
+                        children: [
+                          for (int i = 0; i < listModel.labels.length; i++)
+                            i < 3
+                                ? Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade300,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                        child: Text(
+                                          '  ${listModel.labels[i]}  ',
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : i == 4
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                            child: Text(
+                                              '  +${listModel.labels.length - 3}  ',
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox()
+                        ],
                       ),
-                  ],
-                ),
-              ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),
@@ -523,27 +595,53 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Wrap(
-                    children: [
-                      for (String label in widget.listModel.labels)
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text('  $label  '),
-                          ),
+              DataManager().settingsModel.showLabelsOnHomeScreen
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Wrap(
+                          children: [
+                            for (int i = 0; i < widget.listModel.labels.length; i++)
+                              i < 3
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade300,
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          '  ${widget.listModel.labels[i]}  ',
+                                        ),
+                                      ),
+                                    )
+                                  : i == 4
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade300,
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
+                                              child: Text(
+                                                '  +${widget.listModel.labels.length - 3}  ',
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w300,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox()
+                          ],
                         ),
-                    ],
-                  ),
-                ),
-              ),
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),

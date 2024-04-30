@@ -3,7 +3,6 @@ import 'package:sanjay_notes/widget_helper.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
 import '../note.dart';
-import '../routes.dart';
 
 class FavoriteListView extends StatefulWidget {
   const FavoriteListView({
@@ -25,6 +24,14 @@ class FavoriteListView extends StatefulWidget {
 class _FavoriteListViewState extends State<FavoriteListView> {
   @override
   Widget build(BuildContext context) {
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().favoriteNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().favoriteNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    DataManager().settingsModel.olderNotesChecked
+        ? DataManager().favoriteListModels.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().favoriteListModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
