@@ -29,4 +29,17 @@ class LabelsDb {
 
     DataManager().labels.add(label);
   }
+
+  static removeLabel(String key, String label){
+    List<String> labels = getAllLabels(key);
+
+    labels.remove(label);
+
+    jsonEncode(labels);
+
+    prefs.setString(key, jsonEncode(labels));
+
+    DataManager().labels.remove(label);
+
+  }
 }

@@ -142,7 +142,6 @@ class _NewListScreenState extends State<NewListScreen> {
                   itemControllers.add(TextEditingController());
                   ListItem item = ListItem(name: '');
                   items.add(item);
-                  debugPrint("_NewListScreenState: build $items");
                   setState(() {});
                 },
                 child: SizedBox(
@@ -276,88 +275,110 @@ class _NewListScreenState extends State<NewListScreen> {
 
   _pickAColor() => showModalBottomSheet(
         context: context,
-        builder: (context) => Container(
-          color: Colors.grey.shade300,
-          height: MediaQueryData().padding.bottom + 150,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Colours',
-                  style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          onTap: () => setState(() {
-                            mainColor = Colors.white;
-                          }),
-                          child: Container(
-                            child: Icon(
+        builder: (context) => StatefulBuilder(
+          builder: (context, setLocalState) {
+            return Container(
+              color: Colors.grey.shade300,
+              height: MediaQueryData().padding.bottom + 150,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Colours',
+                      style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ColorsTile(
+                            color: Colors.white,
+                            isSelected: mainColor == Colors.white,
+                            icon: Icon(
                               Icons.format_color_reset_outlined,
                               size: 50,
                               color: Colors.grey.shade800,
                             ),
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(40),
-                            ),
+                            onColorChanging: () {
+                              setLocalState(() {});
+                              setState(() {
+                                mainColor = Colors.white;
+                              });
+                            },
                           ),
-                        ),
+                          ColorsTile(
+                            color: Colors.yellow.shade200,
+                            isSelected: mainColor == Colors.yellow.shade200,
+                            onColorChanging: () {
+                              setLocalState(() {});
+                              setState(() {
+                                mainColor = Colors.yellow.shade200;
+                              });
+                            },
+                          ),
+                          ColorsTile(
+                            color: Colors.green.shade200,
+                            isSelected: mainColor == Colors.green.shade200,
+                            onColorChanging: () {
+                              setLocalState(() {});
+                              setState(() {
+                                mainColor = Colors.green.shade200;
+                              });
+                            },
+                          ),
+                          ColorsTile(
+                            color: Colors.blue.shade200,
+                            isSelected: mainColor == Colors.blue.shade200,
+                            onColorChanging: () {
+                              setLocalState(() {});
+                              setState(() {
+                                mainColor = Colors.blue.shade200;
+                              });
+                            },
+                          ),
+                          ColorsTile(
+                            color: Colors.pink.shade200,
+                            isSelected: mainColor == Colors.pink.shade200,
+                            onColorChanging: () {
+                              setLocalState(() {});
+                              setState(() {
+                                mainColor = Colors.pink.shade200;
+                              });
+                            },
+                          ),
+                          ColorsTile(
+                            color: Colors.deepOrange,
+                            isSelected: mainColor == Colors.deepOrange.shade200,
+                            onColorChanging: () {
+                              setLocalState(() {});
+                              setState(() {
+                                mainColor = Colors.deepOrange.shade200;
+                              });
+                            },
+                          ),
+                          ColorsTile(
+                            color: Colors.brown.shade200,
+                            isSelected: mainColor == Colors.brown.shade200,
+                            onColorChanging: () {
+                              setLocalState(() {});
+                              setState(() {
+                                mainColor = Colors.brown.shade200;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      ColorsTile(
-                        color: Colors.yellow.shade200,
-                        onColorChanging: () => setState(() {
-                          mainColor = Colors.yellow.shade200;
-                        }),
-                      ),
-                      ColorsTile(
-                        color: Colors.green.shade200,
-                        onColorChanging: () => setState(() {
-                          mainColor = Colors.green.shade200;
-                        }),
-                      ),
-                      ColorsTile(
-                        color: Colors.blue.shade200,
-                        onColorChanging: () => setState(() {
-                          mainColor = Colors.blue.shade200;
-                        }),
-                      ),
-                      ColorsTile(
-                        color: Colors.pink.shade200,
-                        onColorChanging: () => setState(() {
-                          mainColor = Colors.pink.shade200;
-                        }),
-                      ),
-                      ColorsTile(
-                        color: Colors.deepOrange,
-                        onColorChanging: () => setState(() {
-                          mainColor = Colors.deepOrange.shade200;
-                        }),
-                      ),
-                      ColorsTile(
-                        color: Colors.brown.shade200,
-                        onColorChanging: () => setState(() {
-                          mainColor = Colors.brown.shade200;
-                        }),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          }
         ),
       );
 
@@ -388,7 +409,6 @@ class _NewListScreenState extends State<NewListScreen> {
       }
     }
 
-
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
   }
 
@@ -411,26 +431,42 @@ class _NewListScreenState extends State<NewListScreen> {
 
 class ColorsTile extends StatelessWidget {
   final Color color;
-
+  final Icon? icon;
   final Function? onColorChanging;
+  final bool isSelected;
 
-  const ColorsTile({Key? key, required this.color, this.onColorChanging}) : super(key: key);
+  const ColorsTile({
+    Key? key,
+    required this.color,
+    this.onColorChanging,
+    this.icon,
+    required this.isSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        onColorChanging?.call();
-      },
+      onTap: () => onColorChanging?.call(),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
           height: 80,
           width: 80,
           decoration: BoxDecoration(
+            border: Border.all(
+              width: isSelected ? 3 : 0,
+              color: isSelected ? Colors.blue.shade900 : Colors.transparent,
+            ),
             color: color,
             borderRadius: BorderRadius.circular(40),
           ),
+          child: isSelected
+              ? Icon(
+            CupertinoIcons.checkmark_alt,
+            size: 40,
+            color: Colors.blue.shade900,
+          )
+              : null,
         ),
       ),
     );

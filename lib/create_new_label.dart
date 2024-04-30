@@ -13,15 +13,16 @@ class CreateNewLabelScreen extends StatefulWidget {
 }
 
 class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
-  TextEditingController controller = TextEditingController();
+  TextEditingController creatingController = TextEditingController();
+  List<TextEditingController> controllers = [];
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool value) {
-        if (controller.text.isNotEmpty && !DataManager().labels.contains(controller.text.trim())) {
-          LabelsDb.addLabel(LabelsDb.labelsKey, controller.text.trim());
+        if (creatingController.text.isNotEmpty && !DataManager().labels.contains(creatingController.text.trim())) {
+          LabelsDb.addLabel(LabelsDb.labelsKey, creatingController.text.trim());
           setState(() {});
         }
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
@@ -36,10 +37,15 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      if (controller.text.isNotEmpty && !DataManager().labels.contains(controller.text.trim())) {
-                        LabelsDb.addLabel(LabelsDb.labelsKey, controller.text.trim());
-                        setState(() {});
+                      if (creatingController.text.isNotEmpty) {
+                        for (TextEditingController controller in controllers) {
+                          LabelsDb.addLabel(LabelsDb.labelsKey, controller.text.trim());
+
+                        }
+
                       }
+
+                      DataManager().labels.clear();
                       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
                     },
                     child: Padding(
@@ -76,7 +82,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 ),
                 Expanded(
                   child: TextField(
-                    controller: controller,
+                    controller: creatingController,
                     maxLines: 1,
                     decoration: const InputDecoration(
                       hintText: ' Create new label',
@@ -87,9 +93,9 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (controller.text.isNotEmpty && !DataManager().labels.contains(controller.text.trim())) {
-                      LabelsDb.addLabel(LabelsDb.labelsKey, controller.text.trim());
-                      controller.clear();
+                    if (creatingController.text.isNotEmpty) {
+                      controllers.add(TextEditingController(text: creatingController.text));
+                      creatingController.clear();
                       setState(() {});
                     }
                   },
@@ -105,12 +111,12 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
               ],
             ),
             const Divider(),
-            if (DataManager().labels.isNotEmpty)
+            if (controllers.isNotEmpty)
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      for (int i = DataManager().labels.length - 1; i >= 0; i--)
+                      for (int i = controllers.length - 1; i >= 0; i--)
                         InkWell(
                           onTap: () {},
                           child: Row(
@@ -123,9 +129,11 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                                 ),
                               ),
                               Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(DataManager().labels[i]),
+                                child: TextField(
+                                  controller: controllers[i],
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                               InkWell(
