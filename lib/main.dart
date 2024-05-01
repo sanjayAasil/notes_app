@@ -22,7 +22,7 @@ void main() async {
   DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
   DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
 
-  DataManager().labels = LabelsDb.getAllLabels(LabelsDb.labelsKey);
+  DataManager().labels = LabelsDb.getAllLabels();
 
   runApp(const MyApp());
 }

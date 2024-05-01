@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import '../data_manager.dart';
@@ -171,7 +173,30 @@ class SelectedHomeAppBar extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: onDeleted,
+              onTap: () {
+                showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) => AlertDialog(
+                      backgroundColor: Colors.grey.shade100,
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            onDeleted();
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('delete'),
+                        ),
+                      ],
+                      title: const Text('Delete'),
+                      contentPadding: const EdgeInsets.all(20),
+                      content: const Text('Do you want to delete')),
+                );
+              },
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Icon(

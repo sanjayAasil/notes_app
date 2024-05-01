@@ -8,8 +8,8 @@ class LabelsDb {
 
   static const labelsKey = 'labelsKey';
 
-  static List<String> getAllLabels(String key) {
-    String? data = prefs.getString(key);
+  static List<String> getAllLabels() {
+    String? data = prefs.getString(LabelsDb.labelsKey);
 
     if (data == null) return [];
 
@@ -18,28 +18,45 @@ class LabelsDb {
     return decoded.map((e) => e.toString()).toList();
   }
 
-  static addLabel(String key, String label) {
-    List<String> labels = getAllLabels(key);
+  // static addLabel(String label) {
+  //   List<String> labels = getAllLabels();
+  //
+  //   labels.add(label);
+  //
+  //   prefs.setString(LabelsDb.labelsKey, jsonEncode(labels));
+  //
+  //   DataManager().labels.add(label);
+  // }
 
-    labels.add(label);
+  // static removeLabel(String label) {
+  //   List<String> labels = getAllLabels();
+  //
+  //   labels.remove(label);
+  //
+  //   jsonEncode(labels);
+  //
+  //   prefs.setString(LabelsDb.labelsKey, jsonEncode(labels));
+  //
+  //   DataManager().labels.remove(label);
+  // }
 
-    jsonEncode(labels);
+  static addLabels(List<String> labels) {
+    List<String> labelS = getAllLabels();
 
-    prefs.setString(key, jsonEncode(labels));
+    labelS.addAll(labels);
 
-    DataManager().labels.add(label);
+    prefs.setString(LabelsDb.labelsKey, jsonEncode(labelS));
+
+    DataManager().labels.addAll(labels);
   }
 
-  static removeLabel(String key, String label){
-    List<String> labels = getAllLabels(key);
+  static removeAllLabels() {
+    List<String> labelS = getAllLabels();
 
-    labels.remove(label);
+    labelS.clear();
 
-    jsonEncode(labels);
+    prefs.setString(LabelsDb.labelsKey, jsonEncode(labelS));
 
-    prefs.setString(key, jsonEncode(labels));
-
-    DataManager().labels.remove(label);
-
+    DataManager().labels.clear();
   }
 }

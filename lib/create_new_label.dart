@@ -15,16 +15,28 @@ class CreateNewLabelScreen extends StatefulWidget {
 class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
   TextEditingController creatingController = TextEditingController();
   List<TextEditingController> controllers = [];
+  List<String> labels = [];
+
+  @override
+  void initState() {
+    for (String label in DataManager().labels) {
+      controllers.add(TextEditingController(text: label));
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool value) {
-        if (creatingController.text.isNotEmpty && !DataManager().labels.contains(creatingController.text.trim())) {
-          LabelsDb.addLabel(LabelsDb.labelsKey, creatingController.text.trim());
-          setState(() {});
+        for (TextEditingController controller in controllers) {
+          labels.add(controller.text.trim());
         }
+        LabelsDb.removeAllLabels();
+        LabelsDb.addLabels(labels);
+
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       },
       child: Scaffold(
@@ -37,15 +49,13 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      if (creatingController.text.isNotEmpty) {
-                        for (TextEditingController controller in controllers) {
-                          LabelsDb.addLabel(LabelsDb.labelsKey, controller.text.trim());
-
-                        }
-
+                      labels.clear();
+                      for (TextEditingController controller in controllers) {
+                        labels.add(controller.text.trim());
                       }
+                      LabelsDb.removeAllLabels();
+                      LabelsDb.addLabels(labels);
 
-                      DataManager().labels.clear();
                       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
                     },
                     child: Padding(
@@ -93,9 +103,10 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (creatingController.text.isNotEmpty) {
-                      controllers.add(TextEditingController(text: creatingController.text));
+                    if (!labels.contains(creatingController.text.trim())) {
+                      controllers.add(TextEditingController(text: creatingController.text.trim()));
                       creatingController.clear();
+                      labels.add(creatingController.text);
                       setState(() {});
                     }
                   },
@@ -129,15 +140,17 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                                 ),
                               ),
                               Expanded(
-                                child: TextField(
-                                  controller: controllers[i],
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: TextField(
+                                    controller: controllers[i],
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
                                   ),
                                 ),
                               ),
                               InkWell(
-                                borderRadius: BorderRadius.circular(40),
                                 onTap: () {},
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
