@@ -52,7 +52,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
       canPop: widget.note != null && widget.note!.isDeleted,
       onPopInvoked: (bool value) {
         if (widget.note == null || (widget.note != null && !widget.note!.isDeleted)) {
-          debugPrint("_ManageNotePageState build: check onBack ");
           onBackPressed();
         }
       },
@@ -477,6 +476,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
               widget.note!.isFavorite = true;
               NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
             }
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                duration: Duration(seconds: 2),
+                content: Text('Note added to Favorites'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
           } else {
             if (DataManager().addToPin) {
               NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
@@ -521,12 +527,33 @@ class _ManageNotePageState extends State<ManageNotePage> {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
+        if (DataManager().addToFavorite) {
+          note.isFavorite = true;
+          if (DataManager().addToPin) {
+            note.isPinned = true;
+          } else {
+            if (DataManager().addToPin) {
+              note.isPinned = true;
+            }
+          }
+        }
         note.isArchive = true;
         NotesDb.addNote(NotesDb.archivedNotesKey, note);
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text('Note moved to Archive'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       } else {
         if (widget.note!.isArchive) {
-          if (widget.note!.isPinned) {
+          if (widget.note!.isFavorite) {
+            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+            widget.note!.isArchive = false;
+            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
+          } else if (widget.note!.isPinned) {
             NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
 
             widget.note!.isArchive = false;
@@ -538,6 +565,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
             NotesDb.addNote(NotesDb.notesKey, widget.note!);
           }
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('Note removed from Archive'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         } else if (widget.note!.isFavorite) {
           NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
 
@@ -545,18 +579,42 @@ class _ManageNotePageState extends State<ManageNotePage> {
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
 
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('Note moved to Archive'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         } else if (widget.note!.isPinned) {
           NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
 
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('Note moved to Archive'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         } else {
           NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
 
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('Note moved to Archive'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         }
       }
     } else {

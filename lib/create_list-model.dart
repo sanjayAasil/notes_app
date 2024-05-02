@@ -57,38 +57,44 @@ class _NewListScreenState extends State<NewListScreen> {
                       ),
                     ),
                     const Expanded(child: SizedBox()),
-                    StatefulBuilder(builder: (context, stateful) {
-                      return InkWell(
-                        onTap: () {
-                          DataManager().addToFavorite = !DataManager().addToFavorite;
-                          setState(() {});
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DataManager().addToFavorite
-                              ? Icon(
-                                  Icons.favorite,
-                                  color: Colors.red.shade800,
-                                )
-                              : Icon(Icons.favorite_border),
-                        ),
-                      );
-                    }),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(40),
-                      onTap: () {
-                        DataManager().addToPin = !DataManager().addToPin;
-                        setState(() {});
+                    StatefulBuilder(
+                      builder: (context, stateful) {
+                        return InkWell(
+                          onTap: () {
+                            DataManager().addToFavorite = !DataManager().addToFavorite;
+                            setState(() {});
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DataManager().addToFavorite
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red.shade800,
+                                  )
+                                : Icon(Icons.favorite_border),
+                          ),
+                        );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DataManager().addToPin
-                            ? Icon(
-                                CupertinoIcons.pin_fill,
-                                color: Colors.grey.shade800,
-                              )
-                            : Icon(CupertinoIcons.pin),
-                      ),
+                    ),
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return InkWell(
+                          borderRadius: BorderRadius.circular(40),
+                          onTap: () {
+                            DataManager().addToPin = !DataManager().addToPin;
+                            setState(() {});
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DataManager().addToPin
+                                ? Icon(
+                                    CupertinoIcons.pin_fill,
+                                    color: Colors.grey.shade800,
+                                  )
+                                : Icon(CupertinoIcons.pin),
+                          ),
+                        );
+                      }
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -386,6 +392,7 @@ class _NewListScreenState extends State<NewListScreen> {
       return;
     }
     if (DataManager().addToFavorite) {
+      listModel.isFavorite = true;
       if (DataManager().addToPin) {
         listModel.isPinned = true;
         ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
@@ -419,6 +426,16 @@ class _NewListScreenState extends State<NewListScreen> {
     listModel.color = mainColor;
     if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
       return;
+    }
+    if(DataManager().addToFavorite){
+      listModel.isFavorite = true;
+      if(DataManager().addToPin){
+        listModel.isPinned = true;
+      }
+    } else {
+      if(DataManager().addToPin){
+        listModel.isPinned = true;
+      }
     }
     listModel.isArchive = true;
     ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
