@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/utils.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
 import '../note.dart';
@@ -139,6 +140,12 @@ class SelectedFavoriteAppBar extends StatelessWidget {
               ),
             ),
             InkWell(
+              onTap: () => Utils.commonDialog(
+                context: context,
+                function: onArchive,
+                content: 'Archive',
+                snackBarMessage: 'Notes moved to Archive',
+              ),
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
@@ -146,29 +153,14 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              onTap: () {
-                List<Note> notes =
-                    DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
-                for (Note note in notes) {
-                  note.isArchive = true;
-                  note.isFavorite = false;
-                  NotesDb.addNote(NotesDb.archivedNotesKey, note);
-                  NotesDb.removeNote(NotesDb.favoriteNotesKey, note.id);
-                }
-
-                List<ListModel> listModels =
-                    DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
-                for (ListModel listModel in listModels) {
-                  listModel.isArchive = true;
-                  listModel.isFavorite = false;
-                  ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
-                  ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
-                }
-                selectedIds.clear();
-                onSelectedIdsCleared?.call();
-              },
             ),
             InkWell(
+              onTap: () => Utils.commonDialog(
+                context: context,
+                function: onDelete,
+                content: 'Delete',
+                snackBarMessage: 'Notes moved to Bin',
+              ),
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
@@ -176,35 +168,6 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              onTap: () {
-                debugPrint("SelectedFavoriteAppBar build: ");
-
-                List<Note> notes =
-                    DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
-                for (Note note in notes) {
-                  note.isDeleted = true;
-                }
-                debugPrint("SelectedFavoriteAppBar build: ${notes.map((e) => e.json)}");
-                if (notes.isNotEmpty) {
-                  NotesDb.addNotes(NotesDb.deletedNotesKey, notes);
-                  NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);
-                }
-
-                List<ListModel> listModels =
-                    DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
-                for (ListModel listModel in listModels) {
-                  listModel.isDeleted = true;
-                }
-                if (listModels.isNotEmpty) {
-                  ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
-                  ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
-                }
-
-                selectedIds.clear();
-                debugPrint("SelectedFavoriteAppBar build: end1");
-                onSelectedIdsCleared?.call();
-                debugPrint("SelectedFavoriteAppBar build: end2");
-              },
             ),
           ],
         ),
@@ -237,5 +200,55 @@ class SelectedFavoriteAppBar extends StatelessWidget {
     selectedIds.clear();
     onSelectedIdsCleared?.call();
     debugPrint("SelectedFavoriteAppBar onPinned: pinned");
+  }
+
+  onArchive() {
+    List<Note> notes = DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
+    for (Note note in notes) {
+      note.isArchive = true;
+      note.isFavorite = false;
+      NotesDb.addNote(NotesDb.archivedNotesKey, note);
+      NotesDb.removeNote(NotesDb.favoriteNotesKey, note.id);
+    }
+
+    List<ListModel> listModels =
+        DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
+    for (ListModel listModel in listModels) {
+      listModel.isArchive = true;
+      listModel.isFavorite = false;
+      ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
+      ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
+    }
+    selectedIds.clear();
+    onSelectedIdsCleared?.call();
+  }
+
+  onDelete() {
+    debugPrint("SelectedFavoriteAppBar build: ");
+
+    List<Note> notes = DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
+    for (Note note in notes) {
+      note.isDeleted = true;
+    }
+    debugPrint("SelectedFavoriteAppBar build: ${notes.map((e) => e.json)}");
+    if (notes.isNotEmpty) {
+      NotesDb.addNotes(NotesDb.deletedNotesKey, notes);
+      NotesDb.removeNotes(NotesDb.favoriteNotesKey, selectedIds);
+    }
+
+    List<ListModel> listModels =
+        DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
+    for (ListModel listModel in listModels) {
+      listModel.isDeleted = true;
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
+      ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
+    }
+
+    selectedIds.clear();
+    debugPrint("SelectedFavoriteAppBar build: end1");
+    onSelectedIdsCleared?.call();
+    debugPrint("SelectedFavoriteAppBar build: end2");
   }
 }

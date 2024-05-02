@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/utils.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
 import '../note.dart';
@@ -127,9 +128,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
               onTap: () {},
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds);
-              },
+              onTap: () => Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds),
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
@@ -139,6 +138,12 @@ class SelectedArchiveAppBar extends StatelessWidget {
               ),
             ),
             InkWell(
+              onTap: () => Utils.commonDialog(
+                context: context,
+                function: onUnArchive,
+                content: 'UnArchive',
+                snackBarMessage: 'Notes removed from Archive',
+              ),
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
@@ -146,39 +151,14 @@ class SelectedArchiveAppBar extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              onTap: () {
-                List<Note> notes =
-                    DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
-                for (Note note in notes) {
-                  note.isArchive = false;
-                  if (note.isFavorite) {
-                    NotesDb.addNote(NotesDb.favoriteNotesKey, note);
-                  } else if (note.isPinned) {
-                    NotesDb.addNote(NotesDb.pinnedNotesKey, note);
-                  } else {
-                    NotesDb.addNote(NotesDb.notesKey, note);
-                  }
-                  NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
-                }
-
-                List<ListModel> listModels =
-                    DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
-                for (ListModel listModel in listModels) {
-                  listModel.isArchive = false;
-                  if (listModel.isFavorite) {
-                    ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
-                  } else if (listModel.isPinned) {
-                    ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
-                  } else {
-                    ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
-                  }
-                  ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
-                }
-                selectedIds.clear();
-                onSelectedIdsCleared?.call();
-              },
             ),
             InkWell(
+              onTap: () => Utils.commonDialog(
+                context: context,
+                function: onDelete,
+                content: 'Delete',
+                snackBarMessage: 'Notes moved to Bin',
+              ),
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(
@@ -186,30 +166,6 @@ class SelectedArchiveAppBar extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              onTap: () {
-                List<Note> notes =
-                    DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
-                for (Note note in notes) {
-                  note.isDeleted = true;
-                  NotesDb.addNote(NotesDb.deletedNotesKey, note);
-                }
-
-                if (notes.isNotEmpty) {
-                  NotesDb.removeNotes(NotesDb.archivedNotesKey, selectedIds);
-                }
-
-                List<ListModel> listModels =
-                    DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
-                for (ListModel listModel in listModels) {
-                  listModel.isDeleted = true;
-                }
-                if (listModels.isNotEmpty) {
-                  ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
-                  ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
-                }
-                selectedIds.clear();
-                onSelectedIdsCleared?.call();
-              },
             ),
           ],
         ),
@@ -239,6 +195,61 @@ class SelectedArchiveAppBar extends StatelessWidget {
       ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
     }
 
+    selectedIds.clear();
+    onSelectedIdsCleared?.call();
+  }
+
+  onDelete() {
+    List<Note> notes = DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+    for (Note note in notes) {
+      note.isDeleted = true;
+      NotesDb.addNote(NotesDb.deletedNotesKey, note);
+    }
+
+    if (notes.isNotEmpty) {
+      NotesDb.removeNotes(NotesDb.archivedNotesKey, selectedIds);
+    }
+
+    List<ListModel> listModels =
+        DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+    for (ListModel listModel in listModels) {
+      listModel.isDeleted = true;
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
+      ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
+    }
+    selectedIds.clear();
+    onSelectedIdsCleared?.call();
+  }
+
+  onUnArchive() {
+    List<Note> notes = DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+    for (Note note in notes) {
+      note.isArchive = false;
+      if (note.isFavorite) {
+        NotesDb.addNote(NotesDb.favoriteNotesKey, note);
+      } else if (note.isPinned) {
+        NotesDb.addNote(NotesDb.pinnedNotesKey, note);
+      } else {
+        NotesDb.addNote(NotesDb.notesKey, note);
+      }
+      NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
+    }
+
+    List<ListModel> listModels =
+        DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+    for (ListModel listModel in listModels) {
+      listModel.isArchive = false;
+      if (listModel.isFavorite) {
+        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
+      } else if (listModel.isPinned) {
+        ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
+      } else {
+        ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
+      }
+      ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
+    }
     selectedIds.clear();
     onSelectedIdsCleared?.call();
   }

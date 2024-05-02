@@ -118,17 +118,14 @@ class _HomeScreenState extends State<HomeScreen> {
           //Expanded(child: SizedBox()),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: const MediaQueryData().padding.bottom + 50),
-        child: FloatingActionButton(
-          onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
-          backgroundColor: Colors.grey.shade200,
-          elevation: 20,
-          child: const Icon(
-            Icons.add,
-            size: 40,
-            color: CupertinoColors.activeBlue,
-          ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
+        backgroundColor: Colors.grey.shade200,
+        elevation: 20,
+        child: const Icon(
+          Icons.add,
+          size: 40,
+          color: CupertinoColors.activeBlue,
         ),
       ),
     );

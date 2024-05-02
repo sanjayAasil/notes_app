@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sanjay_notes/deleted_screen.dart';
 
 class Utils {
+  Utils._();
+
   static String getFormattedDateTime(DateTime date) {
     String format;
     bool isToday = false;
@@ -25,5 +29,42 @@ class Utils {
       return "Yesterday \n ${DateFormat(format).format(date)}";
     }
     return DateFormat(format).format(date);
+  }
+
+  static commonDialog({
+    required context,
+    required Function function,
+    required String content,
+    required String snackBarMessage,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+          backgroundColor: Colors.grey.shade100,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                function();
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    //clipBehavior: Clip.none,
+                    content: Text(snackBarMessage),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+              child: Text(content),
+            ),
+          ],
+          title: Text(content),
+          contentPadding: const EdgeInsets.all(20),
+          content: Text('Do you want to $content?')),
+    );
   }
 }

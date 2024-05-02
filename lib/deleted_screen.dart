@@ -5,6 +5,7 @@ import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:sanjay_notes/utils.dart';
 import 'package:sanjay_notes/widget_helper.dart';
 
 import 'list_model.dart';
@@ -99,6 +100,12 @@ class _DeletedScreenState extends State<DeletedScreen> {
                       ),
                     )),
                     InkWell(
+                      onTap: () => Utils.commonDialog(
+                        context: context,
+                        function: onRestore,
+                        content: 'Restore',
+                        snackBarMessage: 'Notes restored',
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Icon(
@@ -107,56 +114,14 @@ class _DeletedScreenState extends State<DeletedScreen> {
                           size: 25,
                         ),
                       ),
-                      onTap: () {
-                        List<Note> notes =
-                            DataManager().deletedNotes.where((element) => selectedIds.contains(element.id)).toList();
-                        for (Note note in notes) {
-                          if (note.isArchive) {
-                            note.isDeleted = false;
-                            NotesDb.addNote(NotesDb.archivedNotesKey, note);
-                          } else if (note.isFavorite) {
-                            note.isDeleted = false;
-                            NotesDb.addNote(NotesDb.favoriteNotesKey, note);
-                          } else if (note.isPinned) {
-                            note.isDeleted = false;
-                            NotesDb.addNote(NotesDb.pinnedNotesKey, note);
-                          } else {
-                            note.isDeleted = false;
-                            NotesDb.addNote(NotesDb.notesKey, note);
-                          }
-                        }
-                        if (notes.isNotEmpty) {
-                          NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
-                        }
-
-                        List<ListModel> listModels = DataManager()
-                            .deletedListModel
-                            .where((element) => selectedIds.contains(element.id))
-                            .toList();
-
-                        for (ListModel listModel in listModels) {
-                          if (listModel.isArchive) {
-                            listModel.isDeleted = false;
-                            ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
-                          } else if (listModel.isFavorite) {
-                            listModel.isDeleted = false;
-                            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
-                          } else if (listModel.isPinned) {
-                            listModel.isDeleted = false;
-                            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
-                          } else {
-                            listModel.isDeleted = false;
-                            ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
-                          }
-                        }
-                        if (listModels.isNotEmpty) {
-                          ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
-                        }
-                        selectedIds.clear();
-                        setState(() {});
-                      },
                     ),
                     InkWell(
+                      onTap: () => Utils.commonDialog(
+                        context: context,
+                        function: onDelete,
+                        content: 'Delete',
+                        snackBarMessage: 'Permanently Deleted',
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Icon(
@@ -165,16 +130,6 @@ class _DeletedScreenState extends State<DeletedScreen> {
                           size: 25,
                         ),
                       ),
-                      onTap: () {
-                        if (DataManager().deletedNotes.isNotEmpty) {
-                          NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
-                        }
-                        if (DataManager().deletedListModel.isNotEmpty) {
-                          ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
-                        }
-                        selectedIds.clear();
-                        setState(() {});
-                      },
                     ),
                   ],
                 ),
@@ -222,5 +177,62 @@ class _DeletedScreenState extends State<DeletedScreen> {
         ],
       ),
     );
+  }
+
+  onRestore() {
+    List<Note> notes = DataManager().deletedNotes.where((element) => selectedIds.contains(element.id)).toList();
+    for (Note note in notes) {
+      if (note.isArchive) {
+        note.isDeleted = false;
+        NotesDb.addNote(NotesDb.archivedNotesKey, note);
+      } else if (note.isFavorite) {
+        note.isDeleted = false;
+        NotesDb.addNote(NotesDb.favoriteNotesKey, note);
+      } else if (note.isPinned) {
+        note.isDeleted = false;
+        NotesDb.addNote(NotesDb.pinnedNotesKey, note);
+      } else {
+        note.isDeleted = false;
+        NotesDb.addNote(NotesDb.notesKey, note);
+      }
+    }
+    if (notes.isNotEmpty) {
+      NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
+    }
+
+    List<ListModel> listModels =
+        DataManager().deletedListModel.where((element) => selectedIds.contains(element.id)).toList();
+
+    for (ListModel listModel in listModels) {
+      if (listModel.isArchive) {
+        listModel.isDeleted = false;
+        ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
+      } else if (listModel.isFavorite) {
+        listModel.isDeleted = false;
+        ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
+      } else if (listModel.isPinned) {
+        listModel.isDeleted = false;
+        ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
+      } else {
+        listModel.isDeleted = false;
+        ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
+      }
+    }
+    if (listModels.isNotEmpty) {
+      ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
+    }
+    selectedIds.clear();
+    setState(() {});
+  }
+
+  onDelete() {
+    if (DataManager().deletedNotes.isNotEmpty) {
+      NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
+    }
+    if (DataManager().deletedListModel.isNotEmpty) {
+      ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
+    }
+    selectedIds.clear();
+    setState(() {});
   }
 }

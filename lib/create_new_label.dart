@@ -32,7 +32,9 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
       canPop: false,
       onPopInvoked: (bool value) {
         for (TextEditingController controller in controllers) {
-          labels.add(controller.text.trim());
+          if (controller.text.trim().isNotEmpty) {
+            labels.add(controller.text.trim());
+          }
         }
         LabelsDb.removeAllLabels();
         LabelsDb.addLabels(labels);
@@ -49,13 +51,13 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      labels.clear();
                       for (TextEditingController controller in controllers) {
-                        labels.add(controller.text.trim());
+                        if (controller.text.trim().isNotEmpty) {
+                          labels.add(controller.text.trim());
+                        }
                       }
                       LabelsDb.removeAllLabels();
                       LabelsDb.addLabels(labels);
-
                       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
                     },
                     child: Padding(
@@ -103,10 +105,9 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (!labels.contains(creatingController.text.trim())) {
+                    if (creatingController.text.trim().isNotEmpty) {
                       controllers.add(TextEditingController(text: creatingController.text.trim()));
                       creatingController.clear();
-                      labels.add(creatingController.text);
                       setState(() {});
                     }
                   },

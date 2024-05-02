@@ -102,33 +102,23 @@ class MyDrawer extends StatelessWidget {
                   Column(
                     children: [
                       for (int i = DataManager().labels.length - 1; i >= 0; i--)
-                        InkWell(
-                          onTap: () {},
-                          child: Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                                child: Icon(Icons.label_outline_rounded),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(
-                                    DataManager().labels[i],
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                        Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                              child: Icon(Icons.label_outline_rounded),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  DataManager().labels[i],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              InkWell(
-                                  borderRadius: BorderRadius.circular(40),
-                                  onTap: () {},
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                                    child: Icon(CupertinoIcons.pen),
-                                  )),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       InkWell(
                         onTap: selectedTab != 'createNewLabelScreen'
