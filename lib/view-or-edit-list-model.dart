@@ -30,7 +30,6 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     for (ListItem listItem in widget.listModel.items) {
       itemNameControllers.add(TextEditingController(text: listItem.name));
       itemTicked.add(listItem.ticked);
-      debugPrint("_ViewOrEditListModelState: initState $itemNameControllers");
     }
     DataManager().addToFavorite = widget.listModel.isFavorite ? true : false;
     DataManager().addToPin = widget.listModel.isPinned ? true : false;
@@ -38,12 +37,10 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("_ViewOrEditListModelState: build check ${itemNameControllers.length}");
     return PopScope(
       canPop: widget.listModel.isDeleted,
       onPopInvoked: (bool value) {
         if (!widget.listModel.isDeleted) {
-          debugPrint("_ManageNotePageState build: check onBack ");
           onBackPressed();
         }
       },
@@ -449,12 +446,19 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
             widget.listModel.isFavorite = true;
             widget.listModel.isPinned = true;
+            widget.listModel.isArchive = false;
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           } else {
             ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
             widget.listModel.isFavorite = true;
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Note added to Favorites'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         } else {
           if (DataManager().addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);

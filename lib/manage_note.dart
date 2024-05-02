@@ -80,27 +80,27 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             ),
                           ),
                           const Expanded(child: SizedBox()),
-
-                          StatefulBuilder(builder: (context, setState) {
-                            return InkWell(
-                              onTap: () {
-                                DataManager().addToFavorite = !DataManager().addToFavorite;
-                                setState(() {});
-                              },
-                              borderRadius: BorderRadius.circular(40),
-                              child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: DataManager().addToFavorite
-                                      ? Icon(
-                                          Icons.favorite,
-                                          color: Colors.red.shade800,
-                                        )
-                                      : Icon(
-                                          Icons.favorite_border,
-                                          color: Colors.grey.shade800,
-                                        )),
-                            );
-                          }),
+                          if (widget.note == null || !widget.note!.isArchive)
+                            StatefulBuilder(builder: (context, setState) {
+                              return InkWell(
+                                onTap: () {
+                                  DataManager().addToFavorite = !DataManager().addToFavorite;
+                                  setState(() {});
+                                },
+                                borderRadius: BorderRadius.circular(40),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: DataManager().addToFavorite
+                                        ? Icon(
+                                            Icons.favorite,
+                                            color: Colors.red.shade800,
+                                          )
+                                        : Icon(
+                                            Icons.favorite_border,
+                                            color: Colors.grey.shade800,
+                                          )),
+                              );
+                            }),
                           StatefulBuilder(builder: (context, setState) {
                             return InkWell(
                               onTap: () {
@@ -392,34 +392,14 @@ class _ManageNotePageState extends State<ManageNotePage> {
         widget.note!.note = noteController.text.trim();
         widget.note!.color = mainColor;
         if (widget.note!.isArchive) {
-          if (DataManager().addToFavorite) {
-            widget.note!.isArchive = false;
-            if (DataManager().addToPin) {
-              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-              widget.note!.isFavorite = true;
-              widget.note!.isPinned = true;
-              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-            } else {
-              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-              widget.note!.isFavorite = true;
-              NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-            }
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Note added to Favorites'),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
+          if (DataManager().addToPin) {
+            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+            widget.note!.isPinned = true;
+            NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           } else {
-            if (DataManager().addToPin) {
-              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-              widget.note!.isPinned = true;
-              NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
-            } else {
-              NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-              widget.note!.isPinned = false;
-              NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
-            }
+            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+            widget.note!.isPinned = false;
+            NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           }
 
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
@@ -546,39 +526,34 @@ class _ManageNotePageState extends State<ManageNotePage> {
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
         if (widget.note!.isArchive) {
-          if (widget.note!.isFavorite) {
+          if (widget.note!.isPinned) {
             NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-            widget.note!.color = mainColor;
-            widget.note!.isArchive = false;
-            NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
-          } else if (widget.note!.isPinned) {
-            NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-            widget.note!.color = mainColor;
+
             widget.note!.isArchive = false;
             NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
           } else {
             NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-            widget.note!.color = mainColor;
+
             widget.note!.isArchive = false;
             NotesDb.addNote(NotesDb.notesKey, widget.note!);
           }
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
         } else if (widget.note!.isFavorite) {
           NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-          widget.note!.color = mainColor;
+
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
 
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
         } else if (widget.note!.isPinned) {
           NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
-          widget.note!.color = mainColor;
+
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
         } else {
           NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
-          widget.note!.color = mainColor;
+
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);

@@ -22,7 +22,6 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
     for (String label in DataManager().labels) {
       controllers.add(TextEditingController(text: label));
     }
-
     super.initState();
   }
 
@@ -152,11 +151,14 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  controllers.remove(controllers[i]);
+                                  setState(() {});
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Icon(
-                                    CupertinoIcons.pen,
+                                    Icons.delete_outline,
                                     color: Colors.grey.shade800,
                                   ),
                                 ),
