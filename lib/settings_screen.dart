@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/routes.dart';
 import 'package:sanjay_notes/settings_model.dart';
 import 'my_drawer.dart';
 
@@ -29,136 +30,140 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const MyDrawer(
-        selectedTab: 'Settings',
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: const MediaQueryData().padding.top + 50,
-              left: const MediaQueryData().padding.left + 10,
-              bottom: 20,
-            ),
-            child: Row(
-              children: [
-                Builder(
-                  builder: (context) => InkWell(
-                    onTap: () => Scaffold.of(context).openDrawer(),
-                    borderRadius: BorderRadius.circular(40),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.grey.shade800,
-                        size: 30,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) => Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false),
+      child: Scaffold(
+        drawer: const MyDrawer(
+          selectedTab: 'Settings',
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: const MediaQueryData().padding.top + 50,
+                left: const MediaQueryData().padding.left + 10,
+                bottom: 20,
+              ),
+              child: Row(
+                children: [
+                  Builder(
+                    builder: (context) => InkWell(
+                      onTap: () => Scaffold.of(context).openDrawer(),
+                      borderRadius: BorderRadius.circular(40),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.grey.shade800,
+                          size: 30,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                const Expanded(
-                  child: Text(
-                    'Settings',
-                    style: TextStyle(fontSize: 18),
+                  const SizedBox(
+                    width: 20,
                   ),
-                ),
-              ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 25.0),
-            child: Text(
-              'Sort',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.w600,
+                  const Expanded(
+                    child: Text(
+                      'Settings',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'Show Time for Notes',
-                    style: TextStyle(fontSize: 17),
-                  ),
+            const Padding(
+              padding: EdgeInsets.only(left: 25.0),
+              child: Text(
+                'Sort',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
                 ),
-                ValueListenableBuilder(
-                  valueListenable: showTimeChecked,
-                  builder: (context, value, child) {
-                    return Switch(
-                      value: showTimeChecked.value,
-                      onChanged: (bool value) {
-                        showTimeChecked.value = value;
-                        settingsModel.showTimeChecked = showTimeChecked.value;
-                        prefs.setString('settings', jsonEncode(settingsModel.json));
-                      },
-                    );
-                  },
-                ),
-              ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'Show older notes first',
-                    style: TextStyle(fontSize: 17),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Show Time for Notes',
+                      style: TextStyle(fontSize: 17),
+                    ),
                   ),
-                ),
-                ValueListenableBuilder(
-                  valueListenable: olderNotesChecked,
-                  builder: (context, value, child) {
-                    return Switch(
-                      value: olderNotesChecked.value,
-                      onChanged: (bool value) {
-                        olderNotesChecked.value = value;
-                        settingsModel.olderNotesChecked = olderNotesChecked.value;
-                        prefs.setString('settings', jsonEncode(settingsModel.json));
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'Show labels on home screen',
-                    style: TextStyle(fontSize: 17),
+                  ValueListenableBuilder(
+                    valueListenable: showTimeChecked,
+                    builder: (context, value, child) {
+                      return Switch(
+                        value: showTimeChecked.value,
+                        onChanged: (bool value) {
+                          showTimeChecked.value = value;
+                          settingsModel.showTimeChecked = showTimeChecked.value;
+                          prefs.setString('settings', jsonEncode(settingsModel.json));
+                        },
+                      );
+                    },
                   ),
-                ),
-                ValueListenableBuilder(
-                  valueListenable: showLabelsOnHomeScreen,
-                  builder: (context, value, child) {
-                    return Switch(
-                      value: showLabelsOnHomeScreen.value,
-                      onChanged: (bool value) {
-                        showLabelsOnHomeScreen.value = value;
-                        settingsModel.showLabelsOnHomeScreen = showLabelsOnHomeScreen.value;
-                        prefs.setString('settings', jsonEncode(settingsModel.json));
-                      },
-                    );
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Show older notes first',
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: olderNotesChecked,
+                    builder: (context, value, child) {
+                      return Switch(
+                        value: olderNotesChecked.value,
+                        onChanged: (bool value) {
+                          olderNotesChecked.value = value;
+                          settingsModel.olderNotesChecked = olderNotesChecked.value;
+                          prefs.setString('settings', jsonEncode(settingsModel.json));
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Show labels on home screen',
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: showLabelsOnHomeScreen,
+                    builder: (context, value, child) {
+                      return Switch(
+                        value: showLabelsOnHomeScreen.value,
+                        onChanged: (bool value) {
+                          showLabelsOnHomeScreen.value = value;
+                          settingsModel.showLabelsOnHomeScreen = showLabelsOnHomeScreen.value;
+                          prefs.setString('settings', jsonEncode(settingsModel.json));
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

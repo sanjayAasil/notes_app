@@ -41,11 +41,18 @@ class Utils {
       barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
+          shadowColor: Colors.black,
+          elevation: 20,
           backgroundColor: Colors.grey.shade100,
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                ),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -60,7 +67,10 @@ class Utils {
                   ),
                 );
               },
-              child: Text(content),
+              child: Text(
+                content,
+                style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.w600),
+              ),
             ),
           ],
           title: Text(content),
