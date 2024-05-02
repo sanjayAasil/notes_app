@@ -370,6 +370,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
           } else {
             note.isFavorite = true;
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Added to Favorites'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
           NotesDb.addNote(NotesDb.favoriteNotesKey, note);
         } else {
           if (DataManager().addToPin) {
@@ -387,6 +393,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
         widget.note!.color = mainColor;
         if (widget.note!.isArchive) {
           if (DataManager().addToFavorite) {
+            widget.note!.isArchive = false;
             if (DataManager().addToPin) {
               NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
               widget.note!.isFavorite = true;
@@ -397,6 +404,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
               widget.note!.isFavorite = true;
               NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
             }
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Note added to Favorites'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
           } else {
             if (DataManager().addToPin) {
               NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
@@ -433,6 +446,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
               widget.note!.isPinned = false;
               NotesDb.addNote(NotesDb.notesKey, widget.note!);
             }
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                duration: Duration(seconds: 2),
+                content: Text('Note removed from Favorites'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
           }
 
           Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
@@ -447,6 +467,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
               widget.note!.isFavorite = true;
               NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
             }
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Note added to Favorites'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
           } else {
             if (DataManager().addToPin) {
               NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);

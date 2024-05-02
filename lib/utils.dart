@@ -53,9 +53,10 @@ class Utils {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    //clipBehavior: Clip.none,
+                    elevation: 20,
                     content: Text(snackBarMessage),
                     behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 2),
                   ),
                 );
               },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/favorite/favorite_app_bar.dart';
 import 'package:sanjay_notes/favorite/favorite_grid_view.dart';
 import 'package:sanjay_notes/my_drawer.dart';
+import 'package:sanjay_notes/routes.dart';
 import '../data_manager.dart';
 import 'favorite_list_view.dart';
 
@@ -32,54 +33,58 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     _handlePinned();
-    return Scaffold(
-      drawer: const MyDrawer(
-        selectedTab: 'favoriteScreen',
-      ),
-      body: Column(
-        children: [
-          if (selectedIds.isEmpty)
-            DefaultFavoriteAppBar(onViewChanged: () {
-              setState(() {});
-            })
-          else
-            SelectedFavoriteAppBar(
-              selectedIds: selectedIds,
-              onSelectedIdsCleared: () {
-                debugPrint("_FavoriteScreenState build: call check");
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) => Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false),
+      child: Scaffold(
+        drawer: const MyDrawer(
+          selectedTab: 'favoriteScreen',
+        ),
+        body: Column(
+          children: [
+            if (selectedIds.isEmpty)
+              DefaultFavoriteAppBar(onViewChanged: () {
                 setState(() {});
-              },
-            ),
-          if (DataManager().favoriteNotes.isEmpty && DataManager().favoriteListModels.isEmpty)
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.favorite_border,
-                    size: 140,
-                    color: Colors.yellow.shade800,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Your favorite notes appear here'),
-                  ),
-                ],
+              })
+            else
+              SelectedFavoriteAppBar(
+                selectedIds: selectedIds,
+                onSelectedIdsCleared: () {
+                  debugPrint("_FavoriteScreenState build: call check");
+                  setState(() {});
+                },
               ),
-            )
-          else
-            DataManager().favoriteScreenView
-                ? FavoriteListView(
-                    selectedIds: selectedIds,
-                    isPinned: isPinned,
-                    others: others,
-                    onUpdateRequest: () => setState(() {}))
-                : FavoriteGridView(
-                    selectedIds: selectedIds,
-                    isPinned: isPinned,
-                    others: others,
-                    onUpdateRequest: () => setState(() {})),
-        ],
+            if (DataManager().favoriteNotes.isEmpty && DataManager().favoriteListModels.isEmpty)
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.favorite_border,
+                      size: 140,
+                      color: Colors.yellow.shade800,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Your favorite notes appear here'),
+                    ),
+                  ],
+                ),
+              )
+            else
+              DataManager().favoriteScreenView
+                  ? FavoriteListView(
+                      selectedIds: selectedIds,
+                      isPinned: isPinned,
+                      others: others,
+                      onUpdateRequest: () => setState(() {}))
+                  : FavoriteGridView(
+                      selectedIds: selectedIds,
+                      isPinned: isPinned,
+                      others: others,
+                      onUpdateRequest: () => setState(() {})),
+          ],
+        ),
       ),
     );
   }
