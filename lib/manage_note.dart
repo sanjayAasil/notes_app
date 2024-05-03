@@ -207,12 +207,21 @@ class _ManageNotePageState extends State<ManageNotePage> {
                       child: Row(
                         children: [
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(Routes.newListScreen, (route) => false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  duration: Duration(seconds: 2),
+                                  content: Text('Moved to List page'),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            },
                             borderRadius: BorderRadius.circular(40),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Icon(
-                                Icons.add_box_outlined,
+                                Icons.check_box_outlined,
                                 color: Colors.grey.shade800,
                               ),
                             ),
@@ -223,22 +232,37 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Icon(
-                                CupertinoIcons.paintbrush,
+                                Icons.color_lens_outlined,
                                 color: Colors.grey.shade800,
                               ),
                             ),
                           ),
                           const Expanded(child: SizedBox()),
-                          InkWell(
-                            borderRadius: BorderRadius.circular(40),
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Icon(
-                                Icons.more_vert_rounded,
-                                color: Colors.grey.shade800,
+                          PopupMenuButton(
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'deleted',
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 10.0),
+                                      child: Icon(
+                                        Icons.delete_outline_outlined,
+                                        color: Colors.grey.shade800,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Delete',
+                                      style: TextStyle(color: Colors.grey.shade800),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
+                            onSelected: (value) {
+                              debugPrint("_ManageNotePageState build: checlkll");
+                              popUpDelete();
+                            },
                           ),
                         ],
                       ),
@@ -356,6 +380,34 @@ class _ManageNotePageState extends State<ManageNotePage> {
           );
         }),
       );
+
+  void popUpDelete() {
+    if (widget.note != null) {
+      if (widget.note!.isFavorite) {
+        NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+      } else if (widget.note!.isPinned) {
+        NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      } else if (widget.note!.isArchive) {
+        NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+      } else {
+        NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      }
+    } else {
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 2),
+        content: Text('Note  removed'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   void onBackPressed() {
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
@@ -719,6 +771,14 @@ class NoteForDeletedScreen extends StatelessWidget {
                     NotesDb.addNote(NotesDb.notesKey, note);
                     NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
                   }
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      duration: Duration(seconds: 2),
+                      content: Text('Note recycled'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                   Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
                 },
               ),
@@ -734,6 +794,14 @@ class NoteForDeletedScreen extends StatelessWidget {
                 onTap: () {
                   NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
                   Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      duration: Duration(seconds: 2),
+                      content: Text('Note deleted permanently'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                 },
               ),
             ],

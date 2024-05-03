@@ -300,7 +300,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Icon(
-                                CupertinoIcons.paintbrush,
+                                Icons.color_lens_outlined,
                                 color: Colors.grey.shade800,
                               ),
                             ),
@@ -461,21 +461,35 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
           if (DataManager().addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
             widget.listModel.isPinned = true;
-            ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           } else {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
-            ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('List moved to Favorites'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         } else {
           widget.listModel.isFavorite = false;
           if (DataManager().addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
             widget.listModel.isPinned = true;
-            ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
           } else {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
-            ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+            ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('List removed from Favorites'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         }
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.listModel.isPinned) {
@@ -489,6 +503,13 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('List added to Favorites'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         } else {
           if (DataManager().addToPin) {
             widget.listModel.isPinned = true;
@@ -511,6 +532,13 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('List added to Favorites'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         } else {
           if (DataManager().addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
@@ -545,20 +573,29 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
-        if (DataManager().addToPin) {
-          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
-          widget.listModel.isArchive = false;
-          widget.listModel.isPinned = true;
-          ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+        ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+        widget.listModel.isArchive = false;
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+        if (DataManager().addToFavorite) {
+          ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
         } else {
-          ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isArchive = false;
-          ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
-
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+          widget.listModel.isFavorite = false;
+          if (DataManager().addToPin) {
+            widget.listModel.isPinned = true;
+            ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
+          } else {
+            ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
+          }
         }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text('List removed from Archive'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
       } else if (widget.listModel.isFavorite) {
         if (DataManager().addToFavorite) {
           widget.listModel.isFavorite = true;
@@ -566,6 +603,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             widget.listModel.isPinned = true;
           }
         } else {
+          widget.listModel.isFavorite = false;
           if (DataManager().addToPin) {
             widget.listModel.isPinned = true;
           }
@@ -574,18 +612,39 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         widget.listModel.isArchive = true;
         ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text('List added to Favorites'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.listModel.isPinned) {
         ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
         widget.listModel.isArchive = true;
         ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text('List moved to Archive'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
         ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
         widget.listModel.isArchive = true;
         ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text('List moved to Archive'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
     } else {

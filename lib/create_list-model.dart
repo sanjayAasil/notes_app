@@ -76,26 +76,24 @@ class _NewListScreenState extends State<NewListScreen> {
                         );
                       },
                     ),
-                    StatefulBuilder(
-                      builder: (context, setState) {
-                        return InkWell(
-                          borderRadius: BorderRadius.circular(40),
-                          onTap: () {
-                            DataManager().addToPin = !DataManager().addToPin;
-                            setState(() {});
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: DataManager().addToPin
-                                ? Icon(
-                                    CupertinoIcons.pin_fill,
-                                    color: Colors.grey.shade800,
-                                  )
-                                : Icon(CupertinoIcons.pin),
-                          ),
-                        );
-                      }
-                    ),
+                    StatefulBuilder(builder: (context, setState) {
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(40),
+                        onTap: () {
+                          DataManager().addToPin = !DataManager().addToPin;
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DataManager().addToPin
+                              ? Icon(
+                                  CupertinoIcons.pin_fill,
+                                  color: Colors.grey.shade800,
+                                )
+                              : Icon(CupertinoIcons.pin),
+                        ),
+                      );
+                    }),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(
@@ -230,12 +228,21 @@ class _NewListScreenState extends State<NewListScreen> {
                 child: Row(
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.createNewNoteScreen, (route) => false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            duration: Duration(seconds: 2),
+                            content: Text('Moved to Note page'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
                       borderRadius: BorderRadius.circular(40),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
-                          Icons.list,
+                          Icons.note_alt_outlined,
                           color: Colors.grey.shade800,
                         ),
                       ),
@@ -246,22 +253,34 @@ class _NewListScreenState extends State<NewListScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Icon(
-                          CupertinoIcons.paintbrush,
+                          Icons.color_lens_outlined,
                           color: Colors.grey.shade800,
                         ),
                       ),
                     ),
-                    Expanded(child: SizedBox()),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(40),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.more_vert_rounded,
-                          color: Colors.grey.shade800,
+                    const Expanded(child: SizedBox()),
+                    PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 'deleted',
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.delete_outline_outlined,
+                                  color: Colors.grey.shade800,
+                                ),
+                              ),
+                              Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.grey.shade800),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
+                      onSelected: (value) => popUpDelete(),
                     ),
                   ],
                 ),
@@ -278,7 +297,7 @@ class _NewListScreenState extends State<NewListScreen> {
         builder: (context) => StatefulBuilder(builder: (context, setLocalState) {
           return Container(
             color: Colors.grey.shade300,
-            height: MediaQueryData().padding.bottom + 150,
+            height: const MediaQueryData().padding.bottom + 150,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -380,6 +399,18 @@ class _NewListScreenState extends State<NewListScreen> {
         }),
       );
 
+  void popUpDelete() {
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 2),
+        content: Text('List  removed'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+  }
+
   onBackPressed() {
     for (int i = 0; i < itemControllers.length; i++) {
       if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
@@ -427,13 +458,13 @@ class _NewListScreenState extends State<NewListScreen> {
     if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
       return;
     }
-    if(DataManager().addToFavorite){
+    if (DataManager().addToFavorite) {
       listModel.isFavorite = true;
-      if(DataManager().addToPin){
+      if (DataManager().addToPin) {
         listModel.isPinned = true;
       }
     } else {
-      if(DataManager().addToPin){
+      if (DataManager().addToPin) {
         listModel.isPinned = true;
       }
     }
