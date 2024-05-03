@@ -400,7 +400,6 @@ class _NewListScreenState extends State<NewListScreen> {
       );
 
   void popUpDelete() {
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 2),

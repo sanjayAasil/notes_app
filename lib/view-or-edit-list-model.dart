@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:sanjay_notes/utils.dart';
 
 class ViewOrEditListModel extends StatefulWidget {
   final ListModel listModel;
@@ -305,17 +307,46 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                               ),
                             ),
                           ),
-                          const Expanded(child: SizedBox()),
-                          InkWell(
-                            borderRadius: BorderRadius.circular(40),
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Icon(
-                                Icons.more_vert_rounded,
-                                color: Colors.grey.shade800,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 70.0),
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Text(
+                                Utils.getFormattedDateTime(widget.listModel.createdAt),
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade800,
+                                ),
                               ),
                             ),
+                          ),
+                          const Expanded(child: SizedBox()),
+                          PopupMenuButton(
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'deleted',
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 10.0),
+                                      child: Icon(
+                                        Icons.delete_outline_outlined,
+                                        color: Colors.grey.shade800,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Delete',
+                                      style: TextStyle(color: Colors.grey.shade800),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            onSelected: (value) {
+                              debugPrint("_ManageNotePageState build: checlkll");
+                              popUpDelete();
+                            },
                           ),
                         ],
                       ),
@@ -433,6 +464,30 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
           );
         }),
       );
+
+  void popUpDelete() {
+    if (widget.listModel.isFavorite) {
+      ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+    } else if (widget.listModel.isPinned) {
+      ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+    } else if (widget.listModel.isArchive) {
+      ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+    } else {
+      ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 2),
+        content: Text('List removed'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   onBackPressed() {
     for (int i = 0; i < itemNameControllers.length; i++) {

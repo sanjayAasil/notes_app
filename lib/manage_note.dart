@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
+
 
 class ManageNotePage extends StatefulWidget {
   final Note? note;
@@ -23,6 +23,9 @@ class _ManageNotePageState extends State<ManageNotePage> {
   Color mainColor = Colors.white;
   TextEditingController titleController = TextEditingController();
   TextEditingController noteController = TextEditingController();
+
+  DateTime? _date;
+  TimeOfDay? _timeOfDay;
 
   @override
   void initState() {
@@ -114,14 +117,17 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                           CupertinoIcons.pin_fill,
                                           color: Colors.grey.shade800,
                                         )
-                                      : Icon(CupertinoIcons.pin)),
+                                      : const Icon(CupertinoIcons.pin)),
                             );
                           }),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              CupertinoIcons.bell,
-                              color: Colors.grey.shade800,
+                          InkWell(
+                            onTap: () => remainder(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                CupertinoIcons.bell,
+                                color: Colors.grey.shade800,
+                              ),
                             ),
                           ),
                           InkWell(
@@ -259,10 +265,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                 ),
                               ),
                             ],
-                            onSelected: (value) {
-                              debugPrint("_ManageNotePageState build: checlkll");
-                              popUpDelete();
-                            },
+                            onSelected: (value) => popUpDelete(),
                           ),
                         ],
                       ),
@@ -380,6 +383,144 @@ class _ManageNotePageState extends State<ManageNotePage> {
           );
         }),
       );
+
+  void remainder() {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, localState) {
+        return SimpleDialog(
+          backgroundColor: Colors.grey.shade200,
+          title: const Text('Remainder'),
+          alignment: Alignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 10),
+              child: ElevatedButton(
+                  onPressed: () {
+                    showDatePicker(
+                            builder: (context, child) => Theme(
+                                  data: ThemeData(
+                                    colorScheme: ColorScheme.light(
+                                       primary: Colors.blue,
+                                       onPrimary: Colors.white,
+                                       surface: Colors.grey.shade50,
+                                    ),
+
+                                  ),
+                                  child: child!,
+                                ),
+                            context: context,
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2050),
+                            currentDate: DateTime.now())
+                        .then((value) => setState(() {
+                              _date = value!;
+                              localState(() {});
+                            }));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade600,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 7),
+                        child: Icon(
+                          Icons.date_range,
+                          color: Colors.white,
+                        ),
+                      ),
+                      _date == null
+                          ? const Text(
+                              'Select date',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              '${_date!.day}/${_date!.month}/${_date!.year}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                    ],
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
+                  ).then((value) => {
+                        setState(() {
+                          _timeOfDay = value!;
+                          localState(() {});
+                        })
+                      });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue.shade600,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 7),
+                      child: Icon(
+                        Icons.timer,
+                        color: Colors.white,
+                      ),
+                    ),
+                    _timeOfDay == null
+                        ? const Text(
+                            'Select time',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            '${_timeOfDay!.format(context)} ',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                const Expanded(child: SizedBox()),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: Colors.blue.shade800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      }),
+    );
+  }
 
   void popUpDelete() {
     if (widget.note != null) {
@@ -673,6 +814,72 @@ class _ManageNotePageState extends State<ManageNotePage> {
       return;
     }
   }
+
+  Future<void> showDateDialog(BuildContext context) async {
+    // Define the initial date (e.g., the current date)
+    DateTime selectedDate = DateTime.now();
+
+    // Show the dialog
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Select Date'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Display the currently selected date
+                  Text(
+                    'Selected Date: ${selectedDate.toLocal().toString().split(' ')[0]}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 16),
+                  // Button to open the date picker
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Open the date picker
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+
+                      // If a date was selected, update the state
+                      if (pickedDate != null) {
+                        setState(() {
+                          selectedDate = pickedDate;
+                        });
+                      }
+                    },
+                    child: Text('Pick Date'),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    // Close the dialog without saving changes
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Close the dialog and save the selected date
+                    Navigator.of(context).pop(selectedDate);
+                  },
+                  child: Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 class ColorsTile extends StatelessWidget {
@@ -836,3 +1043,5 @@ class NoteForDeletedScreen extends StatelessWidget {
     );
   }
 }
+
+
