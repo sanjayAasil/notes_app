@@ -533,7 +533,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           hour: _timeOfDay!.hour,
                           minute: _timeOfDay!.minute,
                           second: 0,
-                          timeZone: 'Asia/Chennai',
+                          timeZone: 'Asia/Kolkata',
                         ),
                       );
 
@@ -606,6 +606,15 @@ class _ManageNotePageState extends State<ManageNotePage> {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
+        if(_date != null && _timeOfDay != null){
+          note.scheduleTime = DateTime(
+            _date!.year,
+            _date!.month,
+            _date!.day,
+            _timeOfDay!.hour,
+            _timeOfDay!.minute,
+          );
+        }
         if (DataManager().addToFavorite) {
           if (DataManager().addToPin) {
             note.isPinned = true;
@@ -864,72 +873,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
     } else {
       return;
     }
-  }
-
-  Future<void> showDateDialog(BuildContext context) async {
-    // Define the initial date (e.g., the current date)
-    DateTime selectedDate = DateTime.now();
-
-    // Show the dialog
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: Text('Select Date'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Display the currently selected date
-                  Text(
-                    'Selected Date: ${selectedDate.toLocal().toString().split(' ')[0]}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 16),
-                  // Button to open the date picker
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Open the date picker
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-
-                      // If a date was selected, update the state
-                      if (pickedDate != null) {
-                        setState(() {
-                          selectedDate = pickedDate;
-                        });
-                      }
-                    },
-                    child: Text('Pick Date'),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    // Close the dialog without saving changes
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Close the dialog and save the selected date
-                    Navigator.of(context).pop(selectedDate);
-                  },
-                  child: Text('Save'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
   }
 }
 
