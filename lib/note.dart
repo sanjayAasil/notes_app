@@ -12,7 +12,7 @@ class Note {
   Color color;
   bool isFavorite;
   DateTime createdAt;
-
+  DateTime? scheduleTime;
   Note._({
     required this.id,
     required this.title,

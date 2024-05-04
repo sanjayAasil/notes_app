@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/label_db.dart';
@@ -10,6 +11,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
 
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic Notifications',
+        channelDescription: 'Notification channel for basic tests',
+        defaultColor: Colors.teal,
+        importance: NotificationImportance.High,
+        ledColor: Colors.white,
+      ),
+    ],
+  );
   DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
   DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
   DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);

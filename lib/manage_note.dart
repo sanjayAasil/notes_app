@@ -1,10 +1,10 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
-
 
 class ManageNotePage extends StatefulWidget {
   final Note? note;
@@ -401,11 +401,10 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             builder: (context, child) => Theme(
                                   data: ThemeData(
                                     colorScheme: ColorScheme.light(
-                                       primary: Colors.blue,
-                                       onPrimary: Colors.white,
-                                       surface: Colors.grey.shade50,
+                                      primary: Colors.blue,
+                                      onPrimary: Colors.white,
+                                      surface: Colors.grey.shade50,
                                     ),
-
                                   ),
                                   child: child!,
                                 ),
@@ -496,6 +495,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
                 const Expanded(child: SizedBox()),
                 TextButton(
                   onPressed: () {
+                    _date = null;
+                    _timeOfDay = null;
                     Navigator.of(context).pop();
                   },
                   child: Text(
@@ -505,15 +506,65 @@ class _ManageNotePageState extends State<ManageNotePage> {
                     ),
                   ),
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Save',
-                    style: TextStyle(
-                      color: Colors.blue.shade800,
+                if (_date != null && _timeOfDay != null)
+                  TextButton(
+                    onPressed: () {
+                      if (widget.note != null) {
+                        widget.note!.scheduleTime = DateTime(
+                          _date!.year,
+                          _date!.month,
+                          _date!.day,
+                          _timeOfDay!.hour,
+                          _timeOfDay!.minute,
+                        );
+                      }
+
+                      AwesomeNotifications().createNotification(
+                        content: NotificationContent(
+                          id: 1,
+                          channelKey: 'basic_channel',
+                          title: titleController.text.trim(),
+                          body: noteController.text.trim(),
+                        ),
+                        schedule: NotificationCalendar(
+                          year: _date!.year,
+                          month: _date!.month,
+                          day: _date!.day,
+                          hour: _timeOfDay!.hour,
+                          minute: _timeOfDay!.minute,
+                          second: 0,
+                          timeZone: 'Asia/Chennai',
+                        ),
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          elevation: 20,
+                          content: Text("The note's reminder is Scheduled"),
+                          behavior: SnackBarBehavior.floating,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.blue.shade800,
+                      ),
+                    ),
+                  )
+                else
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.grey.shade800,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ],
@@ -1043,5 +1094,3 @@ class NoteForDeletedScreen extends StatelessWidget {
     );
   }
 }
-
-
