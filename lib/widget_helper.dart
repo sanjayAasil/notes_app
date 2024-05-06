@@ -5,7 +5,7 @@ import 'package:sanjay_notes/routes.dart';
 import 'package:sanjay_notes/utils.dart';
 import 'list_model.dart';
 
-class NoteTileListView extends StatelessWidget {
+class NoteTileListView extends StatefulWidget {
   final List<String> selectedIds;
   final Note note;
   final Function()? onUpdateRequest;
@@ -18,44 +18,60 @@ class NoteTileListView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<NoteTileListView> createState() => _NoteTileListViewState();
+}
+
+class _NoteTileListViewState extends State<NoteTileListView> {
+  late bool isTimePassed;
+
+  @override
+  void initState() {
+    if (widget.note.scheduleTime != null) {
+      isTimePassed = DateTime.now().isAfter(widget.note.scheduleTime!);
+    }
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          if (selectedIds.isEmpty) {
-            Navigator.of(context).pushNamed(Routes.editOrViewNoteScreen, arguments: note);
+          if (widget.selectedIds.isEmpty) {
+            Navigator.of(context).pushNamed(Routes.editOrViewNoteScreen, arguments: widget.note);
           } else {
-            if (selectedIds.contains(note.id)) {
-              selectedIds.remove(note.id);
+            if (widget.selectedIds.contains(widget.note.id)) {
+              widget.selectedIds.remove(widget.note.id);
             } else {
-              selectedIds.add(note.id);
+              widget.selectedIds.add(widget.note.id);
             }
-            onUpdateRequest?.call();
+            widget.onUpdateRequest?.call();
           }
         },
         onLongPress: () {
-          if (selectedIds.contains(note.id)) {
-            selectedIds.remove(note.id);
+          if (widget.selectedIds.contains(widget.note.id)) {
+            widget.selectedIds.remove(widget.note.id);
           } else {
-            selectedIds.add(note.id);
+            widget.selectedIds.add(widget.note.id);
           }
-          onUpdateRequest?.call();
+          widget.onUpdateRequest?.call();
         },
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: note.color,
+            color: widget.note.color,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: selectedIds.contains(note.id)
+                color: widget.selectedIds.contains(widget.note.id)
                     ? Colors.blue.shade800
-                    : note.color == Colors.white
+                    : widget.note.color == Colors.white
                         ? Colors.grey
                         : Colors.transparent,
-                width: selectedIds.contains(note.id) ? 3.0 : 0),
+                width: widget.selectedIds.contains(widget.note.id) ? 3.0 : 0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +82,7 @@ class NoteTileListView extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5.0),
                       child: Text(
-                        note.title,
+                        widget.note.title,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: const TextStyle(
@@ -80,7 +96,7 @@ class NoteTileListView extends StatelessWidget {
                       ? Align(
                           alignment: Alignment.topRight,
                           child: Text(
-                            Utils.getFormattedDateTime(note.createdAt),
+                            Utils.getFormattedDateTime(widget.note.createdAt),
                             textAlign: TextAlign.end,
                             style: TextStyle(
                               fontSize: 11,
@@ -97,11 +113,40 @@ class NoteTileListView extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.grey.shade600,
                   ),
-                  note.note,
+                  widget.note.note,
                   maxLines: 10,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+              if (widget.note.scheduleTime != null && !isTimePassed)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: Icon(
+                          Icons.alarm,
+                          size: 20,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                      Text(
+                        Utils.getFormattedDateTime(DateTime(
+                          widget.note.scheduleTime!.year,
+                          widget.note.scheduleTime!.month,
+                          widget.note.scheduleTime!.day,
+                          widget.note.scheduleTime!.hour,
+                          widget.note.scheduleTime!.minute,
+                        )),
+                        style: TextStyle(
+                          color: Colors.blue.shade700,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               DataManager().settingsModel.showLabelsOnHomeScreen
                   ? Padding(
                       padding: const EdgeInsets.only(top: 10.0),
@@ -109,7 +154,7 @@ class NoteTileListView extends StatelessWidget {
                         alignment: AlignmentDirectional.centerStart,
                         child: Wrap(
                           children: [
-                            for (int i = 0; i < note.labels.length; i++)
+                            for (int i = 0; i < widget.note.labels.length; i++)
                               i < 3
                                   ? Padding(
                                       padding: const EdgeInsets.all(5.0),
@@ -121,7 +166,7 @@ class NoteTileListView extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                           child: Text(
-                                            '  ${note.labels[i]}  ',
+                                            '  ${widget.note.labels[i]}  ',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
@@ -143,7 +188,7 @@ class NoteTileListView extends StatelessWidget {
                                             child: Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                               child: Text(
-                                                '  +${note.labels.length - 3}  ',
+                                                '  +${widget.note.labels.length - 3}  ',
                                                 style: const TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w300,
@@ -259,6 +304,35 @@ class NoteTileGridView extends StatelessWidget {
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
               ),
+              if (note.scheduleTime != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: Icon(
+                          Icons.alarm,
+                          size: 20,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                      Text(
+                        Utils.getFormattedDateTime(DateTime(
+                          note.scheduleTime!.year,
+                          note.scheduleTime!.month,
+                          note.scheduleTime!.day,
+                          note.scheduleTime!.hour,
+                          note.scheduleTime!.minute,
+                        )),
+                        style: TextStyle(
+                          color: Colors.blue.shade700,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               DataManager().settingsModel.showLabelsOnHomeScreen
                   ? Align(
                       alignment: AlignmentDirectional.topStart,

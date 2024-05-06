@@ -200,56 +200,60 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                 ),
                               ),
                             ),
-                            widget.note != null && widget.note!.scheduleTime != null
+                            _date != null && _timeOfDay != null
                                 ? Padding(
-                                    padding: const EdgeInsets.only(left: 10.0, top: 20),
-                                    child: Container(
-                                      height: 60,
-                                      width: 120,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
-                                        color: Colors.grey.shade200,
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          remainder();
-                                        },
-                                        child: Row(
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.only(right: 5.0),
-                                              child: Icon(
-                                                Icons.alarm,
-                                                color: Colors.blue,
-                                              ),
-                                            ),
-                                            Text(
-                                              Utils.getFormattedDateTime(widget.note!.scheduleTime!),
-                                              style: const TextStyle(color: Colors.blue),
-                                            ),
-                                          ],
+                                    padding: const EdgeInsets.only(left: 20.0, top: 20),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.alarm,
+                                            color: Colors.blue.shade700,
+                                          ),
                                         ),
-                                      ),
+                                        Text(
+                                          Utils.getFormattedDateTime(DateTime(
+                                            _date!.year,
+                                            _date!.month,
+                                            _date!.day,
+                                            _timeOfDay!.hour,
+                                            _timeOfDay!.minute,
+                                          )),
+                                          style: TextStyle(color: Colors.blue.shade700),
+                                        ),
+                                      ],
                                     ),
                                   )
                                 : const SizedBox(),
-                            Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Wrap(
-                                children: [
-                                  if (widget.note != null)
-                                    for (String label in widget.note!.labels)
-                                      Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade300,
-                                            borderRadius: BorderRadius.circular(5),
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Wrap(
+                                  children: [
+                                    if (widget.note != null)
+                                      for (String label in widget.note!.labels)
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade300,
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Text(
+                                                '  $label  ',
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade700,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          child: Text('  $label  '),
                                         ),
-                                      ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -460,10 +464,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             firstDate: DateTime.now(),
                             lastDate: DateTime(2050),
                             currentDate: DateTime.now())
-                        .then((value) => setState(() {
-                              _date = value!;
-                              localState(() {});
-                            }));
+                        .then((value) => localState(() => _date = value!));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade600,
@@ -501,16 +502,9 @@ class _ManageNotePageState extends State<ManageNotePage> {
                   showTimePicker(
                     context: context,
                     initialTime: TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
-                  ).then((value) => {
-                        setState(() {
-                          _timeOfDay = value!;
-                          localState(() {});
-                        })
-                      });
+                  ).then((value) => localState(() => _timeOfDay = value!));
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade600,
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade600),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

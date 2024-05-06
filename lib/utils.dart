@@ -15,18 +15,18 @@ class Utils {
         isYesterday = true;
         format = 'HH:mm';
       } else if (date.year == now.year) {
-        format = 'dd-MMMM \n HH:mm';
+        format = 'dd-MMMM, HH:mm';
       } else {
-        format = 'dd-MM-yy \n HH:mm';
+        format = 'dd-MM-yy, HH:mm';
       }
     } else {
       isToday = true;
       format = 'HH:mm';
     }
     if (isToday) {
-      return "Today\n ${DateFormat(format).format(date)}";
+      return "Today, ${DateFormat(format).format(date)}";
     } else if (isYesterday) {
-      return "Yesterday \n ${DateFormat(format).format(date)}";
+      return "Yesterday, ${DateFormat(format).format(date)}";
     }
     return DateFormat(format).format(date);
   }
