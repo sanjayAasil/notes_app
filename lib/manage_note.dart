@@ -213,13 +213,15 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                           ),
                                         ),
                                         Text(
-                                          Utils.getFormattedDateTime(DateTime(
-                                            _date!.year,
-                                            _date!.month,
-                                            _date!.day,
-                                            _timeOfDay!.hour,
-                                            _timeOfDay!.minute,
-                                          )),
+                                          Utils.getFormattedDateTime(
+                                            DateTime(
+                                              _date!.year,
+                                              _date!.month,
+                                              _date!.day,
+                                              _timeOfDay!.hour,
+                                              _timeOfDay!.minute,
+                                            ),
+                                          ),
                                           style: TextStyle(color: Colors.blue.shade700),
                                         ),
                                       ],
@@ -361,9 +363,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           ),
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.white;
-                            });
+                            setState(() => mainColor = Colors.white);
                           },
                         ),
                         ColorsTile(
@@ -371,9 +371,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           isSelected: mainColor == Colors.yellow.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.yellow.shade200;
-                            });
+                            setState(() => mainColor = Colors.yellow.shade200);
                           },
                         ),
                         ColorsTile(
@@ -381,9 +379,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           isSelected: mainColor == Colors.green.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.green.shade200;
-                            });
+                            setState(() => mainColor = Colors.green.shade200);
                           },
                         ),
                         ColorsTile(
@@ -391,9 +387,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           isSelected: mainColor == Colors.blue.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.blue.shade200;
-                            });
+                            setState(() => mainColor = Colors.blue.shade200);
                           },
                         ),
                         ColorsTile(
@@ -401,9 +395,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           isSelected: mainColor == Colors.pink.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.pink.shade200;
-                            });
+                            setState(() => mainColor = Colors.pink.shade200);
                           },
                         ),
                         ColorsTile(
@@ -411,19 +403,31 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           isSelected: mainColor == Colors.deepOrange.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.deepOrange.shade200;
-                            });
+                            setState(() => mainColor = Colors.deepOrange.shade200);
                           },
                         ),
                         ColorsTile(
-                          color: Colors.brown.shade200,
-                          isSelected: mainColor == Colors.brown.shade200,
+                          color: Colors.purple.shade200,
+                          isSelected: mainColor == Colors.purple.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.brown.shade200;
-                            });
+                            setState(() => mainColor = Colors.purple.shade200);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.deepOrangeAccent.shade200,
+                          isSelected: mainColor == Colors.deepOrangeAccent.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.deepOrangeAccent.shade200);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.teal.shade200,
+                          isSelected: mainColor == Colors.teal.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.teal.shade200);
                           },
                         ),
                       ],
@@ -462,6 +466,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                 ),
                             context: context,
                             firstDate: DateTime.now(),
+                            initialDate: DateTime(
+                              _date?.year ?? DateTime.now().year,
+                              _date?.month ?? DateTime.now().month,
+                              _date?.day ?? DateTime.now().day,
+                            ),
                             lastDate: DateTime(2050),
                             currentDate: DateTime.now())
                         .then((value) => localState(() => _date = value!));
@@ -501,20 +510,17 @@ class _ManageNotePageState extends State<ManageNotePage> {
                 onPressed: () {
                   showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
+                    initialTime: TimeOfDay(
+                      hour: _timeOfDay?.hour == null ? DateTime.now().hour : _timeOfDay!.hour,
+                      minute: _timeOfDay?.minute == null ? DateTime.now().minute : _timeOfDay!.minute,
+                    ),
                   ).then((value) => localState(() => _timeOfDay = value!));
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade600),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 7),
-                      child: Icon(
-                        Icons.timer,
-                        color: Colors.white,
-                      ),
-                    ),
+                    const Padding(padding: EdgeInsets.only(right: 7), child: Icon(Icons.timer, color: Colors.white)),
                     _timeOfDay == null
                         ? const Text(
                             'Select time',
@@ -527,7 +533,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             style: const TextStyle(
                               color: Colors.white,
                             ),
-                          )
+                          ),
                   ],
                 ),
               ),
@@ -539,7 +545,19 @@ class _ManageNotePageState extends State<ManageNotePage> {
                   onPressed: () {
                     _date = null;
                     _timeOfDay = null;
+                    if (widget.note != null) {
+                      widget.note!.scheduleTime = null;
+                    }
+                    setState(() {});
                     Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        elevation: 20,
+                        content: Text("The note's reminder is Cancelled"),
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
                   },
                   child: Text(
                     'Cancel',
