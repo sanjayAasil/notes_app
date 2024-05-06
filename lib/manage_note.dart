@@ -5,6 +5,7 @@ import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:sanjay_notes/utils.dart';
 
 class ManageNotePage extends StatefulWidget {
   final Note? note;
@@ -45,6 +46,17 @@ class _ManageNotePageState extends State<ManageNotePage> {
       mainColor = Colors.white;
     } else {
       mainColor = widget.note!.color;
+    }
+
+    if (widget.note != null) {
+      if (widget.note!.scheduleTime != null) {
+        _date = DateTime(
+          widget.note!.scheduleTime!.year,
+          widget.note!.scheduleTime!.month,
+          widget.note!.scheduleTime!.day,
+        );
+        _timeOfDay = TimeOfDay(hour: widget.note!.scheduleTime!.hour, minute: widget.note!.scheduleTime!.minute);
+      }
     }
     super.initState();
   }
@@ -131,23 +143,25 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             ),
                           ),
                           InkWell(
-                              onTap: archiveButton,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: widget.note == null
+                            onTap: archiveButton,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: widget.note == null
+                                  ? Icon(
+                                      Icons.archive_outlined,
+                                      color: Colors.grey.shade800,
+                                    )
+                                  : widget.note!.isArchive
                                       ? Icon(
-                                          Icons.archive_outlined,
+                                          Icons.unarchive_outlined,
                                           color: Colors.grey.shade800,
                                         )
-                                      : widget.note!.isArchive
-                                          ? Icon(
-                                              Icons.unarchive_outlined,
-                                              color: Colors.grey.shade800,
-                                            )
-                                          : Icon(
-                                              Icons.archive_outlined,
-                                              color: Colors.grey.shade800,
-                                            ))),
+                                      : Icon(
+                                          Icons.archive_outlined,
+                                          color: Colors.grey.shade800,
+                                        ),
+                            ),
+                          ),
                           // SizedBox(),
                         ],
                       ),
@@ -155,6 +169,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(top: 20, left: 20),
@@ -185,6 +200,39 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                 ),
                               ),
                             ),
+                            widget.note != null && widget.note!.scheduleTime != null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(left: 10.0, top: 20),
+                                    child: Container(
+                                      height: 60,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.grey.shade200,
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          remainder();
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Padding(
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.alarm,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                            Text(
+                                              Utils.getFormattedDateTime(widget.note!.scheduleTime!),
+                                              style: const TextStyle(color: Colors.blue),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox(),
                             Align(
                               alignment: AlignmentDirectional.centerStart,
                               child: Wrap(
@@ -251,7 +299,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(right: 10.0),
+                                      padding: const EdgeInsets.only(right: 10.0),
                                       child: Icon(
                                         Icons.delete_outline_outlined,
                                         color: Colors.grey.shade800,
@@ -481,11 +529,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             ),
                           )
                         : Text(
-                            '${_timeOfDay!.format(context)} ',
+                            _timeOfDay!.format(context).toString(),
                             style: const TextStyle(
                               color: Colors.white,
                             ),
-                          ),
+                          )
                   ],
                 ),
               ),
@@ -533,8 +581,20 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           hour: _timeOfDay!.hour,
                           minute: _timeOfDay!.minute,
                           second: 0,
-                          timeZone: 'Asia/Kolkata',
+                          //timeZone: 'Asia/Kolkata',
                         ),
+                        actionButtons: [
+                          NotificationActionButton(
+                            key: 'label key',
+                            label: 'Cancel',
+                            color: Colors.blue,
+                          ),
+                          NotificationActionButton(
+                            key: 'label key',
+                            label: 'Mark as Done',
+                            color: Colors.blue,
+                          ),
+                        ],
                       );
 
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -547,6 +607,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
                       );
 
                       Navigator.of(context).pop();
+
+                      setState(() {});
                     },
                     child: Text(
                       'Save',
@@ -606,7 +668,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
-        if(_date != null && _timeOfDay != null){
+        if (_date != null && _timeOfDay != null) {
           note.scheduleTime = DateTime(
             _date!.year,
             _date!.month,

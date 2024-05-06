@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
@@ -44,7 +43,6 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
       onPopInvoked: (bool value) {
         if (!widget.listModel.isDeleted) {
           onBackPressed();
-          debugPrint("_ViewOrEditListModelState build: check  ${widget.listModel.isDeleted}");
         }
       },
       child: Scaffold(
@@ -329,7 +327,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(right: 10.0),
+                                      padding: const EdgeInsets.only(right: 10.0),
                                       child: Icon(
                                         Icons.delete_outline_outlined,
                                         color: Colors.grey.shade800,
@@ -343,10 +341,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                                 ),
                               ),
                             ],
-                            onSelected: (value) {
-                              debugPrint("_ManageNotePageState build: checlkll");
-                              popUpDelete();
-                            },
+                            onSelected: (value) => popUpDelete(),
                           ),
                         ],
                       ),
@@ -390,9 +385,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           ),
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.white;
-                            });
+                            setState(() => mainColor = Colors.white);
                           },
                         ),
                         ColorsTile(
@@ -400,9 +393,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           isSelected: mainColor == Colors.yellow.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.yellow.shade200;
-                            });
+                            setState(() => mainColor = Colors.yellow.shade200);
                           },
                         ),
                         ColorsTile(
@@ -410,9 +401,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           isSelected: mainColor == Colors.green.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.green.shade200;
-                            });
+                            setState(() => mainColor = Colors.green.shade200);
                           },
                         ),
                         ColorsTile(
@@ -420,9 +409,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           isSelected: mainColor == Colors.blue.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.blue.shade200;
-                            });
+                            setState(() => mainColor = Colors.blue.shade200);
                           },
                         ),
                         ColorsTile(
@@ -430,9 +417,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           isSelected: mainColor == Colors.pink.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.pink.shade200;
-                            });
+                            setState(() => mainColor = Colors.pink.shade200);
                           },
                         ),
                         ColorsTile(
@@ -440,9 +425,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           isSelected: mainColor == Colors.deepOrange.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.deepOrange.shade200;
-                            });
+                            setState(() => mainColor = Colors.deepOrange.shade200);
                           },
                         ),
                         ColorsTile(
@@ -450,9 +433,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           isSelected: mainColor == Colors.brown.shade200,
                           onColorChanging: () {
                             setLocalState(() {});
-                            setState(() {
-                              mainColor = Colors.brown.shade200;
-                            });
+                            setState(() => mainColor = Colors.brown.shade200);
                           },
                         ),
                       ],

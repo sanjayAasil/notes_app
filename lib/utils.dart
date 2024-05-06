@@ -24,7 +24,7 @@ class Utils {
       format = 'HH:mm';
     }
     if (isToday) {
-      return "Today \n ${DateFormat(format).format(date)}";
+      return "Today\n ${DateFormat(format).format(date)}";
     } else if (isYesterday) {
       return "Yesterday \n ${DateFormat(format).format(date)}";
     }
