@@ -13,6 +13,7 @@ class Note {
   bool isFavorite;
   DateTime createdAt;
   DateTime? scheduleTime;
+
   Note._({
     required this.id,
     required this.title,
@@ -24,6 +25,7 @@ class Note {
     this.color = Colors.white,
     this.isFavorite = false,
     List<String>? labels,
+    this.scheduleTime,
   }) : labels = labels ?? [];
 
   factory Note.create({
@@ -50,6 +52,7 @@ class Note {
       isFavorite: json['isFavorite'],
       labels: List.from(json['labels']),
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+      scheduleTime: DateTime.fromMillisecondsSinceEpoch(json['scheduleTime']),
     );
   }
 
@@ -64,5 +67,6 @@ class Note {
         'isFavorite': isFavorite,
         'labels': labels,
         'createdAt': createdAt.millisecondsSinceEpoch,
+        'scheduleTime': scheduleTime?.millisecondsSinceEpoch,
       };
 }

@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
@@ -21,6 +22,8 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   TextEditingController titleController = TextEditingController();
   List<TextEditingController> itemNameControllers = [];
   List<bool> itemTicked = [];
+  DateTime? _date;
+  TimeOfDay? _timeOfDay;
 
   @override
   void initState() {
@@ -110,11 +113,14 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                             );
                           }),
 
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              CupertinoIcons.bell,
-                              color: Colors.grey.shade800,
+                          InkWell(
+                            onTap: () => remainder(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                CupertinoIcons.bell,
+                                color: Colors.grey.shade800,
+                              ),
                             ),
                           ),
 
@@ -686,6 +692,202 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     } else {
       return;
     }
+  }
+
+  void remainder() {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, localState) {
+        return SimpleDialog(
+          backgroundColor: Colors.grey.shade200,
+          title: const Text('Remainder'),
+          alignment: Alignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  showDatePicker(
+                          builder: (context, child) => Theme(
+                                data: ThemeData(
+                                  colorScheme: ColorScheme.light(
+                                    primary: Colors.blue,
+                                    onPrimary: Colors.white,
+                                    surface: Colors.grey.shade50,
+                                  ),
+                                ),
+                                child: child!,
+                              ),
+                          context: context,
+                          firstDate: DateTime.now(),
+                          initialDate: DateTime(
+                            _date?.year ?? DateTime.now().year,
+                            _date?.month ?? DateTime.now().month,
+                            _date?.day ?? DateTime.now().day,
+                          ),
+                          lastDate: DateTime(2050),
+                          currentDate: DateTime.now())
+                      .then((value) => localState(() => _date = value!));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue.shade600,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 7),
+                      child: Icon(
+                        Icons.date_range,
+                        color: Colors.white,
+                      ),
+                    ),
+                    _date == null
+                        ? const Text(
+                            'Select date',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            '${_date!.day}/${_date!.month}/${_date!.year}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay(
+                      hour: _timeOfDay?.hour == null ? DateTime.now().hour : _timeOfDay!.hour,
+                      minute: _timeOfDay?.minute == null ? DateTime.now().minute + 1 : _timeOfDay!.minute,
+                    ),
+                  ).then((value) => localState(() => _timeOfDay = value!));
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade600),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Padding(padding: EdgeInsets.only(right: 7), child: Icon(Icons.timer, color: Colors.white)),
+                    _timeOfDay == null
+                        ? const Text(
+                            'Select time',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            _timeOfDay!.format(context).toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                const Expanded(child: SizedBox()),
+                TextButton(
+                  onPressed: () {
+                    _date = null;
+                    _timeOfDay = null;
+
+                    setState(() {});
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        elevation: 20,
+                        content: Text("The note's reminder is Cancelled"),
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                ),
+                if (_date != null && _timeOfDay != null)
+                  TextButton(
+                    onPressed: () {
+                      AwesomeNotifications().createNotification(
+                        content: NotificationContent(
+                          id: 1,
+                          channelKey: 'basic_channel',
+                          title: titleController.text.trim(),
+                          body: itemNameControllers.map((e) => e.text.trim()).toString(),
+                        ),
+                        schedule: NotificationCalendar(
+                          year: _date!.year,
+                          month: _date!.month,
+                          day: _date!.day,
+                          hour: _timeOfDay!.hour,
+                          minute: _timeOfDay!.minute,
+                          second: 0,
+                          //timeZone: 'Asia/Kolkata',
+                        ),
+                        actionButtons: [
+                          NotificationActionButton(
+                            key: 'label key',
+                            label: 'Cancel',
+                            color: Colors.blue,
+                          ),
+                          NotificationActionButton(
+                            key: 'label key',
+                            label: 'Mark as Done',
+                            color: Colors.blue,
+                          ),
+                        ],
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          elevation: 20,
+                          content: Text("The note's reminder is Scheduled"),
+                          behavior: SnackBarBehavior.floating,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+
+                      Navigator.of(context).pop();
+
+                      setState(() {});
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.blue.shade800,
+                      ),
+                    ),
+                  )
+                else
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        );
+      }),
+    );
   }
 }
 
