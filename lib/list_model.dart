@@ -12,6 +12,7 @@ class ListModel {
   bool isFavorite;
   Color color;
   DateTime createdAt;
+  DateTime? scheduleTime;
 
   ListModel._({
     required this.id,

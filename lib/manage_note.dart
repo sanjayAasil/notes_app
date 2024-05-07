@@ -512,7 +512,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                     context: context,
                     initialTime: TimeOfDay(
                       hour: _timeOfDay?.hour == null ? DateTime.now().hour : _timeOfDay!.hour,
-                      minute: _timeOfDay?.minute == null ? DateTime.now().minute : _timeOfDay!.minute,
+                      minute: _timeOfDay?.minute == null ? DateTime.now().minute + 1 : _timeOfDay!.minute,
                     ),
                   ).then((value) => localState(() => _timeOfDay = value!));
                 },
@@ -581,7 +581,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
                       AwesomeNotifications().createNotification(
                         content: NotificationContent(
-                          id: 1,
+                          id: 2,
                           channelKey: 'basic_channel',
                           title: titleController.text.trim(),
                           body: noteController.text.trim(),
@@ -688,6 +688,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
+          debugPrint("_ManageNotePageState onBackPressed: checkk ${note.scheduleTime}");
         }
         if (DataManager().addToFavorite) {
           if (DataManager().addToPin) {
@@ -711,12 +712,20 @@ class _ManageNotePageState extends State<ManageNotePage> {
             NotesDb.addNote(NotesDb.notesKey, note);
           }
         }
-
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
         widget.note!.color = mainColor;
+        if (_date != null && _timeOfDay != null) {
+          widget.note!.scheduleTime = DateTime(
+            _date!.year,
+            _date!.month,
+            _date!.day,
+            _timeOfDay!.hour,
+            _timeOfDay!.minute,
+          );
+        }
         if (widget.note!.isArchive) {
           if (DataManager().addToPin) {
             NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);

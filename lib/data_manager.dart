@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/settings_model.dart';
-
 import 'note.dart';
 import 'notes_db.dart';
 
@@ -15,7 +13,6 @@ class DataManager {
   factory DataManager() => _instance;
 
   List<Note> notes = [];
-
 
   List<Note> favoriteNotes = [];
 
