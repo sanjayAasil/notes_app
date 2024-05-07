@@ -37,6 +37,14 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     }
     DataManager().addToFavorite = widget.listModel.isFavorite ? true : false;
     DataManager().addToPin = widget.listModel.isPinned ? true : false;
+    if (widget.listModel.scheduleTime != null) {
+      _date = DateTime(
+        widget.listModel.scheduleTime!.year,
+        widget.listModel.scheduleTime!.month,
+        widget.listModel.scheduleTime!.day,
+      );
+      _timeOfDay = TimeOfDay(hour: widget.listModel.scheduleTime!.hour, minute: widget.listModel.scheduleTime!.minute);
+    }
   }
 
   @override
@@ -87,7 +95,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                                             Icons.favorite,
                                             color: Colors.red.shade800,
                                           )
-                                        : Icon(Icons.favorite_border),
+                                        : const Icon(Icons.favorite_border),
                                   ),
                                 );
                               },
@@ -260,6 +268,34 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                                   ],
                                 ),
                               ),
+                            _date != null && _timeOfDay != null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(left: 20.0, top: 20),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.alarm,
+                                            color: Colors.blue.shade700,
+                                          ),
+                                        ),
+                                        Text(
+                                          Utils.getFormattedDateTime(
+                                            DateTime(
+                                              _date!.year,
+                                              _date!.month,
+                                              _date!.day,
+                                              _timeOfDay!.hour,
+                                              _timeOfDay!.minute,
+                                            ),
+                                          ),
+                                          style: TextStyle(color: Colors.blue.shade700),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox(),
                             Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Align(
@@ -313,15 +349,12 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 70.0),
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                Utils.getFormattedDateTime(widget.listModel.createdAt),
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey.shade800,
-                                ),
+                            child: Text(
+                              Utils.getFormattedDateTime(widget.listModel.createdAt),
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade800,
                               ),
                             ),
                           ),
@@ -359,99 +392,6 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     );
   }
 
-  _pickAColor() => showModalBottomSheet(
-        context: context,
-        builder: (context) => StatefulBuilder(builder: (context, setLocalState) {
-          return Container(
-            color: Colors.grey.shade300,
-            height: const MediaQueryData().padding.bottom + 150,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Colours',
-                    style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        ColorsTile(
-                          color: Colors.white,
-                          isSelected: mainColor == Colors.white,
-                          icon: Icon(
-                            Icons.format_color_reset_outlined,
-                            size: 50,
-                            color: Colors.grey.shade800,
-                          ),
-                          onColorChanging: () {
-                            setLocalState(() {});
-                            setState(() => mainColor = Colors.white);
-                          },
-                        ),
-                        ColorsTile(
-                          color: Colors.yellow.shade200,
-                          isSelected: mainColor == Colors.yellow.shade200,
-                          onColorChanging: () {
-                            setLocalState(() {});
-                            setState(() => mainColor = Colors.yellow.shade200);
-                          },
-                        ),
-                        ColorsTile(
-                          color: Colors.green.shade200,
-                          isSelected: mainColor == Colors.green.shade200,
-                          onColorChanging: () {
-                            setLocalState(() {});
-                            setState(() => mainColor = Colors.green.shade200);
-                          },
-                        ),
-                        ColorsTile(
-                          color: Colors.blue.shade200,
-                          isSelected: mainColor == Colors.blue.shade200,
-                          onColorChanging: () {
-                            setLocalState(() {});
-                            setState(() => mainColor = Colors.blue.shade200);
-                          },
-                        ),
-                        ColorsTile(
-                          color: Colors.pink.shade200,
-                          isSelected: mainColor == Colors.pink.shade200,
-                          onColorChanging: () {
-                            setLocalState(() {});
-                            setState(() => mainColor = Colors.pink.shade200);
-                          },
-                        ),
-                        ColorsTile(
-                          color: Colors.deepOrange,
-                          isSelected: mainColor == Colors.deepOrange.shade200,
-                          onColorChanging: () {
-                            setLocalState(() {});
-                            setState(() => mainColor = Colors.deepOrange.shade200);
-                          },
-                        ),
-                        ColorsTile(
-                          color: Colors.brown.shade200,
-                          isSelected: mainColor == Colors.brown.shade200,
-                          onColorChanging: () {
-                            setLocalState(() {});
-                            setState(() => mainColor = Colors.brown.shade200);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }),
-      );
-
   void popUpDelete() {
     if (widget.listModel.isFavorite) {
       ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
@@ -485,6 +425,16 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     widget.listModel.items.clear();
     widget.listModel.items.addAll(items);
     widget.listModel.color = mainColor;
+
+    if (_date != null && _timeOfDay != null) {
+      widget.listModel.scheduleTime = DateTime(
+        _date!.year,
+        _date!.month,
+        _date!.day,
+        _timeOfDay!.hour,
+        _timeOfDay!.minute,
+      );
+    }
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
@@ -805,7 +755,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         elevation: 20,
-                        content: Text("The note's reminder is Cancelled"),
+                        content: Text("The List's reminder is Cancelled"),
                         behavior: SnackBarBehavior.floating,
                         duration: Duration(seconds: 2),
                       ),
@@ -854,7 +804,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           elevation: 20,
-                          content: Text("The note's reminder is Scheduled"),
+                          content: Text("The List's reminder is Scheduled"),
                           behavior: SnackBarBehavior.floating,
                           duration: Duration(seconds: 2),
                         ),
@@ -888,6 +838,99 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
       }),
     );
   }
+
+  _pickAColor() => showModalBottomSheet(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setLocalState) {
+          return Container(
+            color: Colors.grey.shade300,
+            height: const MediaQueryData().padding.bottom + 150,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Colours',
+                    style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        ColorsTile(
+                          color: Colors.white,
+                          isSelected: mainColor == Colors.white,
+                          icon: Icon(
+                            Icons.format_color_reset_outlined,
+                            size: 50,
+                            color: Colors.grey.shade800,
+                          ),
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.white);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.yellow.shade200,
+                          isSelected: mainColor == Colors.yellow.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.yellow.shade200);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.green.shade200,
+                          isSelected: mainColor == Colors.green.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.green.shade200);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.blue.shade200,
+                          isSelected: mainColor == Colors.blue.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.blue.shade200);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.pink.shade200,
+                          isSelected: mainColor == Colors.pink.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.pink.shade200);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.deepOrange,
+                          isSelected: mainColor == Colors.deepOrange.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.deepOrange.shade200);
+                          },
+                        ),
+                        ColorsTile(
+                          color: Colors.brown.shade200,
+                          isSelected: mainColor == Colors.brown.shade200,
+                          onColorChanging: () {
+                            setLocalState(() {});
+                            setState(() => mainColor = Colors.brown.shade200);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      );
 }
 
 class ColorsTile extends StatelessWidget {

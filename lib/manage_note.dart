@@ -688,7 +688,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
-          debugPrint("_ManageNotePageState onBackPressed: checkk ${note.scheduleTime}");
+
         }
         if (DataManager().addToFavorite) {
           if (DataManager().addToPin) {

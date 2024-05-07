@@ -211,7 +211,7 @@ class _NoteTileListViewState extends State<NoteTileListView> {
   }
 }
 
-class NoteTileGridView extends StatelessWidget {
+class NoteTileGridView extends StatefulWidget {
   final List<String> selectedIds;
   final Note note;
   final Function()? onUpdateRequest;
@@ -224,6 +224,22 @@ class NoteTileGridView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<NoteTileGridView> createState() => _NoteTileGridViewState();
+}
+
+class _NoteTileGridViewState extends State<NoteTileGridView> {
+  late bool isTimePassed;
+
+  @override
+  void initState() {
+    if (widget.note.scheduleTime != null) {
+      isTimePassed = DateTime.now().isAfter(widget.note.scheduleTime!);
+    }
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width / 2 - 5,
@@ -231,38 +247,38 @@ class NoteTileGridView extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          if (selectedIds.isEmpty) {
-            Navigator.of(context).pushNamed(Routes.editOrViewNoteScreen, arguments: note);
+          if (widget.selectedIds.isEmpty) {
+            Navigator.of(context).pushNamed(Routes.editOrViewNoteScreen, arguments: widget.note);
           } else {
-            if (selectedIds.contains(note.id)) {
-              selectedIds.remove(note.id);
+            if (widget.selectedIds.contains(widget.note.id)) {
+              widget.selectedIds.remove(widget.note.id);
             } else {
-              selectedIds.add(note.id);
+              widget.selectedIds.add(widget.note.id);
             }
-            onUpdateRequest?.call();
+            widget.onUpdateRequest?.call();
           }
         },
         onLongPress: () {
-          if (selectedIds.contains(note.id)) {
-            selectedIds.remove(note.id);
+          if (widget.selectedIds.contains(widget.note.id)) {
+            widget.selectedIds.remove(widget.note.id);
           } else {
-            selectedIds.add(note.id);
+            widget.selectedIds.add(widget.note.id);
           }
-          onUpdateRequest?.call();
+          widget.onUpdateRequest?.call();
         },
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: note.color,
+            color: widget.note.color,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: selectedIds.contains(note.id)
+                color: widget.selectedIds.contains(widget.note.id)
                     ? Colors.blue.shade800
-                    : note.color == Colors.white
+                    : widget.note.color == Colors.white
                         ? Colors.grey
                         : Colors.transparent,
-                width: selectedIds.contains(note.id) ? 3.0 : 0),
+                width: widget.selectedIds.contains(widget.note.id) ? 3.0 : 0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +287,7 @@ class NoteTileGridView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      note.title,
+                      widget.note.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -284,7 +300,7 @@ class NoteTileGridView extends StatelessWidget {
                       ? Align(
                           alignment: Alignment.topRight,
                           child: Text(
-                            Utils.getFormattedDateTime(note.createdAt),
+                            Utils.getFormattedDateTime(widget.note.createdAt),
                             textAlign: TextAlign.end,
                             style: TextStyle(
                               fontSize: 11,
@@ -298,13 +314,13 @@ class NoteTileGridView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
                 child: Text(
-                  note.note,
+                  widget.note.note,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
               ),
-              if (note.scheduleTime != null)
+              if (widget.note.scheduleTime != null && !isTimePassed)
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Row(
@@ -319,11 +335,11 @@ class NoteTileGridView extends StatelessWidget {
                       ),
                       Text(
                         Utils.getFormattedDateTime(DateTime(
-                          note.scheduleTime!.year,
-                          note.scheduleTime!.month,
-                          note.scheduleTime!.day,
-                          note.scheduleTime!.hour,
-                          note.scheduleTime!.minute,
+                          widget.note.scheduleTime!.year,
+                          widget.note.scheduleTime!.month,
+                          widget.note.scheduleTime!.day,
+                          widget.note.scheduleTime!.hour,
+                          widget.note.scheduleTime!.minute,
                         )),
                         style: TextStyle(
                           color: Colors.blue.shade700,
@@ -338,7 +354,7 @@ class NoteTileGridView extends StatelessWidget {
                       alignment: AlignmentDirectional.topStart,
                       child: Wrap(
                         children: [
-                          for (int i = 0; i < note.labels.length; i++)
+                          for (int i = 0; i < widget.note.labels.length; i++)
                             i < 3
                                 ? Padding(
                                     padding: const EdgeInsets.all(2.0),
@@ -348,7 +364,7 @@ class NoteTileGridView extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Text(
-                                        '  ${note.labels[i]}  ',
+                                        '  ${widget.note.labels[i]}  ',
                                       ),
                                     ),
                                   )
@@ -363,7 +379,7 @@ class NoteTileGridView extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                             child: Text(
-                                              '  +${note.labels.length - 3}  ',
+                                              '  +${widget.note.labels.length - 3}  ',
                                               style: const TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w300,
@@ -385,7 +401,7 @@ class NoteTileGridView extends StatelessWidget {
   }
 }
 
-class ListModelTileListView extends StatelessWidget {
+class ListModelTileListView extends StatefulWidget {
   final List<String> selectedIds;
   final ListModel listModel;
   final Function? onUpdateRequest;
@@ -398,44 +414,60 @@ class ListModelTileListView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ListModelTileListView> createState() => _ListModelTileListViewState();
+}
+
+class _ListModelTileListViewState extends State<ListModelTileListView> {
+  late bool isTimePassed;
+
+  @override
+  void initState() {
+    if (widget.listModel.scheduleTime != null) {
+      isTimePassed = DateTime.now().isAfter(widget.listModel.scheduleTime!);
+    }
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          if (selectedIds.isEmpty) {
-            Navigator.of(context).pushNamed(Routes.viewOrEditListModel, arguments: listModel);
+          if (widget.selectedIds.isEmpty) {
+            Navigator.of(context).pushNamed(Routes.viewOrEditListModel, arguments: widget.listModel);
           } else {
-            if (selectedIds.contains(listModel.id)) {
-              selectedIds.remove(listModel.id);
+            if (widget.selectedIds.contains(widget.listModel.id)) {
+              widget.selectedIds.remove(widget.listModel.id);
             } else {
-              selectedIds.add(listModel.id);
+              widget.selectedIds.add(widget.listModel.id);
             }
-            onUpdateRequest?.call();
+            widget.onUpdateRequest?.call();
           }
         },
         onLongPress: () {
-          if (selectedIds.contains(listModel.id)) {
-            selectedIds.remove(listModel.id);
+          if (widget.selectedIds.contains(widget.listModel.id)) {
+            widget.selectedIds.remove(widget.listModel.id);
           } else {
-            selectedIds.add(listModel.id);
+            widget.selectedIds.add(widget.listModel.id);
           }
-          onUpdateRequest?.call();
+          widget.onUpdateRequest?.call();
         },
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: listModel.color,
+            color: widget.listModel.color,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: selectedIds.contains(listModel.id)
+                color: widget.selectedIds.contains(widget.listModel.id)
                     ? Colors.blue.shade800
-                    : listModel.color == Colors.white
+                    : widget.listModel.color == Colors.white
                         ? Colors.grey
                         : Colors.transparent,
-                width: selectedIds.contains(listModel.id) ? 3.0 : 0),
+                width: widget.selectedIds.contains(widget.listModel.id) ? 3.0 : 0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -446,7 +478,7 @@ class ListModelTileListView extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
-                        listModel.title,
+                        widget.listModel.title,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
@@ -458,7 +490,7 @@ class ListModelTileListView extends StatelessWidget {
                       ? Align(
                           alignment: Alignment.topRight,
                           child: Text(
-                            Utils.getFormattedDateTime(listModel.createdAt),
+                            Utils.getFormattedDateTime(widget.listModel.createdAt),
                             textAlign: TextAlign.end,
                             style: TextStyle(
                               fontSize: 11,
@@ -473,7 +505,7 @@ class ListModelTileListView extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0, left: 5, bottom: 10),
                 child: Column(
                   children: [
-                    for (ListItem item in listModel.items)
+                    for (ListItem item in widget.listModel.items)
                       Padding(
                         padding: const EdgeInsets.all(2.0),
                         child: Row(
@@ -488,6 +520,8 @@ class ListModelTileListView extends StatelessWidget {
                             Text(
                               item.name,
                               style: TextStyle(color: Colors.grey.shade600),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -495,12 +529,41 @@ class ListModelTileListView extends StatelessWidget {
                   ],
                 ),
               ),
+              if (widget.listModel.scheduleTime != null && !isTimePassed)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: Icon(
+                          Icons.alarm,
+                          size: 20,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                      Text(
+                        Utils.getFormattedDateTime(DateTime(
+                          widget.listModel.scheduleTime!.year,
+                          widget.listModel.scheduleTime!.month,
+                          widget.listModel.scheduleTime!.day,
+                          widget.listModel.scheduleTime!.hour,
+                          widget.listModel.scheduleTime!.minute,
+                        )),
+                        style: TextStyle(
+                          color: Colors.blue.shade700,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               DataManager().settingsModel.showLabelsOnHomeScreen
                   ? Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: Wrap(
                         children: [
-                          for (int i = 0; i < listModel.labels.length; i++)
+                          for (int i = 0; i < widget.listModel.labels.length; i++)
                             i < 3
                                 ? Padding(
                                     padding: const EdgeInsets.all(5.0),
@@ -512,7 +575,7 @@ class ListModelTileListView extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                         child: Text(
-                                          '  ${listModel.labels[i]}  ',
+                                          '  ${widget.listModel.labels[i]}  ',
                                           style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w300,
@@ -532,7 +595,7 @@ class ListModelTileListView extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
                                             child: Text(
-                                              '  +${listModel.labels.length - 3}  ',
+                                              '  +${widget.listModel.labels.length - 3}  ',
                                               style: const TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w300,
@@ -571,6 +634,17 @@ class ListModelTileGridView extends StatefulWidget {
 }
 
 class _ListModelTileGridViewState extends State<ListModelTileGridView> {
+  late bool isTimePassed;
+
+  @override
+  void initState() {
+    if (widget.listModel.scheduleTime != null) {
+      isTimePassed = DateTime.now().isAfter(widget.listModel.scheduleTime!);
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -591,7 +665,7 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
           }
         },
         onLongPress: () {
-          debugPrint("_HomeScreenState: build ");
+
           if (widget.selectedIds.contains(widget.listModel.id)) {
             widget.selectedIds.remove(widget.listModel.id);
           } else {
@@ -663,12 +737,45 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
                                   color: Colors.grey.shade500,
                                   size: 20,
                                 ),
-                          Text(listItem.name),
+                          Text(
+                            listItem.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
                   ],
                 ),
               ),
+              if (widget.listModel.scheduleTime != null && !isTimePassed)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: Icon(
+                          Icons.alarm,
+                          size: 20,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                      Text(
+                        Utils.getFormattedDateTime(DateTime(
+                          widget.listModel.scheduleTime!.year,
+                          widget.listModel.scheduleTime!.month,
+                          widget.listModel.scheduleTime!.day,
+                          widget.listModel.scheduleTime!.hour,
+                          widget.listModel.scheduleTime!.minute,
+                        )),
+                        style: TextStyle(
+                          color: Colors.blue.shade700,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               DataManager().settingsModel.showLabelsOnHomeScreen
                   ? Padding(
                       padding: const EdgeInsets.only(top: 10.0),

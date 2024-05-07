@@ -5,6 +5,7 @@ import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:sanjay_notes/utils.dart';
 
 class NewListScreen extends StatefulWidget {
   const NewListScreen({super.key});
@@ -195,7 +196,7 @@ class _NewListScreenState extends State<NewListScreen> {
                                   ),
                                   onTap: () {
                                     items[i].ticked = !items[i].ticked;
-                                    debugPrint("_NewListScreenState: build ${items[i].ticked}");
+
                                     setState(() {});
                                   }),
                               Expanded(
@@ -223,11 +224,39 @@ class _NewListScreenState extends State<NewListScreen> {
                             ],
                           ),
                         ),
+                      _date != null && _timeOfDay != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 20.0, top: 20),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 5.0),
+                                    child: Icon(
+                                      Icons.alarm,
+                                      color: Colors.blue.shade700,
+                                    ),
+                                  ),
+                                  Text(
+                                    Utils.getFormattedDateTime(
+                                      DateTime(
+                                        _date!.year,
+                                        _date!.month,
+                                        _date!.day,
+                                        _timeOfDay!.hour,
+                                        _timeOfDay!.minute,
+                                      ),
+                                    ),
+                                    style: TextStyle(color: Colors.blue.shade700),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
                     ],
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 45,
                 child: Row(
                   children: [
@@ -617,13 +646,16 @@ class _NewListScreenState extends State<NewListScreen> {
 
     ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
     listModel.color = mainColor;
-    listModel.scheduleTime = DateTime(
-      _date!.year,
-      _date!.month,
-      _date!.day,
-      _timeOfDay!.hour,
-      _timeOfDay!.minute,
-    );
+    if (_date != null && _timeOfDay != null) {
+      listModel.scheduleTime = DateTime(
+        _date!.year,
+        _date!.month,
+        _date!.day,
+        _timeOfDay!.hour,
+        _timeOfDay!.minute,
+      );
+    }
+
     if (listModel.items.isEmpty || titleController.text.trim().isEmpty) {
       Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       return;
