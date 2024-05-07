@@ -800,7 +800,6 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                   onPressed: () {
                     _date = null;
                     _timeOfDay = null;
-
                     setState(() {});
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
