@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/notes_db.dart';
@@ -15,9 +17,13 @@ class ListModelsDb {
   static List<ListModel> getAllListModels(String key) {
     String? data = prefs.getString(key);
 
+    log('$key - $data');
+
     if (data == null) return [];
 
     List decoded = jsonDecode(data);
+
+    debugPrint("NotesDb getAllNotes: checkzzz $key = ${data}");
 
     return decoded.map((e) => ListModel.fromJson(e)).toList();
   }
