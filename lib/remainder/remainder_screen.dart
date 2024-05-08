@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
+import '../list_model.dart';
 import '../my_drawer.dart';
 import '../note.dart';
 import '../utils.dart';
@@ -16,10 +18,15 @@ class _RemainderState extends State<RemainderScreen> {
   @override
   Widget build(BuildContext context) {
     List<Note> notes = DataManager().remainderNotes.where((element) => true).toList();
-
     for (Note note in notes) {
       if (note.scheduleTime != null && DateTime.now().isAfter(note.scheduleTime!)) {
         NotesDb.removeNote(NotesDb.remainderNotesKey, note.id);
+      }
+    }
+    List<ListModel> listModels = DataManager().remainderListModels.where((element) => true).toList();
+    for (ListModel listModel in listModels) {
+      if (listModel.scheduleTime != null && DateTime.now().isAfter(listModel.scheduleTime!)) {
+        ListModelsDb.removeListModel(ListModelsDb.remainderListModelKey, listModel.id);
       }
     }
     return PopScope(
@@ -67,7 +74,7 @@ class _RemainderState extends State<RemainderScreen> {
                 ],
               ),
             ),
-            if (DataManager().remainderNotes.isEmpty)
+            if (DataManager().remainderNotes.isEmpty && DataManager().remainderListModels.isEmpty)
               Expanded(
                 child: Column(
                   children: [
@@ -243,6 +250,173 @@ class _RemainderState extends State<RemainderScreen> {
                                                               : const SizedBox()
                                                   ],
                                                 ),
+                                              ),
+                                            )
+                                          : const SizedBox(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          for (ListModel listModel in DataManager().remainderListModels)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                onTap: () {},
+                                onLongPress: () {},
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: listModel.color,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: listModel.color == Colors.white ? Colors.grey : Colors.transparent,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 5),
+                                              child: Text(
+                                                listModel.title,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          DataManager().settingsModel.showTimeChecked
+                                              ? Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Text(
+                                                    Utils.getFormattedDateTime(listModel.createdAt),
+                                                    textAlign: TextAlign.end,
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.grey.shade800,
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox()
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10.0, left: 5, bottom: 10),
+                                        child: Column(
+                                          children: [
+                                            for (ListItem item in listModel.items)
+                                              Padding(
+                                                padding: const EdgeInsets.all(2.0),
+                                                child: Row(
+                                                  children: [
+                                                    item.ticked
+                                                        ? Icon(
+                                                            Icons.check_box_outlined,
+                                                            color: Colors.grey.shade500,
+                                                            size: 20,
+                                                          )
+                                                        : Icon(Icons.check_box_outline_blank,
+                                                            size: 20, color: Colors.grey.shade500),
+                                                    Text(
+                                                      item.name,
+                                                      style: TextStyle(color: Colors.grey.shade600),
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (listModel.scheduleTime != null)
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 10.0),
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(right: 5.0),
+                                                child: Icon(
+                                                  Icons.alarm,
+                                                  size: 20,
+                                                  color: Colors.blue.shade700,
+                                                ),
+                                              ),
+                                              Text(
+                                                Utils.getFormattedDateTime(
+                                                  DateTime(
+                                                    listModel.scheduleTime!.year,
+                                                    listModel.scheduleTime!.month,
+                                                    listModel.scheduleTime!.day,
+                                                    listModel.scheduleTime!.hour,
+                                                    listModel.scheduleTime!.minute,
+                                                  ),
+                                                ),
+                                                style: TextStyle(
+                                                  color: Colors.blue.shade700,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      DataManager().settingsModel.showLabelsOnHomeScreen
+                                          ? Align(
+                                              alignment: AlignmentDirectional.centerStart,
+                                              child: Wrap(
+                                                children: [
+                                                  for (int i = 0; i < listModel.labels.length; i++)
+                                                    i < 3
+                                                        ? Padding(
+                                                            padding: const EdgeInsets.all(5.0),
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.grey.shade300,
+                                                                borderRadius: BorderRadius.circular(5),
+                                                              ),
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(
+                                                                    horizontal: 4.0, vertical: 3),
+                                                                child: Text(
+                                                                  '  ${listModel.labels[i]}  ',
+                                                                  style: const TextStyle(
+                                                                    fontSize: 13,
+                                                                    fontWeight: FontWeight.w300,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : i == 4
+                                                            ? Padding(
+                                                                padding: const EdgeInsets.all(5.0),
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    color: Colors.grey.shade300,
+                                                                    borderRadius: BorderRadius.circular(5),
+                                                                  ),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                        horizontal: 4.0, vertical: 3),
+                                                                    child: Text(
+                                                                      '  +${listModel.labels.length - 3}  ',
+                                                                      style: const TextStyle(
+                                                                        fontSize: 13,
+                                                                        fontWeight: FontWeight.w300,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : const SizedBox()
+                                                ],
                                               ),
                                             )
                                           : const SizedBox(),

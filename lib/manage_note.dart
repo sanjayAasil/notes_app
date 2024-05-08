@@ -696,6 +696,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
+          NotesDb.removeNote(NotesDb.remainderNotesKey, note.id);
           NotesDb.addNote(NotesDb.remainderNotesKey, note);
         }
         if (DataManager().addToFavorite) {
@@ -733,7 +734,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
+          NotesDb.removeNote(NotesDb.remainderNotesKey, widget.note!.id);
           NotesDb.addNote(NotesDb.remainderNotesKey, widget.note!);
+        } else {
+          NotesDb.removeNote(NotesDb.remainderNotesKey, widget.note!.id);
+          widget.note!.scheduleTime = null;
         }
         if (widget.note!.isArchive) {
           if (DataManager().addToPin) {
@@ -911,7 +916,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
+          NotesDb.removeNote(NotesDb.remainderNotesKey, widget.note!.id);
           NotesDb.addNote(NotesDb.remainderNotesKey, widget.note!);
+        } else {
+          NotesDb.removeNote(NotesDb.remainderNotesKey, widget.note!.id);
+          widget.note!.scheduleTime = null;
         }
         if (widget.note!.isArchive) {
           if (widget.note!.isFavorite) {

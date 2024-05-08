@@ -654,6 +654,7 @@ class _NewListScreenState extends State<NewListScreen> {
         _timeOfDay!.hour,
         _timeOfDay!.minute,
       );
+      ListModelsDb.addListModel(ListModelsDb.remainderListModelKey, listModel);
     }
 
     if (listModel.items.isEmpty || titleController.text.trim().isEmpty) {
@@ -693,6 +694,16 @@ class _NewListScreenState extends State<NewListScreen> {
 
     ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
     listModel.color = mainColor;
+    if (_date != null && _timeOfDay != null) {
+      listModel.scheduleTime = DateTime(
+        _date!.year,
+        _date!.month,
+        _date!.day,
+        _timeOfDay!.hour,
+        _timeOfDay!.minute,
+      );
+      ListModelsDb.addListModel(ListModelsDb.remainderListModelKey, listModel);
+    }
     if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
       return;
     }

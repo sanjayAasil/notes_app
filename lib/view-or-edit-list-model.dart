@@ -24,6 +24,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   List<bool> itemTicked = [];
   DateTime? _date;
   TimeOfDay? _timeOfDay;
+  bool isTimePassed = false;
 
   @override
   void initState() {
@@ -38,12 +39,16 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     DataManager().addToFavorite = widget.listModel.isFavorite ? true : false;
     DataManager().addToPin = widget.listModel.isPinned ? true : false;
     if (widget.listModel.scheduleTime != null) {
-      _date = DateTime(
-        widget.listModel.scheduleTime!.year,
-        widget.listModel.scheduleTime!.month,
-        widget.listModel.scheduleTime!.day,
-      );
-      _timeOfDay = TimeOfDay(hour: widget.listModel.scheduleTime!.hour, minute: widget.listModel.scheduleTime!.minute);
+      isTimePassed = DateTime.now().isAfter(widget.listModel.scheduleTime!);
+      if (!isTimePassed) {
+        _date = DateTime(
+          widget.listModel.scheduleTime!.year,
+          widget.listModel.scheduleTime!.month,
+          widget.listModel.scheduleTime!.day,
+        );
+        _timeOfDay =
+            TimeOfDay(hour: widget.listModel.scheduleTime!.hour, minute: widget.listModel.scheduleTime!.minute);
+      }
     }
   }
 
@@ -268,7 +273,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                                   ],
                                 ),
                               ),
-                            _date != null && _timeOfDay != null
+                            (_date != null && _timeOfDay != null) && !isTimePassed
                                 ? Padding(
                                     padding: const EdgeInsets.only(left: 20.0, top: 20),
                                     child: Row(
@@ -434,6 +439,11 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         _timeOfDay!.hour,
         _timeOfDay!.minute,
       );
+      ListModelsDb.removeListModel(ListModelsDb.remainderListModelKey, widget.listModel.id);
+      ListModelsDb.addListModel(ListModelsDb.remainderListModelKey, widget.listModel);
+    } else {
+      ListModelsDb.removeListModel(ListModelsDb.remainderListModelKey, widget.listModel.id);
+      widget.listModel.scheduleTime = null;
     }
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
@@ -458,13 +468,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           }
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              duration: Duration(seconds: 2),
-              content: Text('List moved to Favorites'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+
         } else {
           widget.listModel.isFavorite = false;
           if (DataManager().addToPin) {
@@ -562,6 +566,18 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     widget.listModel.title = titleController.text.trim();
     widget.listModel.items.clear();
     widget.listModel.items.addAll(items);
+
+    if (_date != null && _timeOfDay != null) {
+      widget.listModel.scheduleTime = DateTime(
+        _date!.year,
+        _date!.month,
+        _date!.day,
+        _timeOfDay!.hour,
+        _timeOfDay!.minute,
+      );
+      ListModelsDb.removeListModel(ListModelsDb.remainderListModelKey, widget.listModel.id);
+      ListModelsDb.addListModel(ListModelsDb.remainderListModelKey, widget.listModel);
+    }
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
@@ -823,7 +839,16 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                   )
                 else
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          elevation: 20,
+                          content: Text("Select Date and Time"),
+                          behavior: SnackBarBehavior.floating,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    },
                     child: Text(
                       'Save',
                       style: TextStyle(
