@@ -42,7 +42,7 @@ class ListModel {
         isFavorite: json['isFavorite'],
         labels: List.from(json['labels']),
         createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
-        scheduleTime: DateTime.fromMillisecondsSinceEpoch(json['scheduleTime']),
+        scheduleTime: json['scheduleTime'] != null ? DateTime.fromMillisecondsSinceEpoch(json['scheduleTime']) : null,
       );
 
   Map<String, dynamic> get json => {

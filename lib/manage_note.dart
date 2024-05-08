@@ -24,7 +24,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
   Color mainColor = Colors.white;
   TextEditingController titleController = TextEditingController();
   TextEditingController noteController = TextEditingController();
-
+  bool isTimePassed = false;
   DateTime? _date;
   TimeOfDay? _timeOfDay;
 
@@ -48,16 +48,23 @@ class _ManageNotePageState extends State<ManageNotePage> {
       mainColor = widget.note!.color;
     }
 
+    if (widget.note != null && widget.note!.scheduleTime != null) {
+      isTimePassed = DateTime.now().isAfter(widget.note!.scheduleTime!);
+    }
+
     if (widget.note != null) {
       if (widget.note!.scheduleTime != null) {
-        _date = DateTime(
-          widget.note!.scheduleTime!.year,
-          widget.note!.scheduleTime!.month,
-          widget.note!.scheduleTime!.day,
-        );
-        _timeOfDay = TimeOfDay(hour: widget.note!.scheduleTime!.hour, minute: widget.note!.scheduleTime!.minute);
+        if (!isTimePassed) {
+          _date = DateTime(
+            widget.note!.scheduleTime!.year,
+            widget.note!.scheduleTime!.month,
+            widget.note!.scheduleTime!.day,
+          );
+          _timeOfDay = TimeOfDay(hour: widget.note!.scheduleTime!.hour, minute: widget.note!.scheduleTime!.minute);
+        }
       }
     }
+
     super.initState();
   }
 
@@ -200,7 +207,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                 ),
                               ),
                             ),
-                            _date != null && _timeOfDay != null
+                            (_date != null && _timeOfDay != null) && !isTimePassed
                                 ? Padding(
                                     padding: const EdgeInsets.only(left: 20.0, top: 20),
                                     child: Row(
@@ -577,6 +584,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           _timeOfDay!.hour,
                           _timeOfDay!.minute,
                         );
+                        isTimePassed = false;
                       }
 
                       AwesomeNotifications().createNotification(
@@ -688,7 +696,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
-
         }
         if (DataManager().addToFavorite) {
           if (DataManager().addToPin) {
