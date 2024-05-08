@@ -28,7 +28,7 @@ class ListModel {
     required this.createdAt,
   }) : labels = labels ?? [];
 
-  factory ListModel.create({required String title, required List<ListItem> items, re}) =>
+  factory ListModel.create({required String title, required List<ListItem> items}) =>
       ListModel._(id: const Uuid().v4(), title: title, items: items, createdAt: DateTime.now());
 
   factory ListModel.fromJson(Map<String, dynamic> json) => ListModel._(

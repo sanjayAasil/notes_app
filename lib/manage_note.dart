@@ -696,6 +696,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
+          DataManager().remainderNotes.add(note);
         }
         if (DataManager().addToFavorite) {
           if (DataManager().addToPin) {

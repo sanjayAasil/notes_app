@@ -28,8 +28,8 @@ class _DeletedScreenState extends State<DeletedScreen> {
         : DataManager().deletedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     DataManager().settingsModel.olderNotesChecked
-        ? DataManager().deletedListModel.sort((a, b) => a.createdAt.compareTo(b.createdAt))
-        : DataManager().deletedListModel.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        ? DataManager().deletedListModels.sort((a, b) => a.createdAt.compareTo(b.createdAt))
+        : DataManager().deletedListModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     return PopScope(
       canPop: false,
@@ -138,7 +138,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                   ),
                 ),
               ),
-            if (DataManager().deletedNotes.isEmpty && DataManager().deletedListModel.isEmpty)
+            if (DataManager().deletedNotes.isEmpty && DataManager().deletedListModels.isEmpty)
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +167,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
                           selectedIds: selectedIds,
                           onUpdateRequest: () => setState(() {}),
                         ),
-                      for (ListModel listModel in DataManager().deletedListModel)
+                      for (ListModel listModel in DataManager().deletedListModels)
                         ListModelTileListView(
                           selectedIds: selectedIds,
                           listModel: listModel,
@@ -205,7 +205,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
     }
 
     List<ListModel> listModels =
-        DataManager().deletedListModel.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().deletedListModels.where((element) => selectedIds.contains(element.id)).toList();
 
     for (ListModel listModel in listModels) {
       if (listModel.isArchive) {
@@ -233,7 +233,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
     if (DataManager().deletedNotes.isNotEmpty) {
       NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
     }
-    if (DataManager().deletedListModel.isNotEmpty) {
+    if (DataManager().deletedListModels.isNotEmpty) {
       ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
     }
     selectedIds.clear();

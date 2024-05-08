@@ -22,6 +22,8 @@ class DataManager {
 
   List<Note> deletedNotes = [];
 
+  List<Note> remainderNotes = [];
+
   List<ListModel> listModels = [];
 
   List<ListModel> favoriteListModels = [];
@@ -30,7 +32,9 @@ class DataManager {
 
   List<ListModel> pinnedListModels = [];
 
-  List<ListModel> deletedListModel = [];
+  List<ListModel> deletedListModels = [];
+
+  List<ListModel> remainderListModels = [];
 
   List<String> labels = [];
 

@@ -6,6 +6,7 @@ import 'package:sanjay_notes/deleted_screen.dart';
 import 'package:sanjay_notes/favorite/favorite_screen.dart';
 import 'package:sanjay_notes/label_screen.dart';
 import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/remainder/remainder_screen.dart';
 import 'package:sanjay_notes/settings_screen.dart';
 import 'package:sanjay_notes/view-or-edit-list-model.dart';
 import 'package:sanjay_notes/manage_note.dart';
@@ -27,6 +28,7 @@ class Routes {
   static const String viewOrEditListModel = '/view-or-edit-list-model';
   static const String favoriteScreen = '/favorite-screen';
   static const String settingsScreen = '/settings-screen';
+  static const String remainderScreen = '/remainder-screen';
 
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
@@ -57,6 +59,8 @@ class Routes {
         return MaterialPageRoute(builder: (context) => ViewOrEditListModel(listModel: listModel));
       case settingsScreen:
         return MaterialPageRoute(builder: (context) => const SettingsScreen());
+      case remainderScreen:
+        return MaterialPageRoute(builder: (context) => const RemainderScreen());
       default:
         return MaterialPageRoute(
           builder: (context) => const Scaffold(

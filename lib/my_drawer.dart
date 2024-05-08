@@ -69,10 +69,13 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () {},
-              child: const DrawerTile(
+              onTap: selectedTab != 'remainder'
+                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.remainderScreen, (route) => false)
+                  : null,
+              child:   DrawerTile(
                 name: 'Remainder',
                 icon: Icons.timer_outlined,
+                isSelected: selectedTab == 'remainder',
               ),
             ),
             if (DataManager().labels.isNotEmpty)
@@ -174,10 +177,6 @@ class MyDrawer extends StatelessWidget {
                 icon: Icons.settings,
                 isSelected: selectedTab == 'Settings',
               ),
-            ),
-            const DrawerTile(
-              name: 'Help & feedback',
-              icon: Icons.help_outline_rounded,
             ),
           ],
         ),

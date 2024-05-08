@@ -15,6 +15,7 @@ class NotesDb {
   static const favoriteNotesKey = 'favoriteNotes';
   static const pinnedNotesKey = 'pinnedNotes';
   static const deletedNotesKey = 'deletedNotes';
+  static const remainderNotesKey = 'remainderNotes';
 
   static List<Note> getAllNotes(String key) {
     String? data = prefs.getString(key);
@@ -50,6 +51,8 @@ class NotesDb {
       DataManager().favoriteNotes.add(note);
     } else if (key == pinnedNotesKey) {
       DataManager().pinnedNotes.add(note);
+    } else if (key == remainderNotesKey) {
+      DataManager().remainderNotes.add(note);
     } else {
       DataManager().deletedNotes.add(note);
     }
@@ -74,6 +77,8 @@ class NotesDb {
       DataManager().favoriteNotes.addAll(notes);
     } else if (key == pinnedNotesKey) {
       DataManager().pinnedNotes.addAll(notes);
+    } else if (key == remainderNotesKey) {
+      DataManager().remainderNotes.addAll(notes);
     } else {
       DataManager().deletedNotes.addAll(notes);
     }
@@ -95,6 +100,8 @@ class NotesDb {
       DataManager().archivedNotes.removeWhere((element) => element.id == noteId);
     } else if (key == pinnedNotesKey) {
       DataManager().pinnedNotes.removeWhere((element) => element.id == noteId);
+    } else if (key == remainderNotesKey) {
+      DataManager().remainderNotes.removeWhere((element) => element.id == noteId);
     } else {
       DataManager().deletedNotes.removeWhere((element) => element.id == noteId);
     }
@@ -116,6 +123,8 @@ class NotesDb {
       DataManager().archivedNotes.removeWhere((element) => noteIds.contains(element.id));
     } else if (key == pinnedNotesKey) {
       DataManager().pinnedNotes.removeWhere((element) => noteIds.contains(element.id));
+    } else if (key == remainderNotesKey) {
+      DataManager().remainderNotes.removeWhere((element) => noteIds.contains(element.id));
     } else {
       DataManager().deletedNotes.removeWhere((element) => noteIds.contains(element.id));
     }

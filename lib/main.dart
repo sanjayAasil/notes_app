@@ -29,12 +29,14 @@ void main() async {
   DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
   DataManager().pinnedNotes = NotesDb.getAllNotes(NotesDb.pinnedNotesKey);
   DataManager().deletedNotes = NotesDb.getAllNotes(NotesDb.deletedNotesKey);
+  DataManager().remainderNotes = NotesDb.getAllNotes(NotesDb.remainderNotesKey);
 
   DataManager().listModels = ListModelsDb.getAllListModels(ListModelsDb.listModelKey);
-  DataManager().deletedListModel = ListModelsDb.getAllListModels(ListModelsDb.deletedListModelKey);
+  DataManager().deletedListModels = ListModelsDb.getAllListModels(ListModelsDb.deletedListModelKey);
   DataManager().pinnedListModels = ListModelsDb.getAllListModels(ListModelsDb.pinnedListModelKey);
   DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
   DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
+  DataManager().remainderListModels = ListModelsDb.getAllListModels(ListModelsDb.remainderListModelKey);
 
   DataManager().labels = LabelsDb.getAllLabels();
 

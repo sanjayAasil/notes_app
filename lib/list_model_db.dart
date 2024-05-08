@@ -13,6 +13,7 @@ class ListModelsDb {
   static const favoriteListModelKey = 'favoriteListModelKey';
   static const pinnedListModelKey = 'pinnedListModelKey';
   static const deletedListModelKey = 'deletedListModelKey';
+  static const remainderListModelKey = 'remainderListModelKey';
 
   static List<ListModel> getAllListModels(String key) {
     String? data = prefs.getString(key);
@@ -46,7 +47,9 @@ class ListModelsDb {
     } else if (key == favoriteListModelKey) {
       DataManager().favoriteListModels.add(listModel);
     } else if (key == deletedListModelKey) {
-      DataManager().deletedListModel.add(listModel);
+      DataManager().deletedListModels.add(listModel);
+    } else if (key == remainderListModelKey) {
+      DataManager().remainderListModels.add(listModel);
     } else {
       DataManager().pinnedListModels.add(listModel);
     }
@@ -70,7 +73,9 @@ class ListModelsDb {
     } else if (key == favoriteListModelKey) {
       DataManager().favoriteListModels.addAll(listModels);
     } else if (key == deletedListModelKey) {
-      DataManager().deletedListModel.addAll(listModels);
+      DataManager().deletedListModels.addAll(listModels);
+    } else if (key == remainderListModelKey) {
+      DataManager().remainderListModels.addAll(listModels);
     } else {
       DataManager().pinnedListModels.addAll(listModels);
     }
@@ -92,7 +97,9 @@ class ListModelsDb {
     } else if (key == favoriteListModelKey) {
       DataManager().favoriteListModels.removeWhere((element) => element.id == listModelId);
     } else if (key == deletedListModelKey) {
-      DataManager().deletedListModel.removeWhere((element) => element.id == listModelId);
+      DataManager().deletedListModels.removeWhere((element) => element.id == listModelId);
+    } else if (key == remainderListModelKey) {
+      DataManager().remainderListModels.removeWhere((element) => element.id == listModelId);
     } else {
       DataManager().pinnedListModels.removeWhere((element) => element.id == listModelId);
     }
@@ -114,7 +121,9 @@ class ListModelsDb {
     } else if (key == favoriteListModelKey) {
       DataManager().favoriteListModels.removeWhere((element) => listModelIds.contains(element.id));
     } else if (key == deletedListModelKey) {
-      DataManager().deletedListModel.removeWhere((element) => listModelIds.contains(element.id));
+      DataManager().deletedListModels.removeWhere((element) => listModelIds.contains(element.id));
+    } else if (key == remainderListModelKey) {
+      DataManager().remainderListModels.removeWhere((element) => listModelIds.contains(element.id));
     } else {
       DataManager().pinnedListModels.removeWhere((element) => listModelIds.contains(element.id));
     }
