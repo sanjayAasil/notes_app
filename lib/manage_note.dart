@@ -696,7 +696,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
-          DataManager().remainderNotes.add(note);
+          NotesDb.addNote(NotesDb.remainderNotesKey, note);
         }
         if (DataManager().addToFavorite) {
           if (DataManager().addToPin) {
@@ -733,6 +733,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             _timeOfDay!.hour,
             _timeOfDay!.minute,
           );
+          NotesDb.addNote(NotesDb.remainderNotesKey, widget.note!);
         }
         if (widget.note!.isArchive) {
           if (DataManager().addToPin) {
@@ -871,6 +872,16 @@ class _ManageNotePageState extends State<ManageNotePage> {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.color = mainColor;
+        if (_date != null && _timeOfDay != null) {
+          note.scheduleTime = DateTime(
+            _date!.year,
+            _date!.month,
+            _date!.day,
+            _timeOfDay!.hour,
+            _timeOfDay!.minute,
+          );
+          NotesDb.addNote(NotesDb.remainderNotesKey, note);
+        }
         if (DataManager().addToFavorite) {
           note.isFavorite = true;
           if (DataManager().addToPin) {
@@ -892,6 +903,16 @@ class _ManageNotePageState extends State<ManageNotePage> {
           ),
         );
       } else {
+        if (_date != null && _timeOfDay != null) {
+          widget.note!.scheduleTime = DateTime(
+            _date!.year,
+            _date!.month,
+            _date!.day,
+            _timeOfDay!.hour,
+            _timeOfDay!.minute,
+          );
+          NotesDb.addNote(NotesDb.remainderNotesKey, widget.note!);
+        }
         if (widget.note!.isArchive) {
           if (widget.note!.isFavorite) {
             NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
