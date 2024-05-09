@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sanjay_notes/favourite_provider.dart';
 import 'package:sanjay_notes/widget_helper.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
 import '../note.dart';
 
 class FavoriteListView extends StatefulWidget {
-  const FavoriteListView({
-    Key? key,
-    required this.selectedIds,
-    this.onUpdateRequest,
-    required this.isPinned,
-    required this.others,
-  }) : super(key: key);
-
-  final List<String> selectedIds;
-  final Function()? onUpdateRequest;
-  final bool isPinned, others;
+  const FavoriteListView({Key? key}) : super(key: key);
 
   @override
   State<FavoriteListView> createState() => _FavoriteListViewState();
 }
 
 class _FavoriteListViewState extends State<FavoriteListView> {
+  late FavouriteProvider favouriteProvider;
+
+  @override
+  void initState() {
+    favouriteProvider = context.read<FavouriteProvider>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    context.watch<FavouriteProvider>();
     DataManager().settingsModel.olderNotesChecked
         ? DataManager().favoriteNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
         : DataManager().favoriteNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -40,7 +41,7 @@ class _FavoriteListViewState extends State<FavoriteListView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.isPinned)
+                if (favouriteProvider.isPinned)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                     child: Text(
@@ -54,26 +55,22 @@ class _FavoriteListViewState extends State<FavoriteListView> {
                   if (note.isPinned)
                     NoteTileListView(
                       note: note,
-                      selectedIds: widget.selectedIds,
-                      onUpdateRequest: () => setState(() {
-                        widget.onUpdateRequest?.call();
-                      }),
+                      selectedIds: favouriteProvider.selectedIds,
+                      onUpdateRequest: () => favouriteProvider.notify(),
                     ),
                 for (ListModel listModel in DataManager().favoriteListModels)
                   if (listModel.isPinned)
                     ListModelTileListView(
-                      selectedIds: widget.selectedIds,
+                      selectedIds: favouriteProvider.selectedIds,
                       listModel: listModel,
-                      onUpdateRequest: () => setState(() {
-                        widget.onUpdateRequest?.call();
-                      }),
+                      onUpdateRequest: () => favouriteProvider.notify(),
                     ),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.isPinned && widget.others)
+                if (favouriteProvider.isPinned && favouriteProvider.others)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                     child: Text(
@@ -87,19 +84,15 @@ class _FavoriteListViewState extends State<FavoriteListView> {
                   if (!note.isPinned)
                     NoteTileListView(
                       note: note,
-                      selectedIds: widget.selectedIds,
-                      onUpdateRequest: () => setState(() {
-                        widget.onUpdateRequest?.call();
-                      }),
+                      selectedIds: favouriteProvider.selectedIds,
+                      onUpdateRequest: () => favouriteProvider.notify(),
                     ),
                 for (ListModel listModel in DataManager().favoriteListModels)
                   if (!listModel.isPinned)
                     ListModelTileListView(
-                      selectedIds: widget.selectedIds,
+                      selectedIds: favouriteProvider.selectedIds,
                       listModel: listModel,
-                      onUpdateRequest: () => setState(() {
-                        widget.onUpdateRequest?.call();
-                      }),
+                      onUpdateRequest: () => favouriteProvider.notify(),
                     )
               ],
             ),

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sanjay_notes/favourite_provider.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/utils.dart';
@@ -9,9 +11,7 @@ import '../note.dart';
 import '../routes.dart';
 
 class DefaultFavoriteAppBar extends StatelessWidget {
-  const DefaultFavoriteAppBar({Key? key, this.onViewChanged}) : super(key: key);
-
-  final Function()? onViewChanged;
+  const DefaultFavoriteAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class DefaultFavoriteAppBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(40),
             onTap: () {
               DataManager().favoriteScreenView = !DataManager().favoriteScreenView;
-              onViewChanged?.call();
+              context.read<FavouriteProvider>().notify();
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
@@ -70,14 +70,27 @@ class DefaultFavoriteAppBar extends StatelessWidget {
   }
 }
 
-class SelectedFavoriteAppBar extends StatelessWidget {
-  const SelectedFavoriteAppBar({Key? key, required this.selectedIds, this.onSelectedIdsCleared}) : super(key: key);
+class SelectedFavoriteAppBar extends StatefulWidget {
+  const SelectedFavoriteAppBar({Key? key}) : super(key: key);
 
-  final List<String> selectedIds;
-  final Function()? onSelectedIdsCleared;
+  @override
+  State<SelectedFavoriteAppBar> createState() => _SelectedFavoriteAppBarState();
+}
+
+class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
+  List<String> selectedIds = [];
+  late FavouriteProvider favouriteProvider;
+
+  @override
+  void initState() {
+    favouriteProvider = context.read<FavouriteProvider>();
+    selectedIds = favouriteProvider.selectedIds;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    selectedIds = context.watch<FavouriteProvider>().selectedIds;
     return Container(
       alignment: Alignment.centerLeft,
       color: Colors.grey.shade200,
@@ -95,10 +108,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              onTap: () {
-                selectedIds.clear();
-                onSelectedIdsCleared?.call();
-              },
+              onTap: () => favouriteProvider.clearSelectedIds(),
             ),
             Expanded(
                 child: Text(
@@ -196,10 +206,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
       ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
       ListModelsDb.addListModels(ListModelsDb.favoriteListModelKey, listModels);
     }
-
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
-    debugPrint("SelectedFavoriteAppBar onPinned: pinned");
+    favouriteProvider.clearSelectedIds();
   }
 
   onArchive() {
@@ -219,8 +226,7 @@ class SelectedFavoriteAppBar extends StatelessWidget {
       ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
       ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
     }
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
+    favouriteProvider.clearSelectedIds();
   }
 
   onDelete() {
@@ -246,9 +252,6 @@ class SelectedFavoriteAppBar extends StatelessWidget {
       ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
     }
 
-    selectedIds.clear();
-    debugPrint("SelectedFavoriteAppBar build: end1");
-    onSelectedIdsCleared?.call();
-    debugPrint("SelectedFavoriteAppBar build: end2");
+    favouriteProvider.clearSelectedIds();
   }
 }

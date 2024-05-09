@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sanjay_notes/favourite_provider.dart';
 import 'package:sanjay_notes/widget_helper.dart';
 import '../data_manager.dart';
 
 class FavoriteGridView extends StatefulWidget {
-  final List<String> selectedIds;
-  final Function()? onUpdateRequest;
-  final bool isPinned, others;
-
-  const FavoriteGridView({
-    Key? key,
-    required this.selectedIds,
-    this.onUpdateRequest,
-    required this.isPinned,
-    required this.others,
-  }) : super(key: key);
+  const FavoriteGridView({Key? key}) : super(key: key);
 
   @override
   State<FavoriteGridView> createState() => _FavoriteGridViewState();
 }
 
 class _FavoriteGridViewState extends State<FavoriteGridView> {
+  late FavouriteProvider favouriteProvider;
+
+  @override
+  void initState() {
+    favouriteProvider = context.read<FavouriteProvider>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -27,7 +27,7 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.isPinned)
+            if (favouriteProvider.isPinned)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
@@ -43,24 +43,20 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
                 for (int i = 0; i < DataManager().favoriteNotes.length; i++)
                   if (DataManager().favoriteNotes[i].isPinned)
                     NoteTileGridView(
-                      selectedIds: widget.selectedIds,
+                      selectedIds: favouriteProvider.selectedIds,
                       note: DataManager().favoriteNotes[i],
-                      onUpdateRequest: () => setState(() {
-                        widget.onUpdateRequest?.call();
-                      }),
+                      onUpdateRequest: () => favouriteProvider.notify(),
                     ),
                 for (int i = 0; i < DataManager().favoriteListModels.length; i++)
                   if (DataManager().favoriteListModels[i].isPinned)
                     ListModelTileGridView(
-                      selectedIds: widget.selectedIds,
+                      selectedIds: favouriteProvider.selectedIds,
                       listModel: DataManager().favoriteListModels[i],
-                      onUpdateRequest: () => setState(() {
-                        widget.onUpdateRequest?.call();
-                      }),
+                      onUpdateRequest: () => favouriteProvider.notify(),
                     ),
               ],
             ),
-            if (widget.isPinned && widget.others)
+            if (favouriteProvider.isPinned && favouriteProvider.others)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
@@ -77,11 +73,9 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
                   for (int i = 0; i < DataManager().favoriteNotes.length; i++)
                     if (!DataManager().favoriteNotes[i].isPinned)
                       NoteTileGridView(
-                        selectedIds: widget.selectedIds,
+                        selectedIds: favouriteProvider.selectedIds,
                         note: DataManager().favoriteNotes[i],
-                        onUpdateRequest: () => setState(() {
-                          widget.onUpdateRequest?.call();
-                        }),
+                        onUpdateRequest: () => favouriteProvider.notify(),
                       ),
 
                   ///listModel notPinned
@@ -89,11 +83,9 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
                   for (int i = 0; i < DataManager().favoriteListModels.length; i++)
                     if (!DataManager().favoriteListModels[i].isPinned)
                       ListModelTileGridView(
-                        selectedIds: widget.selectedIds,
+                        selectedIds: favouriteProvider.selectedIds,
                         listModel: DataManager().favoriteListModels[i],
-                        onUpdateRequest: () => setState(() {
-                          widget.onUpdateRequest?.call();
-                        }),
+                        onUpdateRequest: () => favouriteProvider.notify(),
                       ),
                 ],
               ),

@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/settings_model.dart';
 import 'note.dart';
 import 'notes_db.dart';
 
-class DataManager {
+class DataManager extends ChangeNotifier {
   final SettingsModel settingsModel;
   static final DataManager _instance = DataManager._();
 
