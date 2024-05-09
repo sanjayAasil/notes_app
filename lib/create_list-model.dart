@@ -261,26 +261,6 @@ class _NewListScreenState extends State<NewListScreen> {
                 child: Row(
                   children: [
                     InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.createNewNoteScreen, (route) => false);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            duration: Duration(seconds: 2),
-                            content: Text('Moved to Note page'),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(40),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.note_alt_outlined,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    ),
-                    InkWell(
                       onTap: _pickAColor,
                       borderRadius: BorderRadius.circular(40),
                       child: Padding(

@@ -20,34 +20,25 @@ class DefaultArchiveAppBar extends StatelessWidget {
       child: Row(
         children: [
           Builder(
-              builder: (context) => InkWell(
-                    onTap: () => Scaffold.of(context).openDrawer(),
-                    borderRadius: BorderRadius.circular(40),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.grey.shade800,
-                        size: 30,
-                      ),
-                    ),
-                  )),
+            builder: (context) => InkWell(
+              onTap: () => Scaffold.of(context).openDrawer(),
+              borderRadius: BorderRadius.circular(40),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.menu, color: Colors.grey.shade800, size: 30),
+              ),
+            ),
+          ),
           const SizedBox(width: 20),
           const Expanded(
-            child: Text(
-              'Archive',
-              style: TextStyle(fontSize: 18),
-            ),
+            child: Text('Archive', style: TextStyle(fontSize: 18)),
           ),
           InkWell(
             borderRadius: BorderRadius.circular(40),
             onTap: () {},
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Icon(
-                Icons.search,
-                size: 30,
-              ),
+              child: Icon(Icons.search, size: 30),
             ),
           ),
           InkWell(
@@ -58,10 +49,7 @@ class DefaultArchiveAppBar extends StatelessWidget {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Icon(
-                DataManager().archiveScreenView ? Icons.list : Icons.grid_view_outlined,
-                size: 30,
-              ),
+              child: Icon(DataManager().archiveScreenView ? Icons.list : Icons.grid_view_outlined, size: 30),
             ),
           ),
         ],

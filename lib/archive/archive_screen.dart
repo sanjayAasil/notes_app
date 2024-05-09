@@ -33,57 +33,53 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   @override
   Widget build(BuildContext context) {
     _handlePinned();
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (value) => Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false),
-      child: Scaffold(
-        drawer: const MyDrawer(
-          selectedTab: 'archiveScreen',
-        ),
-        body: Column(
-          children: [
-            if (selectedIds.isEmpty)
-              DefaultArchiveAppBar(onViewChanged: () {
-                setState(() {});
-              })
-            else
-              SelectedArchiveAppBar(
-                selectedIds: selectedIds,
-                onSelectedIdsCleared: () => setState(() {}),
+    return Scaffold(
+      drawer: const MyDrawer(
+        selectedTab: HomeDrawerEnum.archive,
+      ),
+      body: Column(
+        children: [
+          if (selectedIds.isEmpty)
+            DefaultArchiveAppBar(onViewChanged: () {
+              setState(() {});
+            })
+          else
+            SelectedArchiveAppBar(
+              selectedIds: selectedIds,
+              onSelectedIdsCleared: () => setState(() {}),
+            ),
+          if (DataManager().archivedNotes.isEmpty && DataManager().archivedListModels.isEmpty)
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.archive_outlined,
+                    size: 140,
+                    color: Colors.yellow.shade800,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text('Your archived notes appear here'),
+                  ),
+                ],
               ),
-            if (DataManager().archivedNotes.isEmpty && DataManager().archivedListModels.isEmpty)
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.archive_outlined,
-                      size: 140,
-                      color: Colors.yellow.shade800,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Your archived notes appear here'),
-                    ),
-                  ],
-                ),
-              )
-            else
-              DataManager().archiveScreenView
-                  ? ArchivedListView(
-                      selectedIds: selectedIds,
-                      isPinned: isPinned,
-                      others: others,
-                      onUpdateRequest: () => setState(() {}),
-                    )
-                  : ArchivedGridView(
-                      selectedIds: selectedIds,
-                      isPinned: isPinned,
-                      others: others,
-                      onUpdateRequest: () => setState(() {}),
-                    ),
-          ],
-        ),
+            )
+          else
+            DataManager().archiveScreenView
+                ? ArchivedListView(
+                    selectedIds: selectedIds,
+                    isPinned: isPinned,
+                    others: others,
+                    onUpdateRequest: () => setState(() {}),
+                  )
+                : ArchivedGridView(
+                    selectedIds: selectedIds,
+                    isPinned: isPinned,
+                    others: others,
+                    onUpdateRequest: () => setState(() {}),
+                  ),
+        ],
       ),
     );
   }
