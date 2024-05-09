@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/favourite_provider.dart';
+import 'package:sanjay_notes/providers/favourite_provider.dart';
 import 'package:sanjay_notes/widget_helper.dart';
 import '../data_manager.dart';
 

@@ -21,56 +21,50 @@ class _LabelScreenState extends State<LabelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (bool value) {
-        onBackPress();
-      },
-      child: Scaffold(
-        body: Column(
-          children: [
-            Container(
-              color: Colors.grey.shade200,
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+            color: Colors.grey.shade200,
+            child: Padding(
+              padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 40),
               child: Padding(
-                padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 40),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: onBackPress,
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Colors.grey.shade800,
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: onBackPress,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                    const Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter label name',
+                            hintStyle: TextStyle(fontWeight: FontWeight.w300),
                           ),
                         ),
                       ),
-                      const Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Enter label name',
-                              hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            for (int i = DataManager().labels.length - 1; i >= 0; i--)
-              LabelTile(
-                label: DataManager().labels[i],
-                selectedLabels: selectedLabels,
-              ),
-          ],
-        ),
+          ),
+          for (int i = DataManager().labels.length - 1; i >= 0; i--)
+            LabelTile(
+              label: DataManager().labels[i],
+              selectedLabels: selectedLabels,
+            ),
+        ],
       ),
     );
   }

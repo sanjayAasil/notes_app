@@ -27,6 +27,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
   bool isTimePassed = false;
   DateTime? _date;
   TimeOfDay? _timeOfDay;
+  bool isBackPressed = false;
 
   @override
   void initState() {
@@ -71,10 +72,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: widget.note != null && widget.note!.isDeleted,
       onPopInvoked: (bool value) {
+        if (isBackPressed) return;
+
         if (widget.note == null || (widget.note != null && !widget.note!.isDeleted)) {
-          onBackPressed();
+          onBackPressed(true);
         }
       },
       child: Scaffold(
@@ -91,7 +93,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                       child: Row(
                         children: [
                           InkWell(
-                            onTap: onBackPressed,
+                            onTap: () => onBackPressed(false),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Icon(
@@ -273,26 +275,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
                       height: 45,
                       child: Row(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushNamedAndRemoveUntil(Routes.newListScreen, (route) => false);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  duration: Duration(seconds: 2),
-                                  content: Text('Moved to List page'),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(40),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.check_box_outlined,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                          ),
                           InkWell(
                             onTap: _pickAColor,
                             borderRadius: BorderRadius.circular(40),
@@ -683,7 +665,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
     );
   }
 
-  void onBackPressed() {
+  void onBackPressed(bool skipPop) {
+    isBackPressed = true;
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
@@ -721,7 +704,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             NotesDb.addNote(NotesDb.notesKey, note);
           }
         }
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        if (!skipPop) Navigator.of(context).pop();
       } else {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
@@ -751,7 +734,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
             NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           }
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+          if (skipPop) {
+            debugPrint("_ManageNotePageState onBackPressed: vhywefwv ywf wf");
+            Navigator.of(context).pushNamed(Routes.archiveScreen);
+          } else {
+            Navigator.of(context).popAndPushNamed(Routes.archiveScreen);
+          }
         } else if (widget.note!.isFavorite) {
           if (DataManager().addToFavorite) {
             if (DataManager().addToPin) {
@@ -784,7 +772,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
             );
           }
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+          if (skipPop) {
+            Navigator.of(context).pushNamed(Routes.favoriteScreen);
+          } else {
+            Navigator.of(context).popAndPushNamed(Routes.favoriteScreen);
+          }
         } else if (widget.note!.isPinned) {
           if (DataManager().addToFavorite) {
             if (DataManager().addToPin) {
@@ -813,7 +805,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             }
           }
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+          if (!skipPop) Navigator.of(context).pop();
         } else {
           if (DataManager().addToFavorite) {
             if (DataManager().addToPin) {
@@ -843,8 +835,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
               NotesDb.addNote(NotesDb.notesKey, widget.note!);
             }
           }
-
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+          if (!skipPop) Navigator.of(context).pop();
         }
       }
     } else {
@@ -852,27 +843,36 @@ class _ManageNotePageState extends State<ManageNotePage> {
         if (widget.note!.isArchive) {
           NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+          if (skipPop) {
+            Navigator.of(context).pushNamed(Routes.archiveScreen);
+          } else {
+            Navigator.of(context).popAndPushNamed(Routes.archiveScreen);
+          }
         } else if (widget.note!.isFavorite) {
           NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+          if (skipPop) {
+            Navigator.of(context).pushNamed(Routes.favoriteScreen);
+          } else {
+            Navigator.of(context).popAndPushNamed(Routes.favoriteScreen);
+          }
         } else if (widget.note!.isPinned) {
           NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+          if (!skipPop) Navigator.of(context).pop();
         } else {
           NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+          if (!skipPop) Navigator.of(context).pop();
         }
       } else {
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        if (!skipPop) Navigator.of(context).pop();
       }
     }
   }
 
   void archiveButton() {
+    isBackPressed = true;
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
@@ -899,7 +899,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
         }
         note.isArchive = true;
         NotesDb.addNote(NotesDb.archivedNotesKey, note);
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             duration: Duration(seconds: 2),
@@ -938,7 +938,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             widget.note!.isArchive = false;
             NotesDb.addNote(NotesDb.notesKey, widget.note!);
           }
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+          Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               duration: Duration(seconds: 2),
@@ -952,7 +952,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
 
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+          Navigator.of(context).pop();
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -966,7 +966,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+          Navigator.of(context).pop();
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -980,8 +980,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
           widget.note!.isArchive = true;
           NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
-          Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
-
+          Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               duration: Duration(seconds: 2),
@@ -1064,10 +1063,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                     color: Colors.grey.shade800,
                   ),
                 ),
-                onTap: () {
-                  debugPrint("NoteForDeletedScreen build: checkkkkk");
-                  Navigator.of(context).pop();
-                },
+                onTap: () => Navigator.of(context).pop(),
               ),
               const Expanded(child: SizedBox()),
               InkWell(
@@ -1101,7 +1097,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+                  Navigator.of(context).pop();
                 },
               ),
               InkWell(
@@ -1115,7 +1111,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                 ),
                 onTap: () {
                   NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+                  Navigator.of(context).pop();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

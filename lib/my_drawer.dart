@@ -1,15 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/routes.dart';
+
+enum HomeDrawerEnum {
+  notes,
+  favourites,
+  remainder,
+  createLabel,
+  archive,
+  deleted,
+}
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key, required this.selectedTab});
 
-  final String selectedTab;
+  final HomeDrawerEnum selectedTab;
 
   @override
   Widget build(BuildContext context) {
+    HomeScreenProvider homeScreenProvider = context.read<HomeScreenProvider>();
     return Drawer(
       backgroundColor: Colors.white,
       child: SingleChildScrollView(
@@ -49,36 +61,33 @@ class MyDrawer extends StatelessWidget {
               ],
             ),
             InkWell(
-              onTap: selectedTab != 'homeScreen'
-                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false)
-                  : null,
+              onTap: () {
+                homeScreenProvider.selectedDrawer = HomeDrawerEnum.notes;
+                Navigator.of(context).pop();
+              },
               child: DrawerTile(
                 name: 'Notes',
                 icon: Icons.lightbulb_outline_rounded,
-                isSelected: selectedTab == 'homeScreen',
+                isSelected: selectedTab == HomeDrawerEnum.notes,
               ),
             ),
             InkWell(
-              onTap: selectedTab != 'favoriteScreen'
-                  ? () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushNamed(Routes.favoriteScreen);
-                    }
-                  : null,
+              onTap: () {
+                homeScreenProvider.selectedDrawer = HomeDrawerEnum.favourites;
+                Navigator.of(context).pop();
+              },
               child: DrawerTile(
-                name: 'Favorites',
-                icon: Icons.favorite_border,
-                isSelected: selectedTab == 'favoriteScreen',
-              ),
+                  name: 'Favorites', icon: Icons.favorite_border, isSelected: selectedTab == HomeDrawerEnum.favourites),
             ),
             InkWell(
-              onTap: selectedTab != 'remainder'
-                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.remainderScreen, (route) => false)
-                  : null,
+              onTap: () {
+                homeScreenProvider.selectedDrawer = HomeDrawerEnum.remainder;
+                Navigator.of(context).pop();
+              },
               child: DrawerTile(
                 name: 'Remainder',
                 icon: Icons.timer_outlined,
-                isSelected: selectedTab == 'remainder',
+                isSelected: selectedTab == HomeDrawerEnum.remainder,
               ),
             ),
             if (DataManager().labels.isNotEmpty)
@@ -95,9 +104,7 @@ class MyDrawer extends StatelessWidget {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(Routes.createNewLabelScreen, (route) => false);
-                        },
+                        onTap: () => Navigator.of(context).popAndPushNamed(Routes.labelScreen),
                         child: const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                           child: Text('Edit'),
@@ -127,10 +134,10 @@ class MyDrawer extends StatelessWidget {
                           ],
                         ),
                       InkWell(
-                        onTap: selectedTab != 'createNewLabelScreen'
-                            ? () => Navigator.of(context)
-                                .pushNamedAndRemoveUntil(Routes.createNewLabelScreen, (route) => false)
-                            : null,
+                        onTap: () {
+                          homeScreenProvider.selectedDrawer = HomeDrawerEnum.createLabel;
+                          Navigator.of(context).pop();
+                        },
                         child: const DrawerTile(
                           name: 'Create new label',
                           icon: Icons.add,
@@ -143,42 +150,42 @@ class MyDrawer extends StatelessWidget {
               )
             else
               InkWell(
-                onTap: selectedTab != 'createNewLabelScreen'
-                    ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.createNewLabelScreen, (route) => false)
-                    : null,
+                onTap: () {
+                  homeScreenProvider.selectedDrawer = HomeDrawerEnum.createLabel;
+                  Navigator.of(context).pop();
+                },
                 child: const DrawerTile(
                   name: 'Create new label',
                   icon: Icons.add,
                 ),
               ),
             InkWell(
-              onTap: selectedTab != 'archiveScreen'
-                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false)
-                  : null,
+              onTap: () {
+                homeScreenProvider.selectedDrawer = HomeDrawerEnum.archive;
+                Navigator.of(context).pop();
+              },
               child: DrawerTile(
                 name: 'Archive',
                 icon: Icons.archive_outlined,
-                isSelected: selectedTab == 'archiveScreen',
+                isSelected: selectedTab == HomeDrawerEnum.archive,
               ),
             ),
             InkWell(
-              onTap: selectedTab != 'deletedScreen'
-                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false)
-                  : null,
+              onTap: () {
+                homeScreenProvider.selectedDrawer = HomeDrawerEnum.deleted;
+                Navigator.of(context).pop();
+              },
               child: DrawerTile(
                 name: 'Deleted',
                 icon: CupertinoIcons.delete,
-                isSelected: selectedTab == 'deletedScreen',
+                isSelected: selectedTab == HomeDrawerEnum.deleted,
               ),
             ),
             InkWell(
-              onTap: selectedTab != 'Settings'
-                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.settingsScreen, (route) => false)
-                  : null,
+              onTap: () => Navigator.of(context).popAndPushNamed(Routes.settingsScreen),
               child: DrawerTile(
                 name: 'Settings',
                 icon: Icons.settings,
-                isSelected: selectedTab == 'Settings',
               ),
             ),
           ],

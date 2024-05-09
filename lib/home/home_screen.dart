@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sanjay_notes/archive/archive_screen.dart';
+import 'package:sanjay_notes/create_new_label.dart';
 import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/favourite_provider.dart';
+import 'package:sanjay_notes/deleted_screen.dart';
+import 'package:sanjay_notes/favorite/favorite_screen.dart';
 import 'package:sanjay_notes/home/home_grid_view.dart';
 import 'package:sanjay_notes/my_drawer.dart';
+import 'package:sanjay_notes/providers/home_screen_provider.dart';
+import 'package:sanjay_notes/remainder/remainder_screen.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'home_app_bar.dart';
 import 'home_list_view.dart';
@@ -17,22 +22,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> selectedIds = [];
+  final HomeScreenProvider homeScreenProvider = HomeScreenProvider();
 
   @override
   Widget build(BuildContext context) {
     context.watch<DataManager>();
+
+    return ChangeNotifierProvider(
+        create: (_) => homeScreenProvider,
+        builder: (context, child) {
+          context.watch<HomeScreenProvider>();
+          switch (homeScreenProvider.selectedDrawer) {
+            case HomeDrawerEnum.notes:
+              return const NotesScreen();
+            case HomeDrawerEnum.favourites:
+              return const FavoriteScreen();
+            case HomeDrawerEnum.remainder:
+              return const RemainderScreen();
+            case HomeDrawerEnum.createLabel:
+              return const CreateNewLabelScreen();
+            case HomeDrawerEnum.archive:
+              return const ArchiveScreen();
+            case HomeDrawerEnum.deleted:
+              return const DeletedScreen();
+          }
+        });
+  }
+}
+
+class NotesScreen extends StatelessWidget {
+  const NotesScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    context.watch<HomeScreenProvider>();
     return Scaffold(
-      drawer: const MyDrawer(selectedTab: 'homeScreen'),
+      drawer: const MyDrawer(selectedTab: HomeDrawerEnum.notes),
       body: Column(
         children: [
-          if (selectedIds.isEmpty)
-            DefaultHomeAppBar(onViewChanged: () => setState(() {}))
+          if (context.read<HomeScreenProvider>().selectedIds.isEmpty)
+            const DefaultHomeAppBar()
           else
-            SelectedHomeAppBar(
-              onSelectedIdsCleared: () => setState(() {}),
-              selectedIds: selectedIds,
-            ),
+            const SelectedHomeAppBar(),
           if (DataManager().notes.isEmpty &&
               DataManager().listModels.isEmpty &&
               DataManager().pinnedNotes.isEmpty &&
@@ -57,15 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                child: DataManager().homeScreenView
-                    ? HomeScreenListView(
-                        selectedIds: selectedIds,
-                        onUpdateRequest: () => setState(() {}),
-                      )
-                    : HomeScreenGridView(
-                        selectedIds: selectedIds,
-                        onUpdateRequest: () => setState(() {}),
-                      ),
+                child: DataManager().homeScreenView ? const HomeScreenListView() : const HomeScreenGridView(),
               ),
             ),
 

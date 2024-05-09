@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/favorite/favorite_app_bar.dart';
 import 'package:sanjay_notes/favorite/favorite_grid_view.dart';
-import 'package:sanjay_notes/favourite_provider.dart';
+import 'package:sanjay_notes/providers/favourite_provider.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import '../data_manager.dart';
 import 'favorite_list_view.dart';
@@ -37,12 +37,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         builder: (context, child) {
           context.watch<FavouriteProvider>();
           return PopScope(
-            // canPop: false,
-            // onPopInvoked: (value) => Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false),
             child: Scaffold(
-              drawer: const MyDrawer(
-                selectedTab: 'favoriteScreen',
-              ),
+              drawer: const MyDrawer(selectedTab: HomeDrawerEnum.favourites),
               body: Column(
                 children: [
                   if (favouriteProvider.selectedIds.isEmpty)

@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
 import '../note.dart';
 import '../widget_helper.dart';
 
 class HomeScreenListView extends StatefulWidget {
-  const HomeScreenListView({Key? key, required this.selectedIds, this.onUpdateRequest}) : super(key: key);
-
-  final List<String> selectedIds;
-  final Function()? onUpdateRequest;
+  const HomeScreenListView({Key? key}) : super(key: key);
 
   @override
   State<HomeScreenListView> createState() => _HomeScreenListViewState();
 }
 
 class _HomeScreenListViewState extends State<HomeScreenListView> {
+  late HomeScreenProvider homeScreenProvider;
+
+  @override
+  void initState() {
+    homeScreenProvider = context.read<HomeScreenProvider>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    context.watch<HomeScreenProvider>();
     _timeSorting();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,16 +45,16 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
               for (Note note in DataManager().pinnedNotes)
                 NoteTileListView(
                   note: note,
-                  selectedIds: widget.selectedIds,
-                  onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
+                  selectedIds: homeScreenProvider.selectedIds,
+                  onUpdateRequest: () => homeScreenProvider.notify(),
                 ),
 
               ///ListView pinned ListModel
               for (ListModel listModel in DataManager().pinnedListModels)
                 ListModelTileListView(
-                  selectedIds: widget.selectedIds,
+                  selectedIds: homeScreenProvider.selectedIds,
                   listModel: listModel,
-                  onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
+                  onUpdateRequest: () => homeScreenProvider.notify(),
                 )
             ],
           ),
@@ -72,17 +80,17 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
             for (Note note in DataManager().notes)
               NoteTileListView(
                 note: note,
-                selectedIds: widget.selectedIds,
-                onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
+                selectedIds: homeScreenProvider.selectedIds,
+                onUpdateRequest: () => homeScreenProvider.notify(),
               ),
           ],
         ),
 
         for (ListModel listModel in DataManager().listModels)
           ListModelTileListView(
-            selectedIds: widget.selectedIds,
+            selectedIds: homeScreenProvider.selectedIds,
             listModel: listModel,
-            onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
+            onUpdateRequest: () => homeScreenProvider.notify(),
           ),
       ],
     );

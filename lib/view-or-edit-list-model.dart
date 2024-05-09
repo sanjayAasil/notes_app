@@ -468,7 +468,6 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
           }
-
         } else {
           widget.listModel.isFavorite = false;
           if (DataManager().addToPin) {

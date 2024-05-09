@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/favourite_provider.dart';
+import 'package:sanjay_notes/providers/favourite_provider.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
 import 'package:sanjay_notes/utils.dart';
@@ -138,9 +138,7 @@ class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
               onTap: () {},
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds);
-              },
+              onTap: () => Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds),
               child: const Padding(
                 padding: EdgeInsets.all(12),
                 child: Icon(

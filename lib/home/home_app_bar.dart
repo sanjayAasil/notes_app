@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/utils.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
@@ -9,9 +11,7 @@ import '../note.dart';
 import '../routes.dart';
 
 class DefaultHomeAppBar extends StatelessWidget {
-  final Function()? onViewChanged;
-
-  const DefaultHomeAppBar({Key? key, this.onViewChanged}) : super(key: key);
+  const DefaultHomeAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class DefaultHomeAppBar extends StatelessWidget {
             InkWell(
               onTap: () {
                 DataManager().homeScreenView = !DataManager().homeScreenView;
-                onViewChanged?.call();
+                context.read<HomeScreenProvider>().notify();
               },
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -86,17 +86,11 @@ class DefaultHomeAppBar extends StatelessWidget {
 }
 
 class SelectedHomeAppBar extends StatelessWidget {
-  final Function()? onSelectedIdsCleared;
-  final List<String> selectedIds;
-
-  const SelectedHomeAppBar({
-    Key? key,
-    this.onSelectedIdsCleared,
-    required this.selectedIds,
-  }) : super(key: key);
+  const SelectedHomeAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    HomeScreenProvider homeScreenProvider = context.read<HomeScreenProvider>();
     return Container(
       alignment: Alignment.centerLeft,
       color: Colors.grey.shade200,
@@ -115,20 +109,21 @@ class SelectedHomeAppBar extends StatelessWidget {
                   color: Colors.grey.shade800,
                 ),
               ),
-              onTap: () {
-                selectedIds.clear();
-                onSelectedIdsCleared?.call();
-              },
+              onTap: () => homeScreenProvider.clearSelectedIds(),
             ),
             Expanded(
-                child: Text(
-              '${selectedIds.length}',
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            )),
+              child: Builder(builder: (context) {
+                context.watch<HomeScreenProvider>();
+                return Text(
+                  '${homeScreenProvider.selectedIds.length}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                );
+              }),
+            ),
             InkWell(
-              onTap: onPinned,
+              onTap: () => onPinned(homeScreenProvider),
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Icon(
@@ -158,12 +153,15 @@ class SelectedHomeAppBar extends StatelessWidget {
                   color: Colors.grey.shade800,
                 ),
               ),
-              onTap: () => Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds),
+              onTap: () => Navigator.of(context).pushNamed(
+                Routes.labelScreen,
+                arguments: homeScreenProvider.selectedIds,
+              ),
             ),
             InkWell(
               onTap: () => Utils.commonDialog(
                 context: context,
-                function: onArchive,
+                function: () => onArchive(homeScreenProvider),
                 content: 'Archive',
                 snackBarMessage: 'Notes moved to Archive',
               ),
@@ -179,7 +177,7 @@ class SelectedHomeAppBar extends StatelessWidget {
             InkWell(
               onTap: () => Utils.commonDialog(
                 context: context,
-                function: onDeleted,
+                function: () => onDeleted(homeScreenProvider),
                 content: 'Delete',
                 snackBarMessage: 'Notes moved to Bin',
               ),
@@ -198,12 +196,15 @@ class SelectedHomeAppBar extends StatelessWidget {
     );
   }
 
-  onArchive() {
-    List<Note> notes = DataManager().notes.where((element) => selectedIds.contains(element.id)).toList();
-    List<Note> pinnedNotes = DataManager().pinnedNotes.where((element) => selectedIds.contains(element.id)).toList();
-    List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();
+  onArchive(HomeScreenProvider homeScreenProvider) {
+    List<Note> notes =
+        DataManager().notes.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
+    List<Note> pinnedNotes =
+        DataManager().pinnedNotes.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
+    List<ListModel> listModels =
+        DataManager().listModels.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
     List<ListModel> pinnedListModels =
-        DataManager().pinnedListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().pinnedListModels.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
 
     for (Note note in notes) {
       note.isArchive = true;
@@ -220,31 +221,33 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     if (notes.isNotEmpty) {
       NotesDb.addNotes(NotesDb.archivedNotesKey, notes);
-      NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
+      NotesDb.removeNotes(NotesDb.notesKey, homeScreenProvider.selectedIds);
     }
     if (pinnedNotes.isNotEmpty) {
       NotesDb.addNotes(NotesDb.archivedNotesKey, pinnedNotes);
-      NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
+      NotesDb.removeNotes(NotesDb.pinnedNotesKey, homeScreenProvider.selectedIds);
     }
     if (listModels.isNotEmpty) {
       ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
-      ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
+      ListModelsDb.removeListModels(ListModelsDb.listModelKey, homeScreenProvider.selectedIds);
     }
     if (pinnedListModels.isNotEmpty) {
       ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, pinnedListModels);
-      ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, selectedIds);
+      ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, homeScreenProvider.selectedIds);
     }
 
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
+    homeScreenProvider.clearSelectedIds();
   }
 
-  onDeleted() {
-    List<Note> notes = DataManager().notes.where((element) => selectedIds.contains(element.id)).toList();
-    List<Note> pinnedNotes = DataManager().pinnedNotes.where((element) => selectedIds.contains(element.id)).toList();
-    List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();
+  onDeleted(HomeScreenProvider homeScreenProvider) {
+    List<Note> notes =
+        DataManager().notes.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
+    List<Note> pinnedNotes =
+        DataManager().pinnedNotes.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
+    List<ListModel> listModels =
+        DataManager().listModels.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
     List<ListModel> pinnedListModels =
-        DataManager().pinnedListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().pinnedListModels.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
 
     for (Note note in notes) {
       note.isDeleted = true;
@@ -260,45 +263,45 @@ class SelectedHomeAppBar extends StatelessWidget {
     }
     if (notes.isNotEmpty) {
       NotesDb.addNotes(NotesDb.deletedNotesKey, notes);
-      NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
+      NotesDb.removeNotes(NotesDb.notesKey, homeScreenProvider.selectedIds);
     }
     if (pinnedNotes.isNotEmpty) {
       NotesDb.addNotes(NotesDb.deletedNotesKey, pinnedNotes);
-      NotesDb.removeNotes(NotesDb.pinnedNotesKey, selectedIds);
+      NotesDb.removeNotes(NotesDb.pinnedNotesKey, homeScreenProvider.selectedIds);
     }
     if (listModels.isNotEmpty) {
       ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
-      ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
+      ListModelsDb.removeListModels(ListModelsDb.listModelKey, homeScreenProvider.selectedIds);
     }
     if (pinnedListModels.isNotEmpty) {
       ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, pinnedListModels);
-      ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, selectedIds);
+      ListModelsDb.removeListModels(ListModelsDb.pinnedListModelKey, homeScreenProvider.selectedIds);
     }
 
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
+    homeScreenProvider.clearSelectedIds();
   }
 
-  onPinned() {
-    List<Note> notes = DataManager().notes.where((element) => selectedIds.contains(element.id)).toList();
+  onPinned(HomeScreenProvider homeScreenProvider) {
+    List<Note> notes =
+        DataManager().notes.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
 
     for (Note note in notes) {
       note.isPinned = true;
     }
 
     NotesDb.addNotes(NotesDb.pinnedNotesKey, notes);
-    NotesDb.removeNotes(NotesDb.notesKey, selectedIds);
+    NotesDb.removeNotes(NotesDb.notesKey, homeScreenProvider.selectedIds);
 
-    List<ListModel> listModels = DataManager().listModels.where((element) => selectedIds.contains(element.id)).toList();
+    List<ListModel> listModels =
+        DataManager().listModels.where((element) => homeScreenProvider.selectedIds.contains(element.id)).toList();
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
     }
 
     ListModelsDb.addListModels(ListModelsDb.pinnedListModelKey, listModels);
-    ListModelsDb.removeListModels(ListModelsDb.listModelKey, selectedIds);
+    ListModelsDb.removeListModels(ListModelsDb.listModelKey, homeScreenProvider.selectedIds);
 
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
+    homeScreenProvider.clearSelectedIds();
   }
 }
