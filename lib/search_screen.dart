@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/routes.dart';
-import 'package:sanjay_notes/utils.dart';
+import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/widget_helper.dart';
+import 'note.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -12,7 +12,22 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<dynamic> _notesAndListModels = [];
+  List<Note> _notes = [];
+  List<ListModel> _listModels = [];
+  List combinedData = [];
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => focusNode.requestFocus());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Expanded(
                   child: TextField(
                     onChanged: (value) => _foundResult(value),
+                    focusNode: focusNode,
                     decoration: const InputDecoration(
                       hintText: 'Search your notes',
                       border: InputBorder.none,
@@ -49,179 +65,112 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _notesAndListModels.length,
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.editOrViewNoteScreen, arguments: _notesAndListModels[index], (route) => false),
-                  onLongPress: () {},
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: _notesAndListModels[index].color,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: _notesAndListModels[index].color == Colors.white ? Colors.grey : Colors.transparent,
+          if (combinedData.isEmpty)
+            Expanded(
+              child: Column(
+                children: [
+                  const Expanded(child: SizedBox()),
+                  Column(
+                    children: [
+                      Icon(
+                        Icons.search_rounded,
+                        size: 140,
+                        color: Colors.yellow.shade800,
                       ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
-                                child: Text(
-                                  _notesAndListModels[index].title,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DataManager().settingsModel.showTimeChecked
-                                ? Align(
-                                    alignment: Alignment.topRight,
-                                    child: Text(
-                                      Utils.getFormattedDateTime(_notesAndListModels[index].createdAt),
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey.shade800,
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox(),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, left: 5),
-                          child: Text(
-                            _notesAndListModels[index].note,
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                            ),
-                            maxLines: 10,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (_notesAndListModels[index].scheduleTime != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
-                                  child: Icon(
-                                    Icons.alarm,
-                                    size: 20,
-                                    color: Colors.blue.shade700,
-                                  ),
-                                ),
-                                Text(
-                                  Utils.getFormattedDateTime(DateTime(
-                                    _notesAndListModels[index].scheduleTime!.year,
-                                    _notesAndListModels[index].scheduleTime!.month,
-                                    _notesAndListModels[index].scheduleTime!.day,
-                                    _notesAndListModels[index].scheduleTime!.hour,
-                                    _notesAndListModels[index].scheduleTime!.minute,
-                                  )),
-                                  style: TextStyle(
-                                    color: Colors.blue.shade700,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        DataManager().settingsModel.showLabelsOnHomeScreen
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Wrap(
-                                    children: [
-                                      for (int i = 0; i < _notesAndListModels[index].labels.length; i++)
-                                        i < 3
-                                            ? Padding(
-                                                padding: const EdgeInsets.all(5.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey.shade300,
-                                                    borderRadius: BorderRadius.circular(5),
-                                                  ),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
-                                                    child: Text(
-                                                      '  ${_notesAndListModels[index].labels[i]}  ',
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                        fontSize: 13,
-                                                        fontWeight: FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            : i == 4
-                                                ? Padding(
-                                                    padding: const EdgeInsets.all(5.0),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey.shade300,
-                                                        borderRadius: BorderRadius.circular(5),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets.symmetric(horizontal: 4.0, vertical: 3),
-                                                        child: Text(
-                                                          '  +${_notesAndListModels[index].labels.length - 3}  ',
-                                                          style: const TextStyle(
-                                                            fontSize: 13,
-                                                            fontWeight: FontWeight.w300,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : const SizedBox()
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : const SizedBox(),
-                      ],
-                    ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Search your notes'),
+                      ),
+                    ],
                   ),
-                ),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+            )
+          else
+            Expanded(
+              child: ListView.builder(
+                itemCount: combinedData.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  if (combinedData[index] is Note) {
+                    return NoteTileListView(
+                      note: combinedData[index],
+                      selectedIds: const [],
+                    );
+                  } else {
+                    return ListModelTileListView(
+                      selectedIds: const [],
+                      listModel: combinedData[index],
+                    );
+                  }
+                },
               ),
             ),
-          ),
         ],
       ),
     );
   }
 
   void _foundResult(String search) {
-    List<dynamic> result = [];
+    List<Note> noteResult = [];
+    List<ListModel> listModelResult = [];
     if (search.isEmpty) {
-      result = DataManager().notes;
+      noteResult.clear();
+      listModelResult.clear();
     } else {
-      result =
-          DataManager().notes.where((element) => element.title.toLowerCase().contains(search.toLowerCase())).toList();
+      noteResult = [
+        ...DataManager().notes.where((element) => element.title.toLowerCase().contains(search.toLowerCase())).toList(),
+        ...DataManager().notes.where((element) => element.note.toLowerCase().contains(search.toLowerCase())).toList(),
+        ...DataManager()
+            .favoriteNotes
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .favoriteNotes
+            .where((element) => element.note.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .archivedNotes
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .archivedNotes
+            .where((element) => element.note.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .pinnedNotes
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .pinnedNotes
+            .where((element) => element.note.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+      ];
+
+      listModelResult = [
+        ...DataManager()
+            .listModels
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .pinnedListModels
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .archivedListModels
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+        ...DataManager()
+            .favoriteListModels
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
+            .toList(),
+      ];
     }
     setState(() {
-      _notesAndListModels = result;
+      _notes = noteResult;
+      _listModels = listModelResult;
+      combinedData = [..._notes, ..._listModels];
     });
   }
 }

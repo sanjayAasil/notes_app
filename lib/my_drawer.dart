@@ -60,7 +60,10 @@ class MyDrawer extends StatelessWidget {
             ),
             InkWell(
               onTap: selectedTab != 'favoriteScreen'
-                  ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false)
+                  ? () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed(Routes.favoriteScreen);
+                    }
                   : null,
               child: DrawerTile(
                 name: 'Favorites',
@@ -72,7 +75,7 @@ class MyDrawer extends StatelessWidget {
               onTap: selectedTab != 'remainder'
                   ? () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.remainderScreen, (route) => false)
                   : null,
-              child:   DrawerTile(
+              child: DrawerTile(
                 name: 'Remainder',
                 icon: Icons.timer_outlined,
                 isSelected: selectedTab == 'remainder',

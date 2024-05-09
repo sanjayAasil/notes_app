@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/favourite_provider.dart';
 import 'package:sanjay_notes/home/home_grid_view.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -19,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Scaffold(
       drawer: const MyDrawer(selectedTab: 'homeScreen'),
       body: Column(

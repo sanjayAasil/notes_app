@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/label_db.dart';
 import 'package:sanjay_notes/list_model_db.dart';
@@ -53,9 +54,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: Routes.onGenerate,
+    return ChangeNotifierProvider(
+      create: (_) => DataManager(),
+      builder: (context, child) {
+        context.watch<DataManager>();
+        return const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: Routes.onGenerate,
+        );
+      }
     );
   }
 }
