@@ -652,7 +652,10 @@ class _ManageNotePageState extends State<ManageNotePage> {
   }
 
   void popUpDelete() {
+    isBackPressed = true;
     if (widget.note != null) {
+      widget.note!.color = mainColor;
+      widget.note!.isDeleted = true;
       if (widget.note!.isFavorite) {
         NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
         NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);

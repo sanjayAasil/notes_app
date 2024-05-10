@@ -49,8 +49,6 @@ class DataManager extends ChangeNotifier {
 
   void notify() => notifyListeners();
 
-  ///ScreenViews
-
   bool _homeScreenView = true;
 
   bool get homeScreenView => _homeScreenView;

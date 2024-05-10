@@ -1,7 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/data_manager.dart';
+
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 
@@ -607,6 +607,16 @@ class _NewListScreenState extends State<NewListScreen> {
 
   void popUpDelete() {
     isBackPressed = true;
+
+    for (int i = 0; i < itemControllers.length; i++) {
+      if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
+    }
+    ListModel listModel = ListModel.create(title: titleController.text.trim(), items: items);
+    listModel.color = mainColor;
+    listModel.isDeleted = true;
+    if (titleController.text.trim().isNotEmpty || items.isNotEmpty) {
+      ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, listModel);
+    }
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 2),
@@ -614,6 +624,7 @@ class _NewListScreenState extends State<NewListScreen> {
         behavior: SnackBarBehavior.floating,
       ),
     );
+    debugPrint("_NewListScreenState popUpDelete: checkk");
     Navigator.of(context).pop();
   }
 

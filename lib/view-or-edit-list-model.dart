@@ -390,19 +390,21 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   }
 
   void popUpDelete() {
+    isBackPressed = true;
+    widget.listModel.isDeleted = true;
     if (widget.listModel.isFavorite) {
+      ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, widget.listModel);
       ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
     } else if (widget.listModel.isPinned) {
+      ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, widget.listModel);
       ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
     } else if (widget.listModel.isArchive) {
       ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
     } else {
+      ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, widget.listModel);
       ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
     }
+    Navigator.of(context).pop();
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
