@@ -24,6 +24,7 @@ class _FavoriteListViewState extends State<FavoriteListView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     context.watch<FavouriteProvider>();
     DataManager().settingsModel.olderNotesChecked
         ? DataManager().favoriteNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))

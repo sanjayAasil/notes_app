@@ -62,6 +62,7 @@ class NotesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.watch<HomeScreenProvider>();
+    context.watch<DataManager>();
     return Scaffold(
       drawer: const MyDrawer(selectedTab: HomeDrawerEnum.notes),
       body: Column(

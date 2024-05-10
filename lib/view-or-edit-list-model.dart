@@ -26,6 +26,8 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   TimeOfDay? _timeOfDay;
   bool isTimePassed = false;
   bool isBackPressed = false;
+  bool addToPin = false;
+  bool addToFavorite = false;
 
   @override
   void initState() {
@@ -37,8 +39,8 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
       itemNameControllers.add(TextEditingController(text: listItem.name));
       itemTicked.add(listItem.ticked);
     }
-    DataManager().addToFavorite = widget.listModel.isFavorite ? true : false;
-    DataManager().addToPin = widget.listModel.isPinned ? true : false;
+    addToFavorite = widget.listModel.isFavorite ? true : false;
+    addToPin = widget.listModel.isPinned ? true : false;
     if (widget.listModel.scheduleTime != null) {
       isTimePassed = DateTime.now().isAfter(widget.listModel.scheduleTime!);
       if (!isTimePassed) {
@@ -91,12 +93,12 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                               builder: (context, setState) {
                                 return InkWell(
                                   onTap: () {
-                                    DataManager().addToFavorite = !DataManager().addToFavorite;
+                                    addToFavorite = !addToFavorite;
                                     setState(() {});
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: DataManager().addToFavorite
+                                    child: addToFavorite
                                         ? Icon(
                                             Icons.favorite,
                                             color: Colors.red.shade800,
@@ -109,12 +111,12 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           StatefulBuilder(builder: (context, setState) {
                             return InkWell(
                               onTap: () {
-                                DataManager().addToPin = !DataManager().addToPin;
+                                addToPin = !addToPin;
                                 setState(() {});
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: DataManager().addToPin
+                                child: addToPin
                                     ? Icon(
                                         CupertinoIcons.pin_fill,
                                         color: Colors.grey.shade800,
@@ -451,7 +453,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
 
     if (items.isNotEmpty || titleController.text.trim().isNotEmpty) {
       if (widget.listModel.isArchive) {
-        if (DataManager().addToPin) {
+        if (addToPin) {
           ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
           widget.listModel.isPinned = true;
           ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
@@ -462,8 +464,8 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         }
         if (!skipPop) Navigator.of(context).pop();
       } else if (widget.listModel.isFavorite) {
-        if (DataManager().addToFavorite) {
-          if (DataManager().addToPin) {
+        if (addToFavorite) {
+          if (addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
             widget.listModel.isPinned = true;
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
@@ -473,7 +475,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
           }
         } else {
           widget.listModel.isFavorite = false;
-          if (DataManager().addToPin) {
+          if (addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
             widget.listModel.isPinned = true;
             ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
@@ -491,9 +493,9 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         }
         if (!skipPop) Navigator.of(context).pop();
       } else if (widget.listModel.isPinned) {
-        if (DataManager().addToFavorite) {
+        if (addToFavorite) {
           widget.listModel.isFavorite = true;
-          if (DataManager().addToPin) {
+          if (addToPin) {
             widget.listModel.isPinned = true;
             ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
@@ -509,7 +511,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ),
           );
         } else {
-          if (DataManager().addToPin) {
+          if (addToPin) {
             widget.listModel.isPinned = true;
             ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
             ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
@@ -520,9 +522,9 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         }
         if (!skipPop) Navigator.of(context).pop();
       } else {
-        if (DataManager().addToFavorite) {
+        if (addToFavorite) {
           widget.listModel.isFavorite = true;
-          if (DataManager().addToPin) {
+          if (addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
             widget.listModel.isPinned = true;
             ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
@@ -538,7 +540,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ),
           );
         } else {
-          if (DataManager().addToPin) {
+          if (addToPin) {
             ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
             widget.listModel.isPinned = true;
             ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
@@ -587,12 +589,12 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
         widget.listModel.isArchive = false;
 
-        if (DataManager().addToFavorite) {
+        if (addToFavorite) {
           ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, widget.listModel);
         } else {
           widget.listModel.isArchive = false;
           widget.listModel.isFavorite = false;
-          if (DataManager().addToPin) {
+          if (addToPin) {
             widget.listModel.isPinned = true;
             ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, widget.listModel);
           } else {
@@ -608,14 +610,14 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         );
         Navigator.of(context).pop();
       } else if (widget.listModel.isFavorite) {
-        if (DataManager().addToFavorite) {
+        if (addToFavorite) {
           widget.listModel.isFavorite = true;
-          if (DataManager().addToPin) {
+          if (addToPin) {
             widget.listModel.isPinned = true;
           }
         } else {
           widget.listModel.isFavorite = false;
-          if (DataManager().addToPin) {
+          if (addToPin) {
             widget.listModel.isPinned = true;
           }
         }

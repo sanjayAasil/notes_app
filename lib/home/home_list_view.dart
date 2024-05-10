@@ -25,6 +25,7 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
   @override
   Widget build(BuildContext context) {
     context.watch<HomeScreenProvider>();
+    context.watch<DataManager>();
     _timeSorting();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

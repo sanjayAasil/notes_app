@@ -22,6 +22,7 @@ class _HomeScreenGridViewState extends State<HomeScreenGridView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

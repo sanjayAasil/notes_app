@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -35,6 +36,7 @@ class _NoteTileListViewState extends State<NoteTileListView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: InkWell(
@@ -241,6 +243,7 @@ class _NoteTileGridViewState extends State<NoteTileGridView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Container(
       width: MediaQuery.of(context).size.width / 2 - 5,
       padding: const EdgeInsets.all(5),
@@ -431,6 +434,7 @@ class _ListModelTileListViewState extends State<ListModelTileListView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: InkWell(
@@ -647,6 +651,7 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Container(
       width: MediaQuery.of(context).size.width / 2 - 5,
       padding: const EdgeInsets.all(5),
@@ -665,7 +670,6 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
           }
         },
         onLongPress: () {
-
           if (widget.selectedIds.contains(widget.listModel.id)) {
             widget.selectedIds.remove(widget.listModel.id);
           } else {
