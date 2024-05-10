@@ -9,7 +9,6 @@ enum HomeDrawerEnum {
   notes,
   favourites,
   remainder,
-  createLabel,
   archive,
   deleted,
 }
@@ -66,10 +65,9 @@ class MyDrawer extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               child: DrawerTile(
-                name: 'Notes',
-                icon: Icons.lightbulb_outline_rounded,
-                isSelected: selectedTab == HomeDrawerEnum.notes,
-              ),
+                  name: 'Notes',
+                  icon: Icons.lightbulb_outline_rounded,
+                  isSelected: selectedTab == HomeDrawerEnum.notes),
             ),
             InkWell(
               onTap: () {
@@ -104,7 +102,7 @@ class MyDrawer extends StatelessWidget {
                         ),
                       ),
                       InkWell(
-                        onTap: () => Navigator.of(context).popAndPushNamed(Routes.labelScreen),
+                        onTap: () => Navigator.of(context).popAndPushNamed(Routes.createNewLabelScreen),
                         child: const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                           child: Text('Edit'),
@@ -134,10 +132,7 @@ class MyDrawer extends StatelessWidget {
                           ],
                         ),
                       InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          homeScreenProvider.selectedDrawer = HomeDrawerEnum.createLabel;
-                        },
+                        onTap: () => Navigator.of(context).popAndPushNamed(Routes.createNewLabelScreen),
                         child: const DrawerTile(
                           name: 'Create new label',
                           icon: Icons.add,
@@ -150,10 +145,7 @@ class MyDrawer extends StatelessWidget {
               )
             else
               InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  homeScreenProvider.selectedDrawer = HomeDrawerEnum.createLabel;
-                },
+                onTap: () => Navigator.of(context).popAndPushNamed(Routes.createNewLabelScreen),
                 child: const DrawerTile(
                   name: 'Create new label',
                   icon: Icons.add,
@@ -165,24 +157,19 @@ class MyDrawer extends StatelessWidget {
                 homeScreenProvider.selectedDrawer = HomeDrawerEnum.archive;
               },
               child: DrawerTile(
-                name: 'Archive',
-                icon: Icons.archive_outlined,
-                isSelected: selectedTab == HomeDrawerEnum.archive,
-              ),
+                  name: 'Archive', icon: Icons.archive_outlined, isSelected: selectedTab == HomeDrawerEnum.archive),
             ),
             InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  homeScreenProvider.selectedDrawer = HomeDrawerEnum.deleted;
-                },
-                child: DrawerTile(
-                    name: 'Deleted', icon: CupertinoIcons.delete, isSelected: selectedTab == HomeDrawerEnum.deleted)),
+              onTap: () {
+                Navigator.of(context).pop();
+                homeScreenProvider.selectedDrawer = HomeDrawerEnum.deleted;
+              },
+              child: DrawerTile(
+                  name: 'Deleted', icon: CupertinoIcons.delete, isSelected: selectedTab == HomeDrawerEnum.deleted),
+            ),
             InkWell(
               onTap: () => Navigator.of(context).popAndPushNamed(Routes.settingsScreen),
-              child: DrawerTile(
-                name: 'Settings',
-                icon: Icons.settings,
-              ),
+              child: const DrawerTile(name: 'Settings', icon: Icons.settings),
             ),
           ],
         ),

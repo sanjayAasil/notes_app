@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/routes.dart';
 import 'data_manager.dart';
 import 'list_model.dart';
 import 'list_model_db.dart';
@@ -133,7 +132,7 @@ class _LabelScreenState extends State<LabelScreen> {
     ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, widget.selectedIds);
     ListModelsDb.addListModels(ListModelsDb.favoriteListModelKey, favoriteListModels);
 
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+    Navigator.of(context).pop();
   }
 }
 

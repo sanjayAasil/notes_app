@@ -33,39 +33,40 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     _handlePinned();
     return ChangeNotifierProvider(
-        create: (_) => favouriteProvider,
-        builder: (context, child) {
-          context.watch<FavouriteProvider>();
-          return Scaffold(
-            drawer: const MyDrawer(selectedTab: HomeDrawerEnum.favourites),
-            body: Column(
-              children: [
-                if (favouriteProvider.selectedIds.isEmpty)
-                  const DefaultFavoriteAppBar()
-                else
-                  const SelectedFavoriteAppBar(),
-                if (DataManager().favoriteNotes.isEmpty && DataManager().favoriteListModels.isEmpty)
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.favorite_border,
-                          size: 140,
-                          color: Colors.yellow.shade800,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Your favorite notes appear here'),
-                        ),
-                      ],
-                    ),
-                  )
-                else
-                  DataManager().favoriteScreenView ? const FavoriteListView() : const FavoriteGridView(),
-              ],
-            ),
-          );
-        });
+      create: (_) => favouriteProvider,
+      builder: (context, child) {
+        context.watch<FavouriteProvider>();
+        return Scaffold(
+          drawer: const MyDrawer(selectedTab: HomeDrawerEnum.favourites),
+          body: Column(
+            children: [
+              if (favouriteProvider.selectedIds.isEmpty)
+                const DefaultFavoriteAppBar()
+              else
+                const SelectedFavoriteAppBar(),
+              if (DataManager().favoriteNotes.isEmpty && DataManager().favoriteListModels.isEmpty)
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.favorite_border,
+                        size: 140,
+                        color: Colors.yellow.shade800,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Your favorite notes appear here'),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                DataManager().favoriteScreenView ? const FavoriteListView() : const FavoriteGridView(),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

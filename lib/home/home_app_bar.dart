@@ -153,10 +153,8 @@ class SelectedHomeAppBar extends StatelessWidget {
                   color: Colors.grey.shade800,
                 ),
               ),
-              onTap: () => Navigator.of(context).pushNamed(
-                Routes.labelScreen,
-                arguments: homeScreenProvider.selectedIds,
-              ),
+              onTap: () =>
+                  Navigator.of(context).pushNamed(Routes.labelScreen, arguments: homeScreenProvider.selectedIds),
             ),
             InkWell(
               onTap: () => Utils.commonDialog(

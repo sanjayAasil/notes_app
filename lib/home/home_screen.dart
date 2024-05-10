@@ -49,8 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return const FavoriteScreen();
       case HomeDrawerEnum.remainder:
         return const RemainderScreen();
-      case HomeDrawerEnum.createLabel:
-        return const CreateNewLabelScreen();
       case HomeDrawerEnum.archive:
         return const ArchiveScreen();
       case HomeDrawerEnum.deleted:
@@ -112,40 +110,28 @@ class NotesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(40),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.check_box_outlined,
-                      color: Colors.grey.shade800,
-                    ),
+                    child: Icon(Icons.check_box_outlined, color: Colors.grey.shade800),
                   ),
                 ),
                 InkWell(
                   onTap: () {},
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.draw_outlined,
-                      color: Colors.grey.shade800,
-                    ),
+                    child: Icon(Icons.draw_outlined, color: Colors.grey.shade800),
                   ),
                 ),
                 InkWell(
                   onTap: () {},
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.mic_none_rounded,
-                      color: Colors.grey.shade800,
-                    ),
+                    child: Icon(Icons.mic_none_rounded, color: Colors.grey.shade800),
                   ),
                 ),
                 InkWell(
                   onTap: () {},
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.photo_outlined,
-                      color: Colors.grey.shade800,
-                    ),
+                    child: Icon(Icons.photo_outlined, color: Colors.grey.shade800),
                   ),
                 ),
               ],
@@ -158,11 +144,7 @@ class NotesScreen extends StatelessWidget {
         onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
         backgroundColor: Colors.grey.shade200,
         elevation: 20,
-        child: const Icon(
-          Icons.add,
-          size: 40,
-          color: CupertinoColors.activeBlue,
-        ),
+        child: const Icon(Icons.add, size: 40, color: CupertinoColors.activeBlue),
       ),
     );
   }

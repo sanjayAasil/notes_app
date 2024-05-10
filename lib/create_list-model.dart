@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model.dart';
 import 'package:sanjay_notes/list_model_db.dart';
-import 'package:sanjay_notes/routes.dart';
+
 import 'package:sanjay_notes/utils.dart';
 
 class NewListScreen extends StatefulWidget {
@@ -21,6 +21,7 @@ class _NewListScreenState extends State<NewListScreen> {
   List<ListItem> items = [];
   DateTime? _date;
   TimeOfDay? _timeOfDay;
+  bool isBackPressed = false;
 
   @override
   void initState() {
@@ -32,9 +33,10 @@ class _NewListScreenState extends State<NewListScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
       onPopInvoked: (bool value) {
-        onBackPressed();
+        if (isBackPressed) return;
+
+        onBackPressed(true);
       },
       child: Scaffold(
         body: Container(
@@ -49,7 +51,7 @@ class _NewListScreenState extends State<NewListScreen> {
                 child: Row(
                   children: [
                     InkWell(
-                      onTap: onBackPressed,
+                      onTap: () => onBackPressed(false),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Icon(
@@ -609,6 +611,7 @@ class _NewListScreenState extends State<NewListScreen> {
   }
 
   void popUpDelete() {
+    isBackPressed = true;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 2),
@@ -616,10 +619,11 @@ class _NewListScreenState extends State<NewListScreen> {
         behavior: SnackBarBehavior.floating,
       ),
     );
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+    Navigator.of(context).pop();
   }
 
-  onBackPressed() {
+  onBackPressed(bool skipPop) {
+    isBackPressed = true;
     for (int i = 0; i < itemControllers.length; i++) {
       if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
     }
@@ -638,7 +642,7 @@ class _NewListScreenState extends State<NewListScreen> {
     }
 
     if (listModel.items.isEmpty || titleController.text.trim().isEmpty) {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      if (!skipPop) Navigator.of(context).pop();
       return;
     }
     if (DataManager().addToFavorite) {
@@ -664,10 +668,11 @@ class _NewListScreenState extends State<NewListScreen> {
       }
     }
 
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+    if (!skipPop) Navigator.of(context).pop();
   }
 
   onArchived() {
+    isBackPressed = true;
     for (int i = 0; i < itemControllers.length; i++) {
       if (itemControllers.isNotEmpty) items[i].name = itemControllers[i].text.trim();
     }
@@ -700,7 +705,7 @@ class _NewListScreenState extends State<NewListScreen> {
     listModel.isArchive = true;
     ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
 
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+   Navigator.of(context).pop();
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
