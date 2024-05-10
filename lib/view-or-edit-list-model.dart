@@ -25,6 +25,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   DateTime? _date;
   TimeOfDay? _timeOfDay;
   bool isTimePassed = false;
+  bool isBackPressed = false;
 
   @override
   void initState() {
@@ -55,10 +56,10 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: widget.listModel.isDeleted,
       onPopInvoked: (bool value) {
+        if (isBackPressed) return;
         if (!widget.listModel.isDeleted) {
-          onBackPressed();
+          onBackPressed(true);
         }
       },
       child: Scaffold(
@@ -75,7 +76,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                       child: Row(
                         children: [
                           InkWell(
-                            onTap: onBackPressed,
+                            onTap: () => onBackPressed(false),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Icon(
@@ -421,7 +422,9 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     );
   }
 
-  onBackPressed() {
+  onBackPressed(bool skipPop) {
+    isBackPressed = true;
+
     for (int i = 0; i < itemNameControllers.length; i++) {
       ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
       items.add(item);
@@ -457,7 +460,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
           widget.listModel.isPinned = false;
           ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, widget.listModel);
         }
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+        if (!skipPop) Navigator.of(context).pop();
       } else if (widget.listModel.isFavorite) {
         if (DataManager().addToFavorite) {
           if (DataManager().addToPin) {
@@ -486,7 +489,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ),
           );
         }
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+        if (!skipPop) Navigator.of(context).pop();
       } else if (widget.listModel.isPinned) {
         if (DataManager().addToFavorite) {
           widget.listModel.isFavorite = true;
@@ -515,7 +518,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             ListModelsDb.addListModel(ListModelsDb.listModelKey, widget.listModel);
           }
         }
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        if (!skipPop) Navigator.of(context).pop();
       } else {
         if (DataManager().addToFavorite) {
           widget.listModel.isFavorite = true;
@@ -545,7 +548,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
           }
         }
 
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        if (!skipPop) Navigator.of(context).pop();
       }
     } else {
       ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
@@ -553,11 +556,12 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
       ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
       ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
 
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      if (!skipPop) Navigator.of(context).pop();
     }
   }
 
   onArchived() {
+    isBackPressed = true;
     for (int i = 0; i < itemNameControllers.length; i++) {
       ListItem item = ListItem(name: itemNameControllers[i].text.trim(), ticked: itemTicked[i]);
       items.add(item);
@@ -602,7 +606,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             behavior: SnackBarBehavior.floating,
           ),
         );
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
+        Navigator.of(context).pop();
       } else if (widget.listModel.isFavorite) {
         if (DataManager().addToFavorite) {
           widget.listModel.isFavorite = true;
@@ -626,7 +630,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             behavior: SnackBarBehavior.floating,
           ),
         );
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
+        Navigator.of(context).pop();
       } else if (widget.listModel.isPinned) {
         ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
         widget.listModel.isArchive = true;
@@ -639,7 +643,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             behavior: SnackBarBehavior.floating,
           ),
         );
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        Navigator.of(context).pop();
       } else {
         ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
         widget.listModel.isArchive = true;
@@ -652,7 +656,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
             behavior: SnackBarBehavior.floating,
           ),
         );
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+        Navigator.of(context).pop();
       }
     } else {
       return;

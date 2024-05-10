@@ -4,7 +4,7 @@ import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/notes_db.dart';
-import 'package:sanjay_notes/routes.dart';
+
 import 'package:sanjay_notes/utils.dart';
 import 'package:sanjay_notes/widget_helper.dart';
 
@@ -87,8 +87,8 @@ class _DeletedScreenState extends State<DeletedScreen> {
                           size: 25,
                         ),
                       ),
-                      onTap: () =>
-                          Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false),
+                      // onTap: () =>
+                      //     Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false),
                     ),
                     Expanded(
                         child: Text(

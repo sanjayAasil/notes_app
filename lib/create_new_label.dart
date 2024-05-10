@@ -161,7 +161,6 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
   }
 
   onBackPress(bool skipPop) {
-    debugPrint("_CreateNewLabelScreenState onBackPress: checkkk'");
     isBackPressed = true;
     for (TextEditingController controller in controllers) {
       if (controller.text.trim().isNotEmpty) {

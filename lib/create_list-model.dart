@@ -75,7 +75,7 @@ class _NewListScreenState extends State<NewListScreen> {
                                     Icons.favorite,
                                     color: Colors.red.shade800,
                                   )
-                                : Icon(Icons.favorite_border),
+                                : const Icon(Icons.favorite_border),
                           ),
                         );
                       },

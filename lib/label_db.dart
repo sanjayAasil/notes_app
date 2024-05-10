@@ -18,28 +18,6 @@ class LabelsDb {
     return decoded.map((e) => e.toString()).toList();
   }
 
-  // static addLabel(String label) {
-  //   List<String> labels = getAllLabels();
-  //
-  //   labels.add(label);
-  //
-  //   prefs.setString(LabelsDb.labelsKey, jsonEncode(labels));
-  //
-  //   DataManager().labels.add(label);
-  // }
-
-  // static removeLabel(String label) {
-  //   List<String> labels = getAllLabels();
-  //
-  //   labels.remove(label);
-  //
-  //   jsonEncode(labels);
-  //
-  //   prefs.setString(LabelsDb.labelsKey, jsonEncode(labels));
-  //
-  //   DataManager().labels.remove(label);
-  // }
-
   static addLabels(List<String> labels) {
     List<String> labelS = getAllLabels();
 
