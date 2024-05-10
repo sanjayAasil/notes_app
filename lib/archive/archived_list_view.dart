@@ -27,6 +27,7 @@ class _ArchivedListViewState extends State<ArchivedListView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     context.watch<ArchiveProvider>();
     DataManager().settingsModel.olderNotesChecked
         ? DataManager().archivedNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))

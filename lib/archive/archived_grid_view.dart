@@ -24,6 +24,7 @@ class _ArchivedGridViewState extends State<ArchivedGridView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     context.watch<ArchiveProvider>();
     return Expanded(
       child: SingleChildScrollView(

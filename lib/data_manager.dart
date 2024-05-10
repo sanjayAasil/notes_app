@@ -65,10 +65,4 @@ class DataManager extends ChangeNotifier {
     _favoriteScreenView = value;
     notifyListeners();
   }
-
-
-
-  bool showTimeForNotes = true;
-
-  bool olderNotesFirst = false;
 }
