@@ -64,7 +64,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       value: showTimeChecked.value,
                       onChanged: (bool value) {
                         showTimeChecked.value = value;
-                        settingsModel.showTimeChecked = showTimeChecked.value;
+                        // settingsModel.showTimeChecked = showTimeChecked.value;
+                        DataManager().settingsModel = settingsModel.copyWith(showTimeChecked: showTimeChecked.value);
                         prefs.setString('settings', jsonEncode(settingsModel.json));
                       },
                     );
@@ -90,7 +91,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       value: olderNotesChecked.value,
                       onChanged: (bool value) {
                         olderNotesChecked.value = value;
-                        settingsModel.olderNotesChecked = olderNotesChecked.value;
+                        DataManager().settingsModel =
+                            settingsModel.copyWith(olderNotesChecked: olderNotesChecked.value);
                         prefs.setString('settings', jsonEncode(settingsModel.json));
                       },
                     );
@@ -116,7 +118,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       value: showLabelsOnHomeScreen.value,
                       onChanged: (bool value) {
                         showLabelsOnHomeScreen.value = value;
-                        settingsModel.showLabelsOnHomeScreen = showLabelsOnHomeScreen.value;
+                        DataManager().settingsModel =
+                            settingsModel.copyWith(showLabelsOnHomeScreen: showLabelsOnHomeScreen.value);
                         prefs.setString('settings', jsonEncode(settingsModel.json));
                       },
                     );

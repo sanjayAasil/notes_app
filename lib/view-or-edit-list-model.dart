@@ -334,17 +334,6 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                       child: Row(
                         children: [
                           InkWell(
-                            onTap: () {},
-                            borderRadius: BorderRadius.circular(40),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.add_box_outlined,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                          ),
-                          InkWell(
                             onTap: _pickAColor,
                             borderRadius: BorderRadius.circular(40),
                             child: Padding(

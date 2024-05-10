@@ -288,6 +288,18 @@ class _ManageNotePageState extends State<ManageNotePage> {
                               ),
                             ),
                           ),
+                          if (widget.note != null)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 70.0),
+                              child: Text(
+                                Utils.getFormattedDateTime(widget.note!.createdAt),
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade800,
+                                ),
+                              ),
+                            ),
                           const Expanded(child: SizedBox()),
                           PopupMenuButton(
                             itemBuilder: (context) => [
@@ -643,19 +655,29 @@ class _ManageNotePageState extends State<ManageNotePage> {
     if (widget.note != null) {
       if (widget.note!.isFavorite) {
         NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
+        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.note!.isPinned) {
         NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
+        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else if (widget.note!.isArchive) {
         NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
+        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
       } else {
         NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
+        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
+      if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
+        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
+        note.isDeleted = true;
+        NotesDb.addNote(NotesDb.deletedNotesKey, note);
+      }
+
+      Navigator.of(context).pop();
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -707,6 +729,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           }
         }
         if (!skipPop) Navigator.of(context).pop();
+        DataManager().notify();
       } else {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
@@ -830,6 +853,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           }
           if (!skipPop) Navigator.of(context).pop();
         }
+        DataManager().notify();
       }
     } else {
       if (widget.note != null) {
@@ -850,6 +874,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
           if (!skipPop) Navigator.of(context).pop();
         }
+        DataManager().notify();
       } else {
         if (!skipPop) Navigator.of(context).pop();
       }
@@ -975,6 +1000,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           );
         }
       }
+      DataManager().notify();
     } else {
       return;
     }
@@ -1083,6 +1109,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                     ),
                   );
                   Navigator.of(context).pop();
+                  DataManager().notify();
                 },
               ),
               InkWell(
@@ -1105,6 +1132,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
+                  DataManager().notify();
                 },
               ),
             ],

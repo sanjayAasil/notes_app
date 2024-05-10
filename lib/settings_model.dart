@@ -1,5 +1,5 @@
 class SettingsModel {
-  bool showTimeChecked, olderNotesChecked, showLabelsOnHomeScreen;
+  final bool showTimeChecked, olderNotesChecked, showLabelsOnHomeScreen;
 
   SettingsModel._(
     this.showTimeChecked,
@@ -20,4 +20,15 @@ class SettingsModel {
         'olderNotesChecked': olderNotesChecked,
         'showLabelsOnHomeScreen': showLabelsOnHomeScreen,
       };
+
+  SettingsModel copyWith({
+    bool? showTimeChecked,
+    bool? olderNotesChecked,
+    bool? showLabelsOnHomeScreen,
+  }) =>
+      SettingsModel._(
+        showTimeChecked ?? this.showTimeChecked,
+        olderNotesChecked ?? this.olderNotesChecked,
+        showLabelsOnHomeScreen ?? this.showLabelsOnHomeScreen,
+      );
 }

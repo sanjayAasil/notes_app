@@ -6,10 +6,18 @@ import 'note.dart';
 import 'notes_db.dart';
 
 class DataManager extends ChangeNotifier {
-  final SettingsModel settingsModel;
+  SettingsModel _settingsModel;
+
+  SettingsModel get settingsModel => _settingsModel;
+
+  set settingsModel(SettingsModel settingsModel) {
+    _settingsModel = settingsModel;
+    notifyListeners();
+  }
+
   static final DataManager _instance = DataManager._();
 
-  DataManager._() : settingsModel = SettingsModel.fromJson(jsonDecode(prefs.getString('settings') ?? '{}'));
+  DataManager._() : _settingsModel = SettingsModel.fromJson(jsonDecode(prefs.getString('settings') ?? '{}'));
 
   factory DataManager() => _instance;
 
@@ -38,6 +46,10 @@ class DataManager extends ChangeNotifier {
   List<ListModel> remainderListModels = [];
 
   List<String> labels = [];
+
+  void notify() => notifyListeners();
+
+  ///ScreenViews
 
   bool _homeScreenView = true;
 
