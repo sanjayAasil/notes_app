@@ -73,6 +73,7 @@ class NotesScreen extends StatelessWidget {
             const DefaultHomeAppBar()
           else
             const SelectedHomeAppBar(),
+
           if (DataManager().notes.isEmpty &&
               DataManager().listModels.isEmpty &&
               DataManager().pinnedNotes.isEmpty &&
