@@ -39,15 +39,34 @@ class DataManager extends ChangeNotifier {
 
   List<String> labels = [];
 
-  bool homeScreenView = true;
+  bool _homeScreenView = true;
 
-  bool archiveScreenView = true;
+  bool get homeScreenView => _homeScreenView;
 
-  bool favoriteScreenView = true;
+  set homeScreenView(bool value) {
+    _homeScreenView = value;
+    notifyListeners();
+  }
 
-  bool addToFavorite = false;
+  bool _archiveScreenView = true;
 
-  bool addToPin = false;
+  bool get archiveScreenView => _archiveScreenView;
+
+  set archiveScreenView(bool value) {
+    _archiveScreenView = value;
+    notifyListeners();
+  }
+
+  bool _favoriteScreenView = true;
+
+  bool get favoriteScreenView => _favoriteScreenView;
+
+  set favoriteScreenView(bool value) {
+    _favoriteScreenView = value;
+    notifyListeners();
+  }
+
+
 
   bool showTimeForNotes = true;
 

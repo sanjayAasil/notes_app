@@ -28,17 +28,19 @@ class _ManageNotePageState extends State<ManageNotePage> {
   DateTime? _date;
   TimeOfDay? _timeOfDay;
   bool isBackPressed = false;
+  bool addToFavorite = false;
+  bool addToPin = false;
 
   @override
   void initState() {
     titleController.text = widget.note?.title ?? '';
     noteController.text = widget.note?.note ?? '';
-    DataManager().addToFavorite = widget.note == null
+    addToFavorite = widget.note == null
         ? false
         : widget.note!.isFavorite
             ? true
             : false;
-    DataManager().addToPin = widget.note == null
+    addToPin = widget.note == null
         ? false
         : widget.note!.isPinned
             ? true
@@ -107,13 +109,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
                             StatefulBuilder(builder: (context, setState) {
                               return InkWell(
                                 onTap: () {
-                                  DataManager().addToFavorite = !DataManager().addToFavorite;
+                                  addToFavorite = !addToFavorite;
                                   setState(() {});
                                 },
                                 borderRadius: BorderRadius.circular(40),
                                 child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: DataManager().addToFavorite
+                                    child: addToFavorite
                                         ? Icon(
                                             Icons.favorite,
                                             color: Colors.red.shade800,
@@ -127,13 +129,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           StatefulBuilder(builder: (context, setState) {
                             return InkWell(
                               onTap: () {
-                                DataManager().addToPin = !DataManager().addToPin;
+                                addToPin = !addToPin;
                                 setState(() {});
                               },
                               borderRadius: BorderRadius.circular(40),
                               child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: DataManager().addToPin
+                                  child: addToPin
                                       ? Icon(
                                           CupertinoIcons.pin_fill,
                                           color: Colors.grey.shade800,
@@ -682,8 +684,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
           NotesDb.removeNote(NotesDb.remainderNotesKey, note.id);
           NotesDb.addNote(NotesDb.remainderNotesKey, note);
         }
-        if (DataManager().addToFavorite) {
-          if (DataManager().addToPin) {
+        if (addToFavorite) {
+          if (addToPin) {
             note.isPinned = true;
             note.isFavorite = true;
           } else {
@@ -697,7 +699,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           );
           NotesDb.addNote(NotesDb.favoriteNotesKey, note);
         } else {
-          if (DataManager().addToPin) {
+          if (addToPin) {
             note.isPinned = true;
             NotesDb.addNote(NotesDb.pinnedNotesKey, note);
           } else {
@@ -724,7 +726,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
           widget.note!.scheduleTime = null;
         }
         if (widget.note!.isArchive) {
-          if (DataManager().addToPin) {
+          if (addToPin) {
             NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
             widget.note!.isPinned = true;
             NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
@@ -736,8 +738,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
           if (!skipPop) Navigator.of(context).pop();
         } else if (widget.note!.isFavorite) {
-          if (DataManager().addToFavorite) {
-            if (DataManager().addToPin) {
+          if (addToFavorite) {
+            if (addToPin) {
               NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
               widget.note!.isPinned = true;
               NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
@@ -747,7 +749,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
               NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
             }
           } else {
-            if (DataManager().addToPin) {
+            if (addToPin) {
               NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
               widget.note!.isPinned = true;
               widget.note!.isFavorite = false;
@@ -769,8 +771,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
           if (!skipPop) Navigator.of(context).pop();
         } else if (widget.note!.isPinned) {
-          if (DataManager().addToFavorite) {
-            if (DataManager().addToPin) {
+          if (addToFavorite) {
+            if (addToPin) {
               NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
               widget.note!.isFavorite = true;
               NotesDb.addNote(NotesDb.favoriteNotesKey, widget.note!);
@@ -786,7 +788,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
               ),
             );
           } else {
-            if (DataManager().addToPin) {
+            if (addToPin) {
               NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
               NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
             } else {
@@ -798,8 +800,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
           if (!skipPop) Navigator.of(context).pop();
         } else {
-          if (DataManager().addToFavorite) {
-            if (DataManager().addToPin) {
+          if (addToFavorite) {
+            if (addToPin) {
               NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
               widget.note!.isFavorite = true;
               widget.note!.isPinned = true;
@@ -817,7 +819,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
               ),
             );
           } else {
-            if (DataManager().addToPin) {
+            if (addToPin) {
               NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
               widget.note!.isPinned = true;
               NotesDb.addNote(NotesDb.pinnedNotesKey, widget.note!);
@@ -870,12 +872,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
           );
           NotesDb.addNote(NotesDb.remainderNotesKey, note);
         }
-        if (DataManager().addToFavorite) {
+        if (addToFavorite) {
           note.isFavorite = true;
-          if (DataManager().addToPin) {
+          if (addToPin) {
             note.isPinned = true;
           } else {
-            if (DataManager().addToPin) {
+            if (addToPin) {
               note.isPinned = true;
             }
           }

@@ -22,13 +22,8 @@ class _NewListScreenState extends State<NewListScreen> {
   DateTime? _date;
   TimeOfDay? _timeOfDay;
   bool isBackPressed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    DataManager().addToFavorite = false;
-    DataManager().addToPin = false;
-  }
+  bool addToPin = false;
+  bool addToFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +60,12 @@ class _NewListScreenState extends State<NewListScreen> {
                       builder: (context, stateful) {
                         return InkWell(
                           onTap: () {
-                            DataManager().addToFavorite = !DataManager().addToFavorite;
+                            addToFavorite = !addToFavorite;
                             setState(() {});
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: DataManager().addToFavorite
+                            child: addToFavorite
                                 ? Icon(
                                     Icons.favorite,
                                     color: Colors.red.shade800,
@@ -84,17 +79,17 @@ class _NewListScreenState extends State<NewListScreen> {
                       return InkWell(
                         borderRadius: BorderRadius.circular(40),
                         onTap: () {
-                          DataManager().addToPin = !DataManager().addToPin;
+                          addToPin = !addToPin;
                           setState(() {});
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: DataManager().addToPin
+                          child: addToPin
                               ? Icon(
                                   CupertinoIcons.pin_fill,
                                   color: Colors.grey.shade800,
                                 )
-                              : Icon(CupertinoIcons.pin),
+                              : const Icon(CupertinoIcons.pin),
                         ),
                       );
                     }),
@@ -645,9 +640,9 @@ class _NewListScreenState extends State<NewListScreen> {
       if (!skipPop) Navigator.of(context).pop();
       return;
     }
-    if (DataManager().addToFavorite) {
+    if (addToFavorite) {
       listModel.isFavorite = true;
-      if (DataManager().addToPin) {
+      if (addToPin) {
         listModel.isPinned = true;
         ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
       } else {
@@ -660,7 +655,7 @@ class _NewListScreenState extends State<NewListScreen> {
         ),
       );
     } else {
-      if (DataManager().addToPin) {
+      if (addToPin) {
         listModel.isPinned = true;
         ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
       } else {
@@ -692,20 +687,20 @@ class _NewListScreenState extends State<NewListScreen> {
     if (listModel.items.isEmpty && titleController.text.trim().isEmpty) {
       return;
     }
-    if (DataManager().addToFavorite) {
+    if (addToFavorite) {
       listModel.isFavorite = true;
-      if (DataManager().addToPin) {
+      if (addToPin) {
         listModel.isPinned = true;
       }
     } else {
-      if (DataManager().addToPin) {
+      if (addToPin) {
         listModel.isPinned = true;
       }
     }
     listModel.isArchive = true;
     ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
 
-   Navigator.of(context).pop();
+    Navigator.of(context).pop();
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

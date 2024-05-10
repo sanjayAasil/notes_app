@@ -15,6 +15,7 @@ class DefaultArchiveAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Padding(
       padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50, left: 15),
       child: Row(

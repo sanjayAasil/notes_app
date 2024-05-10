@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/archive/archive_screen.dart';
-import 'package:sanjay_notes/create_new_label.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/deleted_screen.dart';
 import 'package:sanjay_notes/favorite/favorite_screen.dart';

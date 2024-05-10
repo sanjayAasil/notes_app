@@ -15,6 +15,7 @@ class DefaultHomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20, left: 10, right: 10),
       child: Container(
