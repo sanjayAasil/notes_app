@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sanjay_notes/providers/archive_provider.dart';
+
 import 'package:sanjay_notes/widget_helper.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
@@ -7,23 +10,24 @@ import '../note.dart';
 class ArchivedListView extends StatefulWidget {
   const ArchivedListView({
     Key? key,
-    required this.selectedIds,
-    this.onUpdateRequest,
-    required this.isPinned,
-    required this.others,
   }) : super(key: key);
-
-  final List<String> selectedIds;
-  final Function()? onUpdateRequest;
-  final bool isPinned, others;
 
   @override
   State<ArchivedListView> createState() => _ArchivedListViewState();
 }
 
 class _ArchivedListViewState extends State<ArchivedListView> {
+  late ArchiveProvider archiveProvider;
+
+  @override
+  void initState() {
+    archiveProvider = context.read<ArchiveProvider>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    context.watch<ArchiveProvider>();
     DataManager().settingsModel.olderNotesChecked
         ? DataManager().archivedNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
         : DataManager().archivedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -40,7 +44,7 @@ class _ArchivedListViewState extends State<ArchivedListView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.isPinned)
+                if (archiveProvider.isPinned)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                     child: Text(
@@ -54,22 +58,21 @@ class _ArchivedListViewState extends State<ArchivedListView> {
                   if (note.isPinned)
                     NoteTileListView(
                       note: note,
-                      selectedIds: widget.selectedIds,
-                      onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
+                      selectedIds: archiveProvider.selectedIds,
+                      onUpdateRequest: () => archiveProvider.notify(),
                     ),
                 for (ListModel listModel in DataManager().archivedListModels)
                   if (listModel.isPinned)
                     ListModelTileListView(
-                      selectedIds: widget.selectedIds,
-                      listModel: listModel,
-                      onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
-                    )
+                        listModel: listModel,
+                        selectedIds: archiveProvider.selectedIds,
+                        onUpdateRequest: () => archiveProvider.notify()),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.isPinned && widget.others)
+                if (archiveProvider.isPinned && archiveProvider.others)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                     child: Text(
@@ -83,17 +86,15 @@ class _ArchivedListViewState extends State<ArchivedListView> {
                   if (!note.isPinned)
                     NoteTileListView(
                       note: note,
-                      selectedIds: widget.selectedIds,
-                      onUpdateRequest: () => setState(() => widget.onUpdateRequest?.call()),
+                      selectedIds: archiveProvider.selectedIds,
+                      onUpdateRequest: () => archiveProvider.notify(),
                     ),
                 for (ListModel listModel in DataManager().archivedListModels)
                   if (!listModel.isPinned)
                     ListModelTileListView(
-                      selectedIds: widget.selectedIds,
                       listModel: listModel,
-                      onUpdateRequest: () => setState(() {
-                        widget.onUpdateRequest?.call();
-                      }),
+                      selectedIds: archiveProvider.selectedIds,
+                      onUpdateRequest: () => archiveProvider.notify(),
                     ),
               ],
             ),

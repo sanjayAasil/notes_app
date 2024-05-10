@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/providers/archive_provider.dart';
 import 'package:sanjay_notes/utils.dart';
 import '../data_manager.dart';
 import '../list_model.dart';
@@ -9,9 +11,7 @@ import '../note.dart';
 import '../routes.dart';
 
 class DefaultArchiveAppBar extends StatelessWidget {
-  const DefaultArchiveAppBar({Key? key, this.onViewChanged}) : super(key: key);
-
-  final Function()? onViewChanged;
+  const DefaultArchiveAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class DefaultArchiveAppBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(40),
             onTap: () {
               DataManager().archiveScreenView = !DataManager().archiveScreenView;
-              onViewChanged?.call();
+              context.read<ArchiveProvider>().notify();
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
@@ -58,14 +58,27 @@ class DefaultArchiveAppBar extends StatelessWidget {
   }
 }
 
-class SelectedArchiveAppBar extends StatelessWidget {
-  const SelectedArchiveAppBar({Key? key, required this.selectedIds, this.onSelectedIdsCleared}) : super(key: key);
+class SelectedArchiveAppBar extends StatefulWidget {
+  const SelectedArchiveAppBar({Key? key}) : super(key: key);
 
-  final List<String> selectedIds;
-  final Function()? onSelectedIdsCleared;
+  @override
+  State<SelectedArchiveAppBar> createState() => _SelectedArchiveAppBarState();
+}
+
+class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
+  List<String> selectedIds = [];
+  late ArchiveProvider archiveProvider;
+
+  @override
+  void initState() {
+    archiveProvider = context.read<ArchiveProvider>();
+    selectedIds = archiveProvider.selectedIds;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    selectedIds = context.watch<ArchiveProvider>().selectedIds;
     return Container(
       alignment: Alignment.centerLeft,
       color: Colors.grey.shade200,
@@ -83,10 +96,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              onTap: () {
-                selectedIds.clear();
-                onSelectedIdsCleared?.call();
-              },
+              onTap: () => archiveProvider.clearSelectedIds(),
             ),
             Expanded(
                 child: Text(
@@ -183,8 +193,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
       ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
     }
 
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
+    archiveProvider.clearSelectedIds();
   }
 
   onDelete() {
@@ -207,8 +216,7 @@ class SelectedArchiveAppBar extends StatelessWidget {
       ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
       ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
     }
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
+    archiveProvider.clearSelectedIds();
   }
 
   onUnArchive() {
@@ -238,7 +246,6 @@ class SelectedArchiveAppBar extends StatelessWidget {
       }
       ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
     }
-    selectedIds.clear();
-    onSelectedIdsCleared?.call();
+    archiveProvider.clearSelectedIds();
   }
 }

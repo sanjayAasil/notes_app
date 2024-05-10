@@ -22,6 +22,7 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FavouriteProvider>();
     return Expanded(
       child: SingleChildScrollView(
         child: Column(

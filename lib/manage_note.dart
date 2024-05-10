@@ -734,12 +734,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             NotesDb.addNote(NotesDb.archivedNotesKey, widget.note!);
           }
 
-          if (skipPop) {
-            debugPrint("_ManageNotePageState onBackPressed: vhywefwv ywf wf");
-            Navigator.of(context).pushNamed(Routes.archiveScreen);
-          } else {
-            Navigator.of(context).popAndPushNamed(Routes.archiveScreen);
-          }
+          if (!skipPop) Navigator.of(context).pop();
         } else if (widget.note!.isFavorite) {
           if (DataManager().addToFavorite) {
             if (DataManager().addToPin) {
@@ -772,11 +767,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
             );
           }
 
-          if (skipPop) {
-            Navigator.of(context).pushNamed(Routes.favoriteScreen);
-          } else {
-            Navigator.of(context).popAndPushNamed(Routes.favoriteScreen);
-          }
+          if (!skipPop) Navigator.of(context).pop();
         } else if (widget.note!.isPinned) {
           if (DataManager().addToFavorite) {
             if (DataManager().addToPin) {
@@ -843,19 +834,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
         if (widget.note!.isArchive) {
           NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
 
-          if (skipPop) {
-            Navigator.of(context).pushNamed(Routes.archiveScreen);
-          } else {
-            Navigator.of(context).popAndPushNamed(Routes.archiveScreen);
-          }
+          if (!skipPop) Navigator.of(context).pop();
         } else if (widget.note!.isFavorite) {
           NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
 
-          if (skipPop) {
-            Navigator.of(context).pushNamed(Routes.favoriteScreen);
-          } else {
-            Navigator.of(context).popAndPushNamed(Routes.favoriteScreen);
-          }
+          if (!skipPop) Navigator.of(context).pop();
         } else if (widget.note!.isPinned) {
           NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
 

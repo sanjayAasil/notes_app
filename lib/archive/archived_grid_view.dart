@@ -1,19 +1,12 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sanjay_notes/providers/archive_provider.dart';
 import 'package:sanjay_notes/widget_helper.dart';
 import '../data_manager.dart';
 
 class ArchivedGridView extends StatefulWidget {
-  final List<String> selectedIds;
-  final Function()? onUpdateRequest;
-  final bool isPinned, others;
-
   const ArchivedGridView({
     Key? key,
-    required this.selectedIds,
-    this.onUpdateRequest,
-    required this.isPinned,
-    required this.others,
   }) : super(key: key);
 
   @override
@@ -21,14 +14,23 @@ class ArchivedGridView extends StatefulWidget {
 }
 
 class _ArchivedGridViewState extends State<ArchivedGridView> {
+  late ArchiveProvider archiveProvider;
+
+  @override
+  void initState() {
+    archiveProvider = context.read<ArchiveProvider>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    context.watch<ArchiveProvider>();
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.isPinned)
+            if (archiveProvider.isPinned)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
@@ -45,25 +47,21 @@ class _ArchivedGridViewState extends State<ArchivedGridView> {
                   for (int i = 0; i < DataManager().archivedNotes.length; i++)
                     if (DataManager().archivedNotes[i].isPinned)
                       NoteTileGridView(
-                        selectedIds: widget.selectedIds,
+                        selectedIds: archiveProvider.selectedIds,
                         note: DataManager().archivedNotes[i],
-                        onUpdateRequest: () => setState(() {
-                          widget.onUpdateRequest?.call();
-                        }),
+                        onUpdateRequest: () => archiveProvider.notify(),
                       ),
                   for (int i = 0; i < DataManager().archivedListModels.length; i++)
                     if (DataManager().archivedListModels[i].isPinned)
                       ListModelTileGridView(
-                        selectedIds: widget.selectedIds,
+                        selectedIds: archiveProvider.selectedIds,
                         listModel: DataManager().archivedListModels[i],
-                        onUpdateRequest: () => setState(() {
-                          widget.onUpdateRequest?.call();
-                        }),
+                        onUpdateRequest: () => archiveProvider.notify(),
                       ),
                 ],
               ),
             ),
-            if (widget.isPinned && widget.others)
+            if (archiveProvider.isPinned && archiveProvider.others)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Text(
@@ -80,23 +78,16 @@ class _ArchivedGridViewState extends State<ArchivedGridView> {
                   for (int i = 0; i < DataManager().archivedNotes.length; i++)
                     if (!DataManager().archivedNotes[i].isPinned)
                       NoteTileGridView(
-                        selectedIds: widget.selectedIds,
+                        selectedIds: archiveProvider.selectedIds,
                         note: DataManager().archivedNotes[i],
-                        onUpdateRequest: () => setState(() {
-                          widget.onUpdateRequest?.call();
-                        }),
+                        onUpdateRequest: () => archiveProvider.notify(),
                       ),
-
-                  ///listModel notPinned
-
                   for (int i = 0; i < DataManager().archivedListModels.length; i++)
                     if (!DataManager().archivedListModels[i].isPinned)
                       ListModelTileGridView(
-                        selectedIds: widget.selectedIds,
+                        selectedIds: archiveProvider.selectedIds,
                         listModel: DataManager().archivedListModels[i],
-                        onUpdateRequest: () => setState(() {
-                          widget.onUpdateRequest?.call();
-                        }),
+                        onUpdateRequest: () => archiveProvider.notify(),
                       ),
                 ],
               ),
