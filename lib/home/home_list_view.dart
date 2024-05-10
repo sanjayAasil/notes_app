@@ -48,8 +48,6 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
                   selectedIds: homeScreenProvider.selectedIds,
                   onUpdateRequest: () => homeScreenProvider.notify(),
                 ),
-
-              ///ListView pinned ListModel
               for (ListModel listModel in DataManager().pinnedListModels)
                 ListModelTileListView(
                   selectedIds: homeScreenProvider.selectedIds,
@@ -58,9 +56,6 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
                 )
             ],
           ),
-
-        ///ListView Notes
-
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -85,7 +80,6 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
               ),
           ],
         ),
-
         for (ListModel listModel in DataManager().listModels)
           ListModelTileListView(
             selectedIds: homeScreenProvider.selectedIds,

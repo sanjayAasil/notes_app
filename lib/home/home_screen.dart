@@ -29,24 +29,33 @@ class _HomeScreenState extends State<HomeScreen> {
     context.watch<DataManager>();
 
     return ChangeNotifierProvider(
-        create: (_) => homeScreenProvider,
-        builder: (context, child) {
-          context.watch<HomeScreenProvider>();
-          switch (homeScreenProvider.selectedDrawer) {
-            case HomeDrawerEnum.notes:
-              return const NotesScreen();
-            case HomeDrawerEnum.favourites:
-              return const FavoriteScreen();
-            case HomeDrawerEnum.remainder:
-              return const RemainderScreen();
-            case HomeDrawerEnum.createLabel:
-              return const CreateNewLabelScreen();
-            case HomeDrawerEnum.archive:
-              return const ArchiveScreen();
-            case HomeDrawerEnum.deleted:
-              return const DeletedScreen();
-          }
-        });
+      create: (_) => homeScreenProvider,
+      builder: (context, child) {
+        context.watch<HomeScreenProvider>();
+        return PopScope(
+          canPop: homeScreenProvider.selectedDrawer == HomeDrawerEnum.notes,
+          onPopInvoked: (value) => homeScreenProvider.selectedDrawer = HomeDrawerEnum.notes,
+          child: body,
+        );
+      },
+    );
+  }
+
+  Widget get body {
+    switch (homeScreenProvider.selectedDrawer) {
+      case HomeDrawerEnum.notes:
+        return const NotesScreen();
+      case HomeDrawerEnum.favourites:
+        return const FavoriteScreen();
+      case HomeDrawerEnum.remainder:
+        return const RemainderScreen();
+      case HomeDrawerEnum.createLabel:
+        return const CreateNewLabelScreen();
+      case HomeDrawerEnum.archive:
+        return const ArchiveScreen();
+      case HomeDrawerEnum.deleted:
+        return const DeletedScreen();
+    }
   }
 }
 
