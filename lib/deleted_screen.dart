@@ -5,6 +5,7 @@ import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/providers/deleted-provider.dart';
 import 'package:sanjay_notes/utils.dart';
 import 'package:sanjay_notes/widget_helper.dart';
 import 'list_model.dart';
@@ -18,6 +19,8 @@ class DeletedScreen extends StatefulWidget {
 }
 
 class _DeletedScreenState extends State<DeletedScreen> {
+  DeletedProvider deletedProvider = DeletedProvider();
+
   List<String> selectedIds = [];
 
   @override
@@ -32,150 +35,154 @@ class _DeletedScreenState extends State<DeletedScreen> {
         ? DataManager().deletedListModels.sort((a, b) => a.createdAt.compareTo(b.createdAt))
         : DataManager().deletedListModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-    return Scaffold(
-      drawer: const MyDrawer(selectedTab: HomeDrawerEnum.deleted),
-      body: Column(
-        children: [
-          if (selectedIds.isEmpty)
-            Padding(
-              padding: EdgeInsets.only(
-                top: const MediaQueryData().padding.top + 50,
-                left: const MediaQueryData().padding.left + 10,
-                bottom: 20,
-              ),
-              child: Row(
-                children: [
-                  Builder(
-                      builder: (context) => InkWell(
-                            onTap: () => Scaffold.of(context).openDrawer(),
-                            borderRadius: BorderRadius.circular(40),
+    return ChangeNotifierProvider(
+        create: (_) => deletedProvider,
+        builder: (context, child) {
+          selectedIds = context.watch<DeletedProvider>().selectedIds;
+          context.watch<DeletedProvider>();
+          return Scaffold(
+            drawer: const MyDrawer(selectedTab: HomeDrawerEnum.deleted),
+            body: Column(
+              children: [
+                if (selectedIds.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: const MediaQueryData().padding.top + 50,
+                      left: const MediaQueryData().padding.left + 10,
+                      bottom: 20,
+                    ),
+                    child: Row(
+                      children: [
+                        Builder(
+                            builder: (context) => InkWell(
+                                  onTap: () => Scaffold.of(context).openDrawer(),
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.menu,
+                                      color: Colors.grey.shade800,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        const Expanded(
+                          child: Text(
+                            'Deleted',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: double.infinity,
+                    height: const MediaQueryData().padding.top + 100,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50),
+                      child: Row(
+                        children: [
+                          InkWell(
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(15),
                               child: Icon(
-                                Icons.menu,
+                                CupertinoIcons.xmark,
                                 color: Colors.grey.shade800,
-                                size: 30,
+                                size: 25,
                               ),
                             ),
+                            onTap: () => deletedProvider.clearSelectedIds(),
+                          ),
+                          Expanded(
+                              child: Text(
+                            '${selectedIds.length}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
                           )),
-                  const SizedBox(
-                    width: 20,
+                          InkWell(
+                            onTap: () => Utils.commonDialog(
+                              context: context,
+                              function: onRestore,
+                              content: 'Restore',
+                              snackBarMessage: 'Notes restored',
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Icon(
+                                Icons.recycling_rounded,
+                                color: Colors.grey.shade800,
+                                size: 25,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () => Utils.commonDialog(
+                              context: context,
+                              function: onDelete,
+                              content: 'Delete',
+                              snackBarMessage: 'Permanently Deleted',
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Icon(
+                                Icons.delete_outline,
+                                color: Colors.grey.shade800,
+                                size: 25,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const Expanded(
-                    child: Text(
-                      'Deleted',
-                      style: TextStyle(fontSize: 18),
+                if (DataManager().deletedNotes.isEmpty && DataManager().deletedListModels.isEmpty)
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          CupertinoIcons.delete_simple,
+                          size: 140,
+                          color: Colors.yellow.shade800,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Text('Your archived notes appear here'),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          // SizedBox(height: 20),
+                          for (Note note in DataManager().deletedNotes)
+                            NoteTileListView(
+                              note: note,
+                              selectedIds: selectedIds,
+                              onUpdateRequest: () => deletedProvider.notify(),
+                            ),
+                          for (ListModel listModel in DataManager().deletedListModels)
+                            ListModelTileListView(
+                                selectedIds: selectedIds,
+                                listModel: listModel,
+                                onUpdateRequest: () => deletedProvider.notify()),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
-            )
-          else
-            Container(
-              alignment: Alignment.centerLeft,
-              width: double.infinity,
-              height: const MediaQueryData().padding.top + 100,
-              child: Padding(
-                padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50),
-                child: Row(
-                  children: [
-                    InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Icon(
-                          CupertinoIcons.xmark,
-                          color: Colors.grey.shade800,
-                          size: 25,
-                        ),
-                      ),
-                      // onTap: () =>
-                      //     Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false),
-                    ),
-                    Expanded(
-                        child: Text(
-                      '${selectedIds.length}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
-                    )),
-                    InkWell(
-                      onTap: () => Utils.commonDialog(
-                        context: context,
-                        function: onRestore,
-                        content: 'Restore',
-                        snackBarMessage: 'Notes restored',
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.recycling_rounded,
-                          color: Colors.grey.shade800,
-                          size: 25,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Utils.commonDialog(
-                        context: context,
-                        function: onDelete,
-                        content: 'Delete',
-                        snackBarMessage: 'Permanently Deleted',
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.delete_outline,
-                          color: Colors.grey.shade800,
-                          size: 25,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-          if (DataManager().deletedNotes.isEmpty && DataManager().deletedListModels.isEmpty)
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    CupertinoIcons.delete_simple,
-                    size: 140,
-                    color: Colors.yellow.shade800,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text('Your archived notes appear here'),
-                  ),
-                ],
-              ),
-            )
-          else
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // SizedBox(height: 20),
-                    for (Note note in DataManager().deletedNotes)
-                      NoteTileListView(
-                        note: note,
-                        selectedIds: selectedIds,
-                        onUpdateRequest: () => setState(() {}),
-                      ),
-                    for (ListModel listModel in DataManager().deletedListModels)
-                      ListModelTileListView(
-                        selectedIds: selectedIds,
-                        listModel: listModel,
-                        onUpdateRequest: () => setState(() {}),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   onRestore() {
@@ -220,8 +227,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
     if (listModels.isNotEmpty) {
       ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
     }
-    selectedIds.clear();
-    setState(() {});
+    deletedProvider.clearSelectedIds();
     DataManager().notify();
   }
 
@@ -232,8 +238,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
     if (DataManager().deletedListModels.isNotEmpty) {
       ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
     }
-    selectedIds.clear();
-    setState(() {});
+    deletedProvider.clearSelectedIds();
     DataManager().notify();
   }
 }
