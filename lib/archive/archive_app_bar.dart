@@ -36,10 +36,10 @@ class DefaultArchiveAppBar extends StatelessWidget {
           ),
           InkWell(
             borderRadius: BorderRadius.circular(40),
-            onTap: () {},
+            onTap: () => Navigator.of(context).pushNamed(Routes.searchScreen),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Icon(Icons.search, size: 30),
+              child: Icon(Icons.search, size: 25),
             ),
           ),
           InkWell(
@@ -50,7 +50,11 @@ class DefaultArchiveAppBar extends StatelessWidget {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Icon(DataManager().archiveScreenView ? Icons.list : Icons.grid_view_outlined, size: 30),
+              child: Icon(
+                  DataManager().archiveScreenView
+                      ? CupertinoIcons.rectangle_grid_1x2
+                      : CupertinoIcons.rectangle_grid_2x2,
+                  size: 25),
             ),
           ),
         ],

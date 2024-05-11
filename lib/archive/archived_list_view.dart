@@ -25,8 +25,21 @@ class _ArchivedListViewState extends State<ArchivedListView> {
     super.initState();
   }
 
+  _handlePinned() {
+    archiveProvider.isPinned = DataManager().archivedNotes.any((element) => element.isPinned);
+    archiveProvider.others = DataManager().archivedNotes.any((element) => !element.isPinned);
+
+    if (!archiveProvider.isPinned) {
+      archiveProvider.isPinned = DataManager().archivedListModels.any((element) => element.isPinned);
+    }
+    if (!archiveProvider.others) {
+      archiveProvider.others = DataManager().archivedListModels.any((element) => !element.isPinned);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _handlePinned();
     context.watch<DataManager>();
     context.watch<ArchiveProvider>();
     DataManager().settingsModel.olderNotesChecked

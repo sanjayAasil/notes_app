@@ -17,25 +17,15 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen> {
   FavouriteProvider favouriteProvider = FavouriteProvider();
 
-  _handlePinned() {
-    favouriteProvider.isPinned = DataManager().favoriteNotes.any((element) => element.isPinned);
-    favouriteProvider.others = DataManager().favoriteNotes.any((element) => !element.isPinned);
 
-    if (!favouriteProvider.isPinned) {
-      favouriteProvider.isPinned = DataManager().favoriteListModels.any((element) => element.isPinned);
-    }
-    if (!favouriteProvider.others) {
-      favouriteProvider.others = DataManager().favoriteListModels.any((element) => !element.isPinned);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    _handlePinned();
     return ChangeNotifierProvider(
       create: (_) => favouriteProvider,
       builder: (context, child) {
         context.watch<FavouriteProvider>();
+
         return Scaffold(
           drawer: const MyDrawer(selectedTab: HomeDrawerEnum.favourites),
           body: Column(

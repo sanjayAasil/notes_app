@@ -25,11 +25,7 @@ class DefaultFavoriteAppBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(40),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.grey.shade800,
-                        size: 30,
-                      ),
+                      child: Icon(Icons.menu, color: Colors.grey.shade800, size: 30),
                     ),
                   )),
           const SizedBox(width: 20),
@@ -41,34 +37,34 @@ class DefaultFavoriteAppBar extends StatelessWidget {
           ),
           InkWell(
             borderRadius: BorderRadius.circular(40),
+            onTap: () => Navigator.of(context).pushNamed(Routes.searchScreen),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              child: Icon(
+                Icons.search,
+                size: 25,
+              ),
+            ),
+          ),
+          InkWell(
+            borderRadius: BorderRadius.circular(40),
             onTap: () {
               DataManager().favoriteScreenView = !DataManager().favoriteScreenView;
               context.read<FavouriteProvider>().notify();
               DataManager().notify();
             },
-            child: Builder(
-              builder: (context) {
-                context.watch<DataManager>();
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                  child: Icon(
-                    DataManager().favoriteScreenView ? Icons.list : Icons.grid_view_outlined,
-                    size: 30,
-                  ),
-                );
-              }
-            ),
-          ),
-          InkWell(
-            borderRadius: BorderRadius.circular(40),
-            onTap: () {},
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Icon(
-                Icons.search,
-                size: 30,
-              ),
-            ),
+            child: Builder(builder: (context) {
+              context.watch<DataManager>();
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                child: Icon(
+                  DataManager().favoriteScreenView
+                      ? CupertinoIcons.rectangle_grid_1x2
+                      : CupertinoIcons.rectangle_grid_2x2,
+                  size: 25,
+                ),
+              );
+            }),
           ),
         ],
       ),

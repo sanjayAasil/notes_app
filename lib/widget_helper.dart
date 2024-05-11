@@ -22,6 +22,7 @@ class NoteTileListView extends StatefulWidget {
   State<NoteTileListView> createState() => _NoteTileListViewState();
 }
 
+
 class _NoteTileListViewState extends State<NoteTileListView> {
   late bool isTimePassed;
 

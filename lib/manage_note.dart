@@ -1,5 +1,4 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';

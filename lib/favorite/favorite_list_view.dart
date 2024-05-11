@@ -22,8 +22,21 @@ class _FavoriteListViewState extends State<FavoriteListView> {
     super.initState();
   }
 
+  _handlePinned() {
+    favouriteProvider.isPinned = DataManager().favoriteNotes.any((element) => element.isPinned);
+    favouriteProvider.others = DataManager().favoriteNotes.any((element) => !element.isPinned);
+
+    if (!favouriteProvider.isPinned) {
+      favouriteProvider.isPinned = DataManager().favoriteListModels.any((element) => element.isPinned);
+    }
+    if (!favouriteProvider.others) {
+      favouriteProvider.others = DataManager().favoriteListModels.any((element) => !element.isPinned);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _handlePinned();
     context.watch<DataManager>();
     context.watch<FavouriteProvider>();
     DataManager().settingsModel.olderNotesChecked

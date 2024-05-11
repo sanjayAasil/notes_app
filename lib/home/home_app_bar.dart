@@ -63,8 +63,8 @@ class DefaultHomeAppBar extends StatelessWidget {
                   right: 15,
                 ),
                 child: Icon(
-                  DataManager().homeScreenView ? Icons.list : Icons.grid_view_outlined,
-                  size: 30,
+                  DataManager().homeScreenView ? CupertinoIcons.rectangle_grid_1x2 : CupertinoIcons.rectangle_grid_2x2,
+                  size: 25,
                   color: Colors.grey.shade800,
                 ),
               ),

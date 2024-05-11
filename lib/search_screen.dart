@@ -38,7 +38,6 @@ class _SearchScreenState extends State<SearchScreen> {
             margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             height: 60,
             alignment: AlignmentDirectional.centerStart,
-            color: Colors.grey.shade300,
             child: Row(
               children: [
                 InkWell(
