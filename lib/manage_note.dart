@@ -1,5 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:awesome_notifications_core/awesome_notifications_core_platform_interface.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
@@ -725,7 +725,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
           }
         }
         if (!skipPop) Navigator.of(context).pop();
-        DataManager().notify();
       } else {
         widget.note!.title = titleController.text.trim();
         widget.note!.note = noteController.text.trim();
@@ -849,7 +848,6 @@ class _ManageNotePageState extends State<ManageNotePage> {
           }
           if (!skipPop) Navigator.of(context).pop();
         }
-        DataManager().notify();
       }
     } else {
       if (widget.note != null) {
@@ -870,11 +868,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
           if (!skipPop) Navigator.of(context).pop();
         }
-        DataManager().notify();
       } else {
         if (!skipPop) Navigator.of(context).pop();
       }
     }
+    DataManager().notify();
   }
 
   void archiveButton() {

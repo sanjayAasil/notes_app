@@ -80,8 +80,6 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
                         onUpdateRequest: () => favouriteProvider.notify(),
                       ),
 
-                  ///listModel notPinned
-
                   for (int i = 0; i < DataManager().favoriteListModels.length; i++)
                     if (!DataManager().favoriteListModels[i].isPinned)
                       ListModelTileGridView(

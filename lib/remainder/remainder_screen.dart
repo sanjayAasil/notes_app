@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/notes_db.dart';
@@ -17,6 +18,7 @@ class RemainderScreen extends StatefulWidget {
 class _RemainderState extends State<RemainderScreen> {
   @override
   Widget build(BuildContext context) {
+    context.watch<DataManager>();
     List<Note> notes = DataManager().remainderNotes.where((element) => true).toList();
     for (Note note in notes) {
       if (note.scheduleTime != null && DateTime.now().isAfter(note.scheduleTime!)) {

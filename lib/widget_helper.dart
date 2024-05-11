@@ -238,6 +238,8 @@ class _NoteTileGridViewState extends State<NoteTileGridView> {
   void initState() {
     if (widget.note.scheduleTime != null) {
       isTimePassed = DateTime.now().isAfter(widget.note.scheduleTime!);
+    } else {
+      isTimePassed = false;
     }
 
     super.initState();
@@ -429,6 +431,8 @@ class _ListModelTileListViewState extends State<ListModelTileListView> {
   void initState() {
     if (widget.listModel.scheduleTime != null) {
       isTimePassed = DateTime.now().isAfter(widget.listModel.scheduleTime!);
+    } else {
+      isTimePassed = false;
     }
 
     super.initState();
@@ -646,6 +650,8 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
   void initState() {
     if (widget.listModel.scheduleTime != null) {
       isTimePassed = DateTime.now().isAfter(widget.listModel.scheduleTime!);
+    } else {
+      isTimePassed = false;
     }
 
     super.initState();

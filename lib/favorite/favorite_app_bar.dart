@@ -44,13 +44,19 @@ class DefaultFavoriteAppBar extends StatelessWidget {
             onTap: () {
               DataManager().favoriteScreenView = !DataManager().favoriteScreenView;
               context.read<FavouriteProvider>().notify();
+              DataManager().notify();
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Icon(
-                DataManager().favoriteScreenView ? Icons.list : Icons.grid_view_outlined,
-                size: 30,
-              ),
+            child: Builder(
+              builder: (context) {
+                context.watch<DataManager>();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                  child: Icon(
+                    DataManager().favoriteScreenView ? Icons.list : Icons.grid_view_outlined,
+                    size: 30,
+                  ),
+                );
+              }
             ),
           ),
           InkWell(
