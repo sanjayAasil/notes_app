@@ -29,6 +29,8 @@ class _NoteTileListViewState extends State<NoteTileListView> {
   void initState() {
     if (widget.note.scheduleTime != null) {
       isTimePassed = DateTime.now().isAfter(widget.note.scheduleTime!);
+    } else {
+      isTimePassed = false;
     }
 
     super.initState();

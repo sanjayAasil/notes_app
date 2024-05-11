@@ -1,10 +1,10 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications_core/awesome_notifications_core_platform_interface.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/note.dart';
 import 'package:sanjay_notes/notes_db.dart';
-import 'package:sanjay_notes/routes.dart';
 import 'package:sanjay_notes/utils.dart';
 
 class ManageNotePage extends StatefulWidget {
@@ -546,6 +546,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                 const Expanded(child: SizedBox()),
                 TextButton(
                   onPressed: () {
+                    AwesomeNotifications().cancel(2);
                     _date = null;
                     _timeOfDay = null;
                     if (widget.note != null) {
@@ -561,6 +562,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
                         duration: Duration(seconds: 2),
                       ),
                     );
+                    DataManager().notify();
                   },
                   child: Text(
                     'Cancel',
@@ -621,9 +623,8 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           duration: Duration(seconds: 2),
                         ),
                       );
-
+                      DataManager().notify();
                       Navigator.of(context).pop();
-
                       setState(() {});
                     },
                     child: Text(
