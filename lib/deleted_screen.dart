@@ -5,10 +5,8 @@ import 'package:sanjay_notes/data_manager.dart';
 import 'package:sanjay_notes/list_model_db.dart';
 import 'package:sanjay_notes/my_drawer.dart';
 import 'package:sanjay_notes/notes_db.dart';
-
 import 'package:sanjay_notes/utils.dart';
 import 'package:sanjay_notes/widget_helper.dart';
-
 import 'list_model.dart';
 import 'note.dart';
 
@@ -25,6 +23,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
   @override
   Widget build(BuildContext context) {
     context.watch<DataManager>();
+
     DataManager().settingsModel.olderNotesChecked
         ? DataManager().deletedNotes.sort((a, b) => a.createdAt.compareTo(b.createdAt))
         : DataManager().deletedNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -223,6 +222,7 @@ class _DeletedScreenState extends State<DeletedScreen> {
     }
     selectedIds.clear();
     setState(() {});
+    DataManager().notify();
   }
 
   onDelete() {
@@ -234,5 +234,6 @@ class _DeletedScreenState extends State<DeletedScreen> {
     }
     selectedIds.clear();
     setState(() {});
+    DataManager().notify();
   }
 }

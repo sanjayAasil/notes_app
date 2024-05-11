@@ -658,31 +658,22 @@ class _ManageNotePageState extends State<ManageNotePage> {
       widget.note!.isDeleted = true;
       if (widget.note!.isFavorite) {
         NotesDb.removeNote(NotesDb.favoriteNotesKey, widget.note!.id);
-        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.favoriteScreen, (route) => false);
       } else if (widget.note!.isPinned) {
         NotesDb.removeNote(NotesDb.pinnedNotesKey, widget.note!.id);
-        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       } else if (widget.note!.isArchive) {
         NotesDb.removeNote(NotesDb.archivedNotesKey, widget.note!.id);
-        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.archiveScreen, (route) => false);
       } else {
         NotesDb.removeNote(NotesDb.notesKey, widget.note!.id);
-        NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
-        Navigator.of(context).pushNamedAndRemoveUntil(Routes.homeScreen, (route) => false);
       }
+      NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
     } else {
       if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
         note.isDeleted = true;
         NotesDb.addNote(NotesDb.deletedNotesKey, note);
       }
-
-      Navigator.of(context).pop();
     }
-
+    Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         duration: Duration(seconds: 2),
@@ -690,6 +681,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
         behavior: SnackBarBehavior.floating,
       ),
     );
+    DataManager().notify();
   }
 
   void onBackPressed(bool skipPop) {

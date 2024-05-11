@@ -393,17 +393,15 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
     isBackPressed = true;
     widget.listModel.isDeleted = true;
     if (widget.listModel.isFavorite) {
-      ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, widget.listModel);
       ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, widget.listModel.id);
     } else if (widget.listModel.isPinned) {
-      ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, widget.listModel);
       ListModelsDb.removeListModel(ListModelsDb.pinnedListModelKey, widget.listModel.id);
     } else if (widget.listModel.isArchive) {
       ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, widget.listModel.id);
     } else {
-      ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, widget.listModel);
       ListModelsDb.removeListModel(ListModelsDb.listModelKey, widget.listModel.id);
     }
+    ListModelsDb.addListModel(ListModelsDb.deletedListModelKey, widget.listModel);
     Navigator.of(context).pop();
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -413,6 +411,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         behavior: SnackBarBehavior.floating,
       ),
     );
+    DataManager().notify();
   }
 
   onBackPressed(bool skipPop) {
@@ -551,6 +550,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
 
       if (!skipPop) Navigator.of(context).pop();
     }
+    DataManager().notify();
   }
 
   onArchived() {
@@ -1015,9 +1015,7 @@ class ListModelForDeletedScreen extends StatelessWidget {
           child: Row(
             children: [
               InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
-                },
+                onTap: () => Navigator.of(context).pop(),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Icon(
@@ -1026,7 +1024,7 @@ class ListModelForDeletedScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
               InkWell(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -1039,18 +1037,16 @@ class ListModelForDeletedScreen extends StatelessWidget {
                   listModel.isDeleted = false;
                   if (listModel.isArchive) {
                     ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
-                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
                   } else if (listModel.isFavorite) {
                     ListModelsDb.addListModel(ListModelsDb.favoriteListModelKey, listModel);
-                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
                   } else if (listModel.isPinned) {
                     ListModelsDb.addListModel(ListModelsDb.pinnedListModelKey, listModel);
-                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
                   } else {
                     ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
-                    ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
                   }
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+                  ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
+                  Navigator.of(context).pop;
+                  DataManager().notify();
                 },
               ),
               InkWell(
@@ -1064,7 +1060,8 @@ class ListModelForDeletedScreen extends StatelessWidget {
                 ),
                 onTap: () {
                   ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
-                  Navigator.of(context).pushNamedAndRemoveUntil(Routes.deletedScreen, (route) => false);
+                  Navigator.of(context).pop();
+                  DataManager().notify();
                 },
               ), // SizedBox(),
             ],
