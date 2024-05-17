@@ -105,12 +105,15 @@ class NotesScreen extends StatelessWidget {
             height: 45,
             child: Row(
               children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).pushNamed(Routes.newListScreen),
-                  borderRadius: BorderRadius.circular(40),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.check_box_outlined, color: Colors.grey.shade800),
+                Tooltip(
+                  message: 'List',
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pushNamed(Routes.newListScreen),
+                    borderRadius: BorderRadius.circular(40),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.check_box_outlined, color: Colors.grey.shade800),
+                    ),
                   ),
                 ),
                 InkWell(
@@ -140,11 +143,14 @@ class NotesScreen extends StatelessWidget {
           //Expanded(child: SizedBox()),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
-        backgroundColor: Colors.grey.shade200,
-        elevation: 20,
-        child: const Icon(Icons.add, size: 40, color: CupertinoColors.activeBlue),
+      floatingActionButton: Tooltip(
+        message: 'Note',
+        child: FloatingActionButton(
+          onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
+          backgroundColor: Colors.grey.shade200,
+          elevation: 20,
+          child: const Icon(Icons.add, size: 40, color: CupertinoColors.activeBlue),
+        ),
       ),
     );
   }
