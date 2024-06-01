@@ -25,22 +25,7 @@ void main() async {
       ),
     ],
   );
-  DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
-  DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
-  DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
-  DataManager().pinnedNotes = NotesDb.getAllNotes(NotesDb.pinnedNotesKey);
-  DataManager().deletedNotes = NotesDb.getAllNotes(NotesDb.deletedNotesKey);
-  DataManager().remainderNotes = NotesDb.getAllNotes(NotesDb.remainderNotesKey);
-
-  DataManager().listModels = ListModelsDb.getAllListModels(ListModelsDb.listModelKey);
-  DataManager().deletedListModels = ListModelsDb.getAllListModels(ListModelsDb.deletedListModelKey);
-  DataManager().pinnedListModels = ListModelsDb.getAllListModels(ListModelsDb.pinnedListModelKey);
-  DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
-  DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
-  DataManager().remainderListModels = ListModelsDb.getAllListModels(ListModelsDb.remainderListModelKey);
-
-  DataManager().labels = LabelsDb.getAllLabels();
-
+  initialize();
   runApp(const MyApp());
 }
 
@@ -65,4 +50,23 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
+}
+
+initialize() {
+
+  DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
+  DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
+  DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
+  DataManager().pinnedNotes = NotesDb.getAllNotes(NotesDb.pinnedNotesKey);
+  DataManager().deletedNotes = NotesDb.getAllNotes(NotesDb.deletedNotesKey);
+  DataManager().remainderNotes = NotesDb.getAllNotes(NotesDb.remainderNotesKey);
+
+  DataManager().listModels = ListModelsDb.getAllListModels(ListModelsDb.listModelKey);
+  DataManager().deletedListModels = ListModelsDb.getAllListModels(ListModelsDb.deletedListModelKey);
+  DataManager().pinnedListModels = ListModelsDb.getAllListModels(ListModelsDb.pinnedListModelKey);
+  DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
+  DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
+  DataManager().remainderListModels = ListModelsDb.getAllListModels(ListModelsDb.remainderListModelKey);
+
+  DataManager().labels = LabelsDb.getAllLabels();
 }
