@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
@@ -8,8 +9,13 @@ import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   prefs = await SharedPreferences.getInstance();
   initializeAwesomeNotification();
   initializeDb();
@@ -30,7 +36,10 @@ class _MyAppState extends State<MyApp> {
       create: (_) => DataManager(),
       builder: (context, child) {
         context.watch<DataManager>();
-        return const MaterialApp(
+        return MaterialApp(
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: Routes.onGenerate,
         );
