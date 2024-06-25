@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'data_manager.dart';
-import 'list_model.dart';
-import 'list_model_db.dart';
-import 'note.dart';
-import 'notes_db.dart';
+import '../Database/data_manager.dart';
+import '../models/list_model.dart';
+import '../Database/list_model_db.dart';
+import '../models/note.dart';
+import '../Database/notes_db.dart';
 
 class LabelScreen extends StatefulWidget {
   final List<String> selectedIds;

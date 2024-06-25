@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_manager.dart';
-import 'note.dart';
+import '../models/note.dart';
 
 late SharedPreferences prefs;
 

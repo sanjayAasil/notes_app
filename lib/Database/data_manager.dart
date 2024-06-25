@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/list_model.dart';
-import 'package:sanjay_notes/settings_model.dart';
-import 'note.dart';
+import 'package:sanjay_notes/models/list_model.dart';
+import 'package:sanjay_notes/models/settings_model.dart';
+import '../models/note.dart';
 import 'notes_db.dart';
 
 class DataManager extends ChangeNotifier {

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/providers/favourite_provider.dart';
 import 'package:sanjay_notes/widget_helper.dart';
-import '../data_manager.dart';
-import '../list_model.dart';
-import '../note.dart';
+
+import '../../Database/data_manager.dart';
+import '../../models/list_model.dart';
+import '../../models/note.dart';
+
 
 class FavoriteListView extends StatefulWidget {
   const FavoriteListView({Key? key}) : super(key: key);

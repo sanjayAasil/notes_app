@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/note.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/models/note.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:sanjay_notes/utils.dart';
-import 'list_model.dart';
+import 'models/list_model.dart';
 
 class NoteTileListView extends StatefulWidget {
   final List<String> selectedIds;

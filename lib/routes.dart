@@ -1,19 +1,19 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/archive/archive_screen.dart';
-import 'package:sanjay_notes/create_new_label.dart';
-import 'package:sanjay_notes/deleted_screen.dart';
-import 'package:sanjay_notes/favorite/favorite_screen.dart';
-import 'package:sanjay_notes/label_screen.dart';
-import 'package:sanjay_notes/list_model.dart';
-import 'package:sanjay_notes/remainder/remainder_screen.dart';
-import 'package:sanjay_notes/settings_screen.dart';
-import 'package:sanjay_notes/view-or-edit-list-model.dart';
-import 'package:sanjay_notes/manage_note.dart';
-import 'package:sanjay_notes/home/home_screen.dart';
-import 'package:sanjay_notes/create_list-model.dart';
-import 'package:sanjay_notes/note.dart';
-import 'package:sanjay_notes/search_screen.dart';
+import 'package:sanjay_notes/Screens/create_new_label.dart';
+import 'package:sanjay_notes/Screens/deleted_screen.dart';
+import 'package:sanjay_notes/Screens/label_screen.dart';
+import 'package:sanjay_notes/models/list_model.dart';
+import 'package:sanjay_notes/Screens/settings_screen.dart';
+import 'package:sanjay_notes/Screens/view-or-edit-list-model.dart';
+import 'package:sanjay_notes/Screens/manage_note.dart';
+import 'package:sanjay_notes/Screens/create_list-model.dart';
+import 'package:sanjay_notes/models/note.dart';
+import 'package:sanjay_notes/Screens/search_screen.dart';
+import 'Screens/archive/archive_screen.dart';
+import 'Screens/favorite/favorite_screen.dart';
+import 'Screens/home/home_screen.dart';
+import 'Screens/remainder/remainder_screen.dart';
 
 class Routes {
   static const String homeScreen = '/';

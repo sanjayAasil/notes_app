@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/Database/notes_db.dart';
 
 class LabelsDb {
   LabelsDb._();

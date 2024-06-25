@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/widget_helper.dart';
-import '../data_manager.dart';
+
+import '../../Database/data_manager.dart';
+
 
 class HomeScreenGridView extends StatefulWidget {
   const HomeScreenGridView({Key? key}) : super(key: key);

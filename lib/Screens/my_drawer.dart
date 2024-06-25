@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/data_manager.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/routes.dart';
 

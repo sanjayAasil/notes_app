@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/archive/archive_app_bar.dart';
-import 'package:sanjay_notes/my_drawer.dart';
+import 'package:sanjay_notes/Screens/my_drawer.dart';
 import 'package:sanjay_notes/providers/archive_provider.dart';
-import '../data_manager.dart';
+import '../../Database/data_manager.dart';
+import 'archive_app_bar.dart';
 import 'archived_grid_view.dart';
 import 'archived_list_view.dart';
 

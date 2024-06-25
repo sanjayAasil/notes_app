@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/providers/favourite_provider.dart';
-import 'package:sanjay_notes/list_model_db.dart';
-import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/Database/list_model_db.dart';
+import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/utils.dart';
-import '../data_manager.dart';
-import '../list_model.dart';
-import '../note.dart';
-import '../routes.dart';
+import '../../Database/data_manager.dart';
+import '../../models/list_model.dart';
+import '../../models/note.dart';
+import '../../routes.dart';
 
 class DefaultFavoriteAppBar extends StatelessWidget {
   const DefaultFavoriteAppBar({Key? key}) : super(key: key);

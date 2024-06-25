@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/list_model_db.dart';
-import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/Database/list_model_db.dart';
+import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/widget_helper.dart';
-import '../list_model.dart';
+import '../../models/list_model.dart';
 import '../my_drawer.dart';
-import '../note.dart';
-import '../routes.dart';
-import '../utils.dart';
+import '../../models/note.dart';
+import '../../routes.dart';
 
 class RemainderScreen extends StatefulWidget {
   const RemainderScreen({Key? key}) : super(key: key);

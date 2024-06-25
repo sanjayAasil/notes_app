@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/favorite/favorite_app_bar.dart';
-import 'package:sanjay_notes/favorite/favorite_grid_view.dart';
 import 'package:sanjay_notes/providers/favourite_provider.dart';
-import 'package:sanjay_notes/my_drawer.dart';
-import '../data_manager.dart';
+import 'package:sanjay_notes/Screens/my_drawer.dart';
+import '../../Database/data_manager.dart';
+import 'favorite_app_bar.dart';
+import 'favorite_grid_view.dart';
 import 'favorite_list_view.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -16,8 +16,6 @@ class FavoriteScreen extends StatefulWidget {
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
   FavouriteProvider favouriteProvider = FavouriteProvider();
-
-
 
   @override
   Widget build(BuildContext context) {

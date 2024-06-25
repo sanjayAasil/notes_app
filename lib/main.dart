@@ -1,10 +1,10 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/label_db.dart';
-import 'package:sanjay_notes/list_model_db.dart';
-import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/Database/label_db.dart';
+import 'package:sanjay_notes/Database/list_model_db.dart';
+import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

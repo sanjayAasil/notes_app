@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
-import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/list_model.dart';
-import 'package:sanjay_notes/notes_db.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/models/list_model.dart';
+import 'package:sanjay_notes/Database/notes_db.dart';
 
 class ListModelsDb {
   ListModelsDb._();

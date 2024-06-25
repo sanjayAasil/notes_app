@@ -1,18 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sanjay_notes/archive/archive_screen.dart';
-import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/deleted_screen.dart';
-import 'package:sanjay_notes/favorite/favorite_screen.dart';
-import 'package:sanjay_notes/home/home_grid_view.dart';
-import 'package:sanjay_notes/my_drawer.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/Screens/deleted_screen.dart';
+import 'package:sanjay_notes/Screens/my_drawer.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
-import 'package:sanjay_notes/remainder/remainder_screen.dart';
 import 'package:sanjay_notes/routes.dart';
+import '../archive/archive_screen.dart';
+import '../favorite/favorite_screen.dart';
+import '../remainder/remainder_screen.dart';
 import 'home_app_bar.dart';
+import 'home_grid_view.dart';
 import 'home_list_view.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

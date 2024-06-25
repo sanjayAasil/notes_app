@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sanjay_notes/data_manager.dart';
-import 'package:sanjay_notes/list_model.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/models/list_model.dart';
 import 'package:sanjay_notes/widget_helper.dart';
-import 'note.dart';
+import '../models/note.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
