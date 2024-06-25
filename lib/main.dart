@@ -11,21 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
-
-  AwesomeNotifications().initialize(
-    null,
-    [
-      NotificationChannel(
-        channelKey: 'basic_channel',
-        channelName: 'Basic Notifications',
-        channelDescription: 'Notification channel for basic tests',
-        defaultColor: Colors.teal,
-        importance: NotificationImportance.High,
-        ledColor: Colors.white,
-      ),
-    ],
-  );
-  initialize();
+  initializeAwesomeNotification();
+  initializeDb();
   runApp(const MyApp());
 }
 
@@ -52,8 +39,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-initialize() {
-
+initializeDb() {
   DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
   DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
   DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
@@ -69,4 +55,20 @@ initialize() {
   DataManager().remainderListModels = ListModelsDb.getAllListModels(ListModelsDb.remainderListModelKey);
 
   DataManager().labels = LabelsDb.getAllLabels();
+}
+
+initializeAwesomeNotification() {
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic Notifications',
+        channelDescription: 'Notification channel for basic tests',
+        defaultColor: Colors.teal,
+        importance: NotificationImportance.High,
+        ledColor: Colors.white,
+      ),
+    ],
+  );
 }
