@@ -8,10 +8,10 @@ import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'firebase_options.dart';
 
 void main() async {
+  debugPrint(" main: init");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -20,6 +20,7 @@ void main() async {
   initializeAwesomeNotification();
   initializeDb();
   runApp(const MyApp());
+  debugPrint(" main: check main");
 }
 
 class MyApp extends StatefulWidget {

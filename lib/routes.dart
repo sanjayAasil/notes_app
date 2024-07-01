@@ -1,8 +1,12 @@
 import 'dart:core';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Screens/create_new_label.dart';
 import 'package:sanjay_notes/Screens/deleted_screen.dart';
 import 'package:sanjay_notes/Screens/label_screen.dart';
+import 'package:sanjay_notes/Screens/login_Screens/login_screen.dart';
+import 'package:sanjay_notes/Screens/login_Screens/signUp_Screen.dart';
+import 'package:sanjay_notes/Screens/login_Screens/welcome_screen.dart';
 import 'package:sanjay_notes/models/list_model.dart';
 import 'package:sanjay_notes/Screens/settings_screen.dart';
 import 'package:sanjay_notes/Screens/view-or-edit-list-model.dart';
@@ -33,7 +37,9 @@ class Routes {
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
       case homeScreen:
-        return MaterialPageRoute(builder: (context) => const HomeScreen());
+        return FirebaseAuth.instance.currentUser == null
+            ? MaterialPageRoute(builder: (context) => const SignUpScreen())
+            : MaterialPageRoute(builder: (context) => const HomeScreen());
       case searchScreen:
         return MaterialPageRoute(builder: (context) => const SearchScreen());
       case newListScreen:

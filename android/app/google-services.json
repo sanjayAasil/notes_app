@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "679639839132",
-    "project_id": "keep-notes-98ee6",
-    "storage_bucket": "keep-notes-98ee6.appspot.com"
+    "project_number": "1003473576371",
+    "project_id": "keep-notes-adb09",
+    "storage_bucket": "keep-notes-adb09.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:679639839132:android:047695e031a3d457799859",
+        "mobilesdk_app_id": "1:1003473576371:android:f97a0ee213529bc5792bc6",
         "android_client_info": {
           "package_name": "com.example.sanjay_notes"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDqE74jlT5FyaXMoMaRLTuJcFVWJOEVedY"
+          "current_key": "AIzaSyA1bXPMtUwpXodiDT6G9KvNgk45Gmami4E"
         }
       ],
       "services": {
