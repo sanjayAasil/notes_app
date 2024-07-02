@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/routes.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -49,32 +50,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
             SizedBox(height: 20),
-            Container(
-              height: 53,
-              width: 320,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
-                borderRadius: BorderRadius.circular(40),
+            InkWell(
+              onTap: () => Navigator.of(context).pushNamed(Routes.signInScreen),
+              child: Container(
+                height: 53,
+                width: 320,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: Center(
+                    child: Text(
+                  'SIGN IN',
+                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                )),
               ),
-              child: Center(
-                  child: Text(
-                'SIGN IN',
-                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              )),
             ),
             SizedBox(height: 20),
-            Container(
-              height: 53,
-              width: 320,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.white),
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: Center(
-                child: Text(
-                  'SIGN UP',
-                  style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+            InkWell(
+              onTap: () => Navigator.of(context).pushNamed(Routes.signUpScreen),
+              child: Container(
+                height: 53,
+                width: 320,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: Center(
+                  child: Text(
+                    'SIGN UP',
+                    style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -82,10 +89,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.g_mobiledata_rounded,
-                  color: Colors.white,
-                  size: 90,
+                InkWell(
+                  onTap: () {},
+                  child: Icon(
+                    Icons.g_mobiledata_rounded,
+                    color: Colors.white,
+                    size: 90,
+                  ),
                 ),
                 Text(
                   '--OR--',
@@ -93,12 +103,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     color: Colors.white,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Icon(
-                    Icons.phone_outlined,
-                    color: Colors.white,
-                    size: 50,
+                InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Icon(
+                      Icons.phone_outlined,
+                      color: Colors.white,
+                      size: 50,
+                    ),
                   ),
                 ),
               ],

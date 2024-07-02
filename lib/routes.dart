@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Screens/create_new_label.dart';
 import 'package:sanjay_notes/Screens/deleted_screen.dart';
 import 'package:sanjay_notes/Screens/label_screen.dart';
-import 'package:sanjay_notes/Screens/login_Screens/login_screen.dart';
+import 'package:sanjay_notes/Screens/login_Screens/signIn-screen.dart';
 import 'package:sanjay_notes/Screens/login_Screens/signUp_Screen.dart';
 import 'package:sanjay_notes/Screens/login_Screens/welcome_screen.dart';
 import 'package:sanjay_notes/models/list_model.dart';
@@ -20,7 +20,9 @@ import 'Screens/home/home_screen.dart';
 import 'Screens/remainder/remainder_screen.dart';
 
 class Routes {
-  static const String homeScreen = '/';
+  static const String mainScreen = '/';
+  static const String signInScreen = '/sign-in-screen';
+  static const String signUpScreen = '/sign-out-screen';
   static const String searchScreen = '/search-screen';
   static const String newListScreen = '/new-list-screen';
   static const String createNewNoteScreen = '/create-new-note-screen';
@@ -36,10 +38,14 @@ class Routes {
 
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
-      case homeScreen:
+      case mainScreen:
         return FirebaseAuth.instance.currentUser == null
-            ? MaterialPageRoute(builder: (context) => const SignUpScreen())
+            ? MaterialPageRoute(builder: (context) => const WelcomeScreen())
             : MaterialPageRoute(builder: (context) => const HomeScreen());
+      case signInScreen:
+        return MaterialPageRoute(builder: (context) => const SignInScreen());
+      case signUpScreen:
+        return MaterialPageRoute(builder: (context) => const SignUpScreen());
       case searchScreen:
         return MaterialPageRoute(builder: (context) => const SearchScreen());
       case newListScreen:

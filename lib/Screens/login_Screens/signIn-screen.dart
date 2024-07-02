@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/routes.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Text("Don't have an account?"),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () => Navigator.of(context).popAndPushNamed(Routes.signUpScreen),
                             child: Text(
                               'Sign Up',
                               style: TextStyle(

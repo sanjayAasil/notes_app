@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/routes.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -87,7 +88,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           )),
                     ),
                     SizedBox(height: 50),
-
                     Container(
                       height: 50,
                       width: 300,
@@ -102,30 +102,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          'SIGN IN',
+                          'SIGN UP',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                             color: Colors.white,
                           ),
                         ),
-                      ),
-                    ),
-                    Spacer(),
-                    Align(
-                      child: Column(
-                        children: [
-                          Text("Don't have an account?"),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                color: Colors.blue.shade700,
-                              ),
-                            ),
-                          )
-                        ],
                       ),
                     ),
                   ],
