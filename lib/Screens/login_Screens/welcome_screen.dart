@@ -28,31 +28,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
         child: Column(
           children: [
-            Align(
+            const Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 60),
-                child: Text(
+                padding: EdgeInsets.only(left: 20.0, top: 60),
+                child: const Text(
                   'Keep Notes',
                   style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-            SizedBox(height: 100),
-            Icon(
+            const SizedBox(height: 100),
+            const Icon(
               Icons.lightbulb_outline_rounded,
               size: 150,
               color: Colors.white,
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Welcome Back !',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 35,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             InkWell(
               onTap: () => Navigator.of(context).pushNamed(Routes.signInScreen),
               child: Container(
@@ -62,14 +62,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(40),
                 ),
-                child: Center(
+                child: const Center(
                     child: Text(
                   'SIGN IN',
                   style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 )),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             InkWell(
               onTap: () => Navigator.of(context).pushNamed(Routes.signUpScreen),
               child: Container(
@@ -80,7 +80,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(40),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'SIGN UP',
                     style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
@@ -88,19 +88,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: signIn,
-                  child: Icon(
+                  onTap: signInGoogle,
+                  child: const Icon(
                     Icons.g_mobiledata_rounded,
                     color: Colors.white,
                     size: 90,
                   ),
                 ),
-                Text(
+                const Text(
                   '--OR--',
                   style: TextStyle(
                     color: Colors.white,
@@ -108,8 +108,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 InkWell(
                   onTap: () => Navigator.of(context).pushNamed(Routes.phoneNumberLoginScreen),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 20.0),
                     child: Icon(
                       Icons.phone_outlined,
                       color: Colors.white,
@@ -119,21 +119,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),
     );
   }
 
-  signIn() async {
-    debugPrint("_WelcomeScreenState signIn: ");
-    LoadingDialog loadingDialog = LoadingDialog(progressbarColor: Colors.blue.shade700)..show(context);
-    await FirebaseAuthManager().signInWithGoogle();
-    if (mounted) {
-      loadingDialog.dismiss(context);
-      Navigator.of(context).pushNamed(Routes.mainScreen);
+  signInGoogle() async {
+    try {
+      debugPrint("_WelcomeScreenState signIn: ");
+      LoadingDialog loadingDialog = LoadingDialog(progressbarColor: Colors.blue.shade700)..show(context);
+      await FirebaseAuthManager().signInWithGoogle();
+      if (mounted) {
+        loadingDialog.dismiss(context);
+        Navigator.of(context).popAndPushNamed(Routes.mainScreen);
+      }
+    } catch (e) {
+      debugPrint("_WelcomeScreenState signIn: error occurred $e");
     }
-
   }
 }

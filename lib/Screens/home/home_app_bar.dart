@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
-import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/utils.dart';
+import 'package:versatile_dialogs/loading_dialog.dart';
 
 import '../../Database/data_manager.dart';
 import '../../models/list_model.dart';
@@ -82,8 +82,22 @@ class DefaultHomeAppBar extends StatelessWidget {
                         title: Text('Profile'),
                         actions: [
                           TextButton(
-                            onPressed: () {
-                              FirebaseAuth.instance.signOut();
+                            onPressed: () async {
+                              try {
+                                debugPrint("DefaultHomeAppBar build: ");
+                                LoadingDialog loadingDialog = LoadingDialog(progressbarColor: Colors.blue.shade700)
+                                  ..show(context);
+                                await FirebaseAuth.instance.signOut();
+                                if (context.mounted) {
+                                  debugPrint("DefaultHomeAppBar build: fewferwerv");
+                                  loadingDialog.dismiss(context);
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushNamed(Routes.mainScreen);
+                                }
+                              } catch (e) {
+                                debugPrint("DefaultHomeAppBar build: errorrr $e");
+                              }
                             },
                             child: Text('Sign Out'),
                           ),

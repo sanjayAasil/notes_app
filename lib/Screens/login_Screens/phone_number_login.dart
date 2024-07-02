@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
+import 'package:sanjay_notes/routes.dart';
+import 'package:versatile_dialogs/loading_dialog.dart';
 
 class PhoneNumberLoginScreen extends StatefulWidget {
   const PhoneNumberLoginScreen({super.key});
@@ -9,6 +12,9 @@ class PhoneNumberLoginScreen extends StatefulWidget {
 
 class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
   bool otpSent = false;
+  TextEditingController phoneNumberController = TextEditingController(text: '+91');
+  TextEditingController otpController = TextEditingController();
+  String verificationId = '';
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +33,8 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 20.0, top: MediaQueryData().padding.top + 60),
-              child: Text(
+              padding: EdgeInsets.only(left: 20.0, top: const MediaQueryData().padding.top + 60),
+              child: const Text(
                 'Sign In with\nMobile Number!',
                 style: TextStyle(
                   fontSize: 30,
@@ -40,10 +46,10 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 200.0),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+                  topRight: const Radius.circular(40),
                 ),
                 color: Colors.white,
               ),
@@ -53,7 +59,7 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                 padding: const EdgeInsets.only(left: 18.0, right: 18),
                 child: Column(
                   children: [
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: otpSent
@@ -68,6 +74,8 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                     ),
                     otpSent
                         ? TextField(
+                            textInputAction: TextInputAction.next,
+                            controller: otpController,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               hintText: 'Enter OTP',
@@ -78,6 +86,7 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                             ),
                           )
                         : TextField(
+                            controller: phoneNumberController,
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               hintText: 'Enter Mobile Number',
@@ -87,37 +96,22 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                               ),
                             ),
                           ),
-                    SizedBox(height: 70),
+                    const SizedBox(height: 70),
                     if (otpSent)
-                      Container(
-                        height: 50,
-                        width: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            colors: [
-                              Colors.blue,
-                              Colors.black,
-                            ],
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      )
-                    else
                       InkWell(
-                        onTap: () {
-                          setState(() {
-                            otpSent = true;
-                          });
+                        onTap: () async {
+                          debugPrint("_PhoneNumberLoginScreenState build: check init submit");
+                          LoadingDialog loadingDialog = LoadingDialog(
+                            message: 'Signing In',
+                            progressbarColor: Colors.blue.shade700,
+                          )..show(context);
+                          await FirebaseAuthManager().signInWithOtp(otpController.text.trim(), verificationId);
+                          if (context.mounted) {
+                            loadingDialog.dismiss(context);
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pushNamed(Routes.mainScreen);
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -131,7 +125,54 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                               ],
                             ),
                           ),
-                          child: Center(
+                          child: const Center(
+                            child: Text(
+                              'Submit',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      InkWell(
+                        onTap: () async {
+                          if (phoneNumberController.text.trim().isEmpty ||
+                              phoneNumberController.text.trim().length < 13) return;
+                          LoadingDialog loadingDialog = LoadingDialog(
+                            message: 'Verifying',
+                            progressbarColor: Colors.blue.shade700,
+                          )..show(context);
+
+                          await FirebaseAuthManager().requestOTP(
+                            context,
+                            phoneNumberController.text.trim(),
+                            (verificationId, forceResendingToken) {
+                              this.verificationId = verificationId;
+                            },
+                          );
+
+                          if (context.mounted) {
+                            loadingDialog.dismiss(context);
+                          }
+                          setState(() => otpSent = true);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: const LinearGradient(
+                              colors: [
+                                Colors.blue,
+                                Colors.black,
+                              ],
+                            ),
+                          ),
+                          child: const Center(
                             child: Text(
                               'Send OTP',
                               style: TextStyle(

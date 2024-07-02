@@ -1,28 +1,95 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthManager {
-  signInWithGoogle() async {
-    debugPrint("FirebaseAuthManager signInWithGoogle: ");
+  FirebaseAuth auth = FirebaseAuth.instance;
+  GoogleSignIn googleSignIn = GoogleSignIn();
 
-    //Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<User?> signInWithGoogle() async {
+    try {
+      debugPrint("FirebaseAuthManager signInWithGoogle: ");
 
-    //obtain the auth details from request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      //Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    if (googleAuth == null) return null;
+      //obtain the auth details from request
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    //create new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+      if (googleAuth == null) return null;
 
-    //once signedIn, return the UserCredential
-    var user = await FirebaseAuth.instance.signInWithCredential(credential);
+      //create new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    debugPrint("FirebaseAuthManager signInWithGoogle: user $user and ${FirebaseAuth.instance.currentUser}");
+      //once signedIn, return the UserCredential
+      UserCredential userCredential = await auth.signInWithCredential(credential);
+      debugPrint("FirebaseAuthManager signInWithGoogle: user ${userCredential.user} and ${auth.currentUser}");
+      return userCredential.user;
+    } catch (e) {
+      debugPrint("FirebaseAuthManager signInWithGoogle: $e");
+      return null;
+    }
+  }
+
+  Future<void> requestOTP(
+    BuildContext context,
+    String phoneNumber,
+    Function(String verificationId, int? forceResendingToken) onCodeSent,
+  ) async {
+    try {
+      await auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
+          //Auto-retrieved verification completed
+          await auth.signInWithCredential(phoneAuthCredential);
+          debugPrint("FirebaseAuthManager requestOTP: verificationCompleted");
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          debugPrint('Verification failed: ${e.message}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Verification failed: ${e.message}')),
+          );
+        },
+        codeSent: onCodeSent,
+        codeAutoRetrievalTimeout: (String verificationId) {
+          verificationId = verificationId;
+          debugPrint("FirebaseAuthManager requestOTP: codeAutoRetrieval Timedout");
+          //timeout for auto phone resolution
+        },
+      );
+    } catch (e) {
+      debugPrint("FirebaseAuthManager requestOTP: $e");
+    }
+  }
+
+  Future<User?> signInWithOtp(String otp, String verificationId) async {
+    try {
+      debugPrint("FirebaseAuthManager signInWithOtp: check $verificationId");
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otp,
+      );
+      debugPrint("FirebaseAuthManager signInWithOtp: chec");
+
+      final UserCredential userCredential = await auth.signInWithCredential(credential);
+      debugPrint("FirebaseAuthManager signInWithOtp: $credential");
+      return userCredential.user;
+    } catch (e) {
+      debugPrint("FirebaseAuthManager signInWithOtp: $e");
+      return null;
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await auth.signOut();
+      await googleSignIn.signOut();
+      debugPrint("FirebaseAuthManager signOut: signedOut successfully");
+    } catch (e) {
+      debugPrint("FirebaseAuthManager signOut: $e");
+    }
   }
 }
