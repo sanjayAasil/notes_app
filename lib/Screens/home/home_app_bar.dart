@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
+import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/utils.dart';
 
@@ -10,7 +12,6 @@ import '../../Database/data_manager.dart';
 import '../../models/list_model.dart';
 import '../../models/note.dart';
 import '../../routes.dart';
-
 
 class DefaultHomeAppBar extends StatelessWidget {
   const DefaultHomeAppBar({Key? key}) : super(key: key);
@@ -74,7 +75,22 @@ class DefaultHomeAppBar extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Profile'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              FirebaseAuth.instance.signOut();
+                            },
+                            child: Text('Sign Out'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                   child: Icon(
                     Icons.account_circle_outlined,
                     size: 30,
@@ -89,7 +105,7 @@ class DefaultHomeAppBar extends StatelessWidget {
 }
 
 class SelectedHomeAppBar extends StatelessWidget {
-  const SelectedHomeAppBar({Key? key}) : super(key: key);
+  const SelectedHomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

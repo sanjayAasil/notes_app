@@ -541,6 +541,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  versatile_dialogs:
+    dependency: "direct main"
+    description:
+      name: versatile_dialogs
+      sha256: "336244e33632e3d86bd688cbc0c54eef529039ccf0310ece73a23718b78b6e98"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   vm_service:
     dependency: transitive
     description:

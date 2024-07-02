@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:versatile_dialogs/loading_dialog.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -90,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: signIn,
                   child: Icon(
                     Icons.g_mobiledata_rounded,
                     color: Colors.white,
@@ -104,7 +107,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () => Navigator.of(context).pushNamed(Routes.phoneNumberLoginScreen),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: Icon(
@@ -121,5 +124,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     );
+  }
+
+  signIn() async {
+    debugPrint("_WelcomeScreenState signIn: ");
+    LoadingDialog loadingDialog = LoadingDialog(progressbarColor: Colors.blue.shade700)..show(context);
+    await FirebaseAuthManager().signInWithGoogle();
+    if (mounted) {
+      loadingDialog.dismiss(context);
+      Navigator.of(context).pushNamed(Routes.mainScreen);
+    }
+
   }
 }

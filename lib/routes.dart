@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Screens/create_new_label.dart';
 import 'package:sanjay_notes/Screens/deleted_screen.dart';
 import 'package:sanjay_notes/Screens/label_screen.dart';
+import 'package:sanjay_notes/Screens/login_Screens/phone_number_login.dart';
 import 'package:sanjay_notes/Screens/login_Screens/signIn-screen.dart';
 import 'package:sanjay_notes/Screens/login_Screens/signUp_Screen.dart';
 import 'package:sanjay_notes/Screens/login_Screens/welcome_screen.dart';
@@ -35,6 +36,7 @@ class Routes {
   static const String favoriteScreen = '/favorite-screen';
   static const String settingsScreen = '/settings-screen';
   static const String remainderScreen = '/remainder-screen';
+  static const String phoneNumberLoginScreen = '/phoneNumber-login-screen';
 
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
@@ -46,6 +48,8 @@ class Routes {
         return MaterialPageRoute(builder: (context) => const SignInScreen());
       case signUpScreen:
         return MaterialPageRoute(builder: (context) => const SignUpScreen());
+      case phoneNumberLoginScreen:
+        return MaterialPageRoute(builder: (context) => const PhoneNumberLoginScreen());
       case searchScreen:
         return MaterialPageRoute(builder: (context) => const SearchScreen());
       case newListScreen:
