@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/models/list_model.dart';
 import 'package:sanjay_notes/models/settings_model.dart';
@@ -75,4 +76,22 @@ class DataManager extends ChangeNotifier {
     _favoriteScreenView = value;
     notifyListeners();
   }
+
+  User user = FirebaseAuth.instance.currentUser!;
+
+//User(displayName: Sanjay,
+// email: sanjuaasil@gmail.com,
+// isEmailVerified: true,
+// isAnonymous: false,
+// metadata: UserMetadata(creationTime: 2024-07-02 05:49:08.528Z,
+// lastSignInTime: 2024-07-03 08:31:02.122Z),
+// phoneNumber: null,
+// photoURL: https://lh3.googleusercontent.com/a/ACg8ocKGL3vpc2-12PpLUNFfUS33Wco0Y2Qrky7Bxoj7El4fKsfg8Estrw=s96-c,
+// providerData, [UserInfo(displayName: Sanjay, email: sanjuaasil@gmail.com,
+// phoneNumber: null,
+// photoURL: https://lh3.googleusercontent.com/a/ACg8ocKGL3vpc2-12PpLUNFfUS33Wco0Y2Qrky7Bxoj7El4fKsfg8Estrw=s96-c,
+// providerId: google.com, uid: 106789429631148152084)], refreshToken: null, tenantId: null, uid: la3bccwjXATtXQEefPb8SdBcrIa2)
+// and User(displayName: Sanjay, email: sanjuaasil@gmail.com, isEmailVerified: true, isAnonymous: false,
+// metadata: UserMetadata(creationTime: 2024-07-02 05:49:08.528Z, lastSignInTime: 2024-07-03 08:31:02.122Z),
+// phoneNumber: null, photoURL: https://lh3.googleusercontent.com/a/ACg8ocKGL3vpc2-12PpLUNFfUS33Wco0Y2Qrky7Bxo
 }

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
+
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/utils.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
@@ -14,8 +15,15 @@ import '../../models/list_model.dart';
 import '../../models/note.dart';
 import '../../routes.dart';
 
-class DefaultHomeAppBar extends StatelessWidget {
-  const DefaultHomeAppBar({Key? key}) : super(key: key);
+class DefaultHomeAppBar extends StatefulWidget {
+  const DefaultHomeAppBar({super.key});
+
+  @override
+  State<DefaultHomeAppBar> createState() => _DefaultHomeAppBarState();
+}
+
+class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
+  User user = DataManager().user;
 
   @override
   Widget build(BuildContext context) {
@@ -76,36 +84,7 @@ class DefaultHomeAppBar extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Profile'),
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              try {
-                                debugPrint("DefaultHomeAppBar build: ");
-                                LoadingDialog loadingDialog = LoadingDialog(progressbarColor: Colors.blue.shade700)
-                                  ..show(context);
-                                await FirebaseAuthManager().signOut();
-                                if (context.mounted) {
-                                  debugPrint("DefaultHomeAppBar build: fewferwerv");
-                                  loadingDialog.dismiss(context);
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pushNamed(Routes.mainScreen);
-                                }
-                              } catch (e) {
-                                debugPrint("DefaultHomeAppBar build: errorrr $e");
-                              }
-                            },
-                            child: Text('Sign Out'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                  onTap: _showProfile,
                   child: Icon(
                     Icons.account_circle_outlined,
                     size: 30,
@@ -113,6 +92,36 @@ class DefaultHomeAppBar extends StatelessWidget {
                   )),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  _showProfile() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: FittedBox(child: Image.network(user.photoURL.toString())),
+        ),
+        title: Text('Profile'),
+        content: TextButton(
+          onPressed: () async {
+            LoadingDialog loadingDialog = LoadingDialog()..show(context);
+
+            await FirebaseAuthManager().signOut();
+
+            if (context.mounted) {
+              loadingDialog.dismiss(context);
+              Navigator.of(context).pop();
+
+              Navigator.of(context).pushNamed(Routes.mainScreen);
+            }
+          },
+          child: Text('Sign Out'),
         ),
       ),
     );

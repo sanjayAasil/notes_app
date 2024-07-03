@@ -6,7 +6,7 @@ class FirebaseAuthManager {
   FirebaseAuth auth = FirebaseAuth.instance;
   GoogleSignIn googleSignIn = GoogleSignIn();
 
-  Future<User?> signInWithGoogle() async {
+  Future<User?> signInWithGoogle(BuildContext context) async {
     try {
       debugPrint("FirebaseAuthManager signInWithGoogle: ");
 
@@ -27,9 +27,18 @@ class FirebaseAuthManager {
       //once signedIn, return the UserCredential
       UserCredential userCredential = await auth.signInWithCredential(credential);
       debugPrint("FirebaseAuthManager signInWithGoogle: user ${userCredential.user} and ${auth.currentUser}");
+
       return userCredential.user;
-    } catch (e) {
-      debugPrint("FirebaseAuthManager signInWithGoogle: $e");
+    } on FirebaseAuthException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: SnackBar(
+            content: Text(' ${e.message}'),
+          )),
+        );
+      }
+
       return null;
     }
   }
@@ -48,9 +57,11 @@ class FirebaseAuthManager {
           debugPrint("FirebaseAuthManager requestOTP: verificationCompleted");
         },
         verificationFailed: (FirebaseAuthException e) {
-          debugPrint('Verification failed: ${e.message}');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Verification failed: ${e.message}')),
+            SnackBar(
+                content: SnackBar(
+              content: Text(' ${e.message}'),
+            )),
           );
         },
         codeSent: onCodeSent,

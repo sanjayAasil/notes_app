@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
@@ -93,7 +94,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: signInGoogle,
+                  onTap: () async {
+                    await signInGoogle(context);
+                  },
                   child: const Icon(
                     Icons.g_mobiledata_rounded,
                     color: Colors.white,
@@ -126,12 +129,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  signInGoogle() async {
+  signInGoogle(BuildContext context) async {
     try {
       debugPrint("_WelcomeScreenState signIn: ");
       LoadingDialog loadingDialog = LoadingDialog(progressbarColor: Colors.blue.shade700)..show(context);
-      await FirebaseAuthManager().signInWithGoogle();
-      if (mounted) {
+      final User? user = await FirebaseAuthManager().signInWithGoogle(context);
+      if (context.mounted) {
+        loadingDialog.dismiss(context);
+        Navigator.of(context).popAndPushNamed(Routes.mainScreen);
+      }
+      if (user == null) return null;
+      DataManager().user = user;
+
+      if (context.mounted) {
         loadingDialog.dismiss(context);
         Navigator.of(context).popAndPushNamed(Routes.mainScreen);
       }
