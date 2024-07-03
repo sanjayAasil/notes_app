@@ -83,6 +83,38 @@ class FirebaseAuthManager {
     }
   }
 
+  Future<User?> signUpWithEmail(String email, String password, BuildContext context) async {
+    try {
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message.toString()),
+          ),
+        );
+      }
+      return null;
+    }
+  }
+
+  Future<User?> signInWithEmail(BuildContext context, String email, String password) async {
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message.toString()),
+          ),
+        );
+      }
+      return null;
+    }
+  }
+
   Future<void> signOut() async {
     try {
       await auth.signOut();

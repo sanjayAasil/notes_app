@@ -21,6 +21,7 @@ void main() async {
   initializeDb();
   runApp(const MyApp());
   debugPrint(" main: check main");
+
 }
 
 class MyApp extends StatefulWidget {
