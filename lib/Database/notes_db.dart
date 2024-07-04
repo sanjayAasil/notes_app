@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_manager.dart';
 import '../models/note.dart';
@@ -33,6 +35,10 @@ class NotesDb {
   }
 
   static addNote(String key, Note note) {
+    ///adding note to firestore
+    FirestoreService().addNote(note.json);
+    debugPrint("NotesDb addNote: ${FirestoreService().hashCode}");
+
     List<Note> notes = getAllNotes(key);
 
     notes.add(note);
@@ -41,6 +47,7 @@ class NotesDb {
 
     String encoded = jsonEncode(jsonList);
 
+    ///adding notes to SharedPref Db
     prefs.setString(key, encoded);
 
     if (key == notesKey) {
@@ -85,6 +92,10 @@ class NotesDb {
   }
 
   static removeNote(String key, String noteId) {
+    ///firestore delete
+    debugPrint("NotesDb removeNote: ");
+    FirestoreService().deleteNote(noteId);
+
     List<Note> notes = getAllNotes(key);
 
     notes.removeWhere((element) => element.id == noteId);

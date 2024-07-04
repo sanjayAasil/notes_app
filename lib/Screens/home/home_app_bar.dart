@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
+import 'package:sanjay_notes/firestore/firestore_service.dart';
 
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/utils.dart';
@@ -23,7 +24,7 @@ class DefaultHomeAppBar extends StatefulWidget {
 }
 
 class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
-  User user = DataManager().user;
+  User user = DataManager().user!;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +108,7 @@ class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
           ),
           child: FittedBox(child: Image.network(user.photoURL.toString())),
         ),
-        title: Text('Profile'),
+        title: const Text('Profile'),
         content: TextButton(
           onPressed: () async {
             LoadingDialog loadingDialog = LoadingDialog()..show(context);
@@ -292,6 +293,8 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isDeleted = true;
+      FirestoreService().deleteNote(note.id);
+      debugPrint("SelectedHomeAppBar onDeleted: delete check");
     }
     for (Note note in pinnedNotes) {
       note.isDeleted = true;

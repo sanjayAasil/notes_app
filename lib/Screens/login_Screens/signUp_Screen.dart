@@ -73,58 +73,56 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),
                           )),
                     ),
-                    StatefulBuilder(
-                      builder: (context, setState) {
-                        return TextField(
-                          obscureText: toggleShowPassword,
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter Password',
-                            suffixIcon: !toggleShowPassword
-                                ? IconButton(
-                                    color: Colors.grey,
-                                    onPressed: () => setState(() => toggleShowPassword = !toggleShowPassword),
-                                    icon: const Icon(Icons.visibility),
-                                  )
-                                : IconButton(
-                                    color: Colors.grey,
-                                    onPressed: () => setState(() => toggleShowPassword = !toggleShowPassword),
-                                    icon: const Icon(Icons.visibility_off),
-                                  ),
-                            label: Text(
-                              'Password',
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),
-                            ),
+                    StatefulBuilder(builder: (context, setState) {
+                      return TextField(
+                        obscureText: toggleShowPassword,
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter Password',
+                          suffixIcon: !toggleShowPassword
+                              ? IconButton(
+                                  color: Colors.grey,
+                                  onPressed: () => setState(() => toggleShowPassword = !toggleShowPassword),
+                                  icon: const Icon(Icons.visibility),
+                                )
+                              : IconButton(
+                                  color: Colors.grey,
+                                  onPressed: () => setState(() => toggleShowPassword = !toggleShowPassword),
+                                  icon: const Icon(Icons.visibility_off),
+                                ),
+                          label: Text(
+                            'Password',
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),
                           ),
-                        );
-                      }
-                    ),
-                    StatefulBuilder(
-                      builder: (context, setState) {
-                        return TextField(
-                          obscureText: toggleShowConformPassword,
-                          controller: conformPasswordController,
-                          decoration: InputDecoration(
-                            hintText: 'Conform Password',
-                            suffixIcon: !toggleShowConformPassword
-                                ? IconButton(
-                                    color: Colors.grey,
-                                    onPressed: () => setState(() => toggleShowConformPassword = !toggleShowConformPassword),
-                                    icon: const Icon(Icons.visibility),
-                                  )
-                                : IconButton(
-                                    color: Colors.grey,
-                                    onPressed: () => setState(() => toggleShowConformPassword = !toggleShowConformPassword),
-                                    icon: const Icon(Icons.visibility_off),
-                                  ),
-                            label: Text(
-                              'Password',
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),
-                            ),
+                        ),
+                      );
+                    }),
+                    StatefulBuilder(builder: (context, setState) {
+                      return TextField(
+                        obscureText: toggleShowConformPassword,
+                        controller: conformPasswordController,
+                        decoration: InputDecoration(
+                          hintText: 'Conform Password',
+                          suffixIcon: !toggleShowConformPassword
+                              ? IconButton(
+                                  color: Colors.grey,
+                                  onPressed: () =>
+                                      setState(() => toggleShowConformPassword = !toggleShowConformPassword),
+                                  icon: const Icon(Icons.visibility),
+                                )
+                              : IconButton(
+                                  color: Colors.grey,
+                                  onPressed: () =>
+                                      setState(() => toggleShowConformPassword = !toggleShowConformPassword),
+                                  icon: const Icon(Icons.visibility_off),
+                                ),
+                          label: Text(
+                            'Password',
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),
                           ),
-                        );
-                      }
-                    ),
+                        ),
+                      );
+                    }),
                     const SizedBox(height: 35),
                     InkWell(
                       onTap: () async {
@@ -188,9 +186,8 @@ signUp(BuildContext context, String email, String password) async {
   }
   if (context.mounted) {
     loadingDialog.dismiss(context);
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(Routes.mainScreen);
+
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
   }
   debugPrint(" signUp: signedUp Successfully $user");
 }

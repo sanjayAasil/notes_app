@@ -179,9 +179,8 @@ _signIn(BuildContext context, String email, String password) async {
   }
   if (context.mounted) {
     loadingDialog.dismiss(context);
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(Routes.mainScreen);
+
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
   }
   debugPrint(" signUp: signedUp Successfully $user");
 }

@@ -108,9 +108,7 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                           await FirebaseAuthManager().signInWithOtp(otpController.text.trim(), verificationId);
                           if (context.mounted) {
                             loadingDialog.dismiss(context);
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed(Routes.mainScreen);
+                            Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
                           }
                         },
                         child: Container(

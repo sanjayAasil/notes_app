@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,8 +7,10 @@ import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/Database/label_db.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
+import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:versatile_dialogs/loading_dialog.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,10 +21,9 @@ void main() async {
   );
   prefs = await SharedPreferences.getInstance();
   initializeAwesomeNotification();
-  initializeDb();
+  await initializeDb();
   runApp(const MyApp());
   debugPrint(" main: check main");
-
 }
 
 class MyApp extends StatefulWidget {
@@ -50,22 +52,30 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-initializeDb() {
-  DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
-  DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
-  DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
-  DataManager().pinnedNotes = NotesDb.getAllNotes(NotesDb.pinnedNotesKey);
-  DataManager().deletedNotes = NotesDb.getAllNotes(NotesDb.deletedNotesKey);
-  DataManager().remainderNotes = NotesDb.getAllNotes(NotesDb.remainderNotesKey);
+initializeDb() async {
+  //DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
+  // DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
+  // DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
+  // DataManager().pinnedNotes = NotesDb.getAllNotes(NotesDb.pinnedNotesKey);
+  // DataManager().deletedNotes = NotesDb.getAllNotes(NotesDb.deletedNotesKey);
+  // DataManager().remainderNotes = NotesDb.getAllNotes(NotesDb.remainderNotesKey);
+  //
+  // DataManager().listModels = ListModelsDb.getAllListModels(ListModelsDb.listModelKey);
+  // DataManager().deletedListModels = ListModelsDb.getAllListModels(ListModelsDb.deletedListModelKey);
+  // DataManager().pinnedListModels = ListModelsDb.getAllListModels(ListModelsDb.pinnedListModelKey);
+  // DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
+  // DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
+  // DataManager().remainderListModels = ListModelsDb.getAllListModels(ListModelsDb.remainderListModelKey);
+  //
+  // DataManager().labels = LabelsDb.getAllLabels();
 
-  DataManager().listModels = ListModelsDb.getAllListModels(ListModelsDb.listModelKey);
-  DataManager().deletedListModels = ListModelsDb.getAllListModels(ListModelsDb.deletedListModelKey);
-  DataManager().pinnedListModels = ListModelsDb.getAllListModels(ListModelsDb.pinnedListModelKey);
-  DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
-  DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
-  DataManager().remainderListModels = ListModelsDb.getAllListModels(ListModelsDb.remainderListModelKey);
-
-  DataManager().labels = LabelsDb.getAllLabels();
+  ///Firestore fetchings
+  DataManager().notes = await FirestoreService().getNotes();
+  DataManager().archivedNotes = await FirestoreService().getArchivedNotes();
+  DataManager().favoriteNotes = await FirestoreService().getFavoriteNotes();
+  DataManager().pinnedNotes = await FirestoreService().getPinnedNotes();
+  DataManager().deletedNotes = await FirestoreService().getDeletedNotes();
+  DataManager().remainderNotes = await FirestoreService().getRemainderNotes();
 }
 
 initializeAwesomeNotification() {

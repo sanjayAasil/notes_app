@@ -33,7 +33,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: EdgeInsets.only(left: 20.0, top: 60),
-                child: const Text(
+                child: Text(
                   'Keep Notes',
                   style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),
                 ),
@@ -143,10 +143,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       if (context.mounted) {
         loadingDialog.dismiss(context);
-        Navigator.of(context).popAndPushNamed(Routes.mainScreen);
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
       }
-    } catch (e) {
-      debugPrint("_WelcomeScreenState signIn: error occurred $e");
+    } catch (e, stack) {
+      debugPrint("_WelcomeScreenState signIn: error occurred $e, $stack");
     }
   }
 }

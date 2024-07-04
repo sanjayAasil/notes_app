@@ -77,7 +77,7 @@ class DataManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  User user = FirebaseAuth.instance.currentUser!;
+  User? user = FirebaseAuth.instance.currentUser;
 
 //User(displayName: Sanjay,
 // email: sanjuaasil@gmail.com,

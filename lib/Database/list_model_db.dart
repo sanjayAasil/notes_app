@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:sanjay_notes/models/list_model.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
 
@@ -30,6 +31,10 @@ class ListModelsDb {
   }
 
   static addListModel(String key, ListModel listModel) {
+
+    ///adding listmodel to firestore
+    FirestoreService().addListModel(listModel.json);
+
     List<ListModel> listModels = getAllListModels(key);
 
     listModels.add(listModel);
