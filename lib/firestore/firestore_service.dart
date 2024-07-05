@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:sanjay_notes/models/list_model.dart';
 
@@ -20,6 +21,7 @@ class FirestoreService {
   final CollectionReference<Map<String, dynamic>> _notesCollection = FirebaseFirestore.instance.collection('notes');
   final CollectionReference<Map<String, dynamic>> _listModelsCollection =
       FirebaseFirestore.instance.collection('listModels');
+  final CollectionReference<Map<String, dynamic>> _labelsCollection = FirebaseFirestore.instance.collection('labels');
 
   ///CREATE: adding notes, lists
   Future<void> addNote(Map<String, dynamic> note) async {
@@ -28,6 +30,10 @@ class FirestoreService {
 
   Future<void> addListModel(Map<String, dynamic> listModel) async {
     await _listModelsCollection.doc(listModel['id']).set(listModel);
+  }
+
+  Future<void> addLabels(List<String> labels) async {
+    await _labelsCollection.doc('permanentId').set({'labels': labels});
   }
 
   ///READ: getting notes from firestore
@@ -126,7 +132,16 @@ class FirestoreService {
     return querySnapshot.docs.map((doc) => ListModel.fromJson(doc.data())).toList();
   }
 
+  Future<List<String>> getLabels() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _labelsCollection.get();
+    List<String> list = querySnapshot.docs.expand((doc) => List<String>.from(doc['labels'] ?? [])).toList();
+    debugPrint("FirestoreService getLabels: checkknn   $list");
+    return list;
+  }
+
   /// UPDATE: updating notes in firestore
+
+  ///NO NEED as it can be managed in addNote()...used(set())
 
   ///DELETE:  Deleting notes in firestore
   Future<void> deleteNote(String noteId) async {
@@ -135,5 +150,9 @@ class FirestoreService {
 
   Future<void> deleteListModel(String noteId) async {
     await _listModelsCollection.doc(noteId).delete();
+  }
+
+  Future<void> deleteLabels() async {
+    await _labelsCollection.doc().delete();
   }
 }

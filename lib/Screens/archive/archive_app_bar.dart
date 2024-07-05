@@ -235,6 +235,7 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
       } else {
         NotesDb.addNote(NotesDb.notesKey, note);
       }
+
       NotesDb.removeNote(NotesDb.archivedNotesKey, note.id);
     }
 

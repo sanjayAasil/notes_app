@@ -1,40 +1,19 @@
-import 'dart:convert';
-
 import 'package:sanjay_notes/Database/data_manager.dart';
-import 'package:sanjay_notes/Database/notes_db.dart';
+
+import 'package:sanjay_notes/firestore/firestore_service.dart';
 
 class LabelsDb {
   LabelsDb._();
 
   static const labelsKey = 'labelsKey';
 
-  static List<String> getAllLabels() {
-    String? data = prefs.getString(LabelsDb.labelsKey);
-
-    if (data == null) return [];
-
-    List decoded = jsonDecode(data);
-
-    return decoded.map((e) => e.toString()).toList();
-  }
-
   static addLabels(List<String> labels) {
-    List<String> labelS = getAllLabels();
-
-    labelS.addAll(labels);
-
-    prefs.setString(LabelsDb.labelsKey, jsonEncode(labelS));
-
+    FirestoreService().addLabels(labels);
     DataManager().labels.addAll(labels);
   }
 
   static removeAllLabels() {
-    List<String> labelS = getAllLabels();
-
-    labelS.clear();
-
-    prefs.setString(LabelsDb.labelsKey, jsonEncode(labelS));
-
+    FirestoreService().deleteLabels();
     DataManager().labels.clear();
   }
 }

@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/Database/label_db.dart';
-import 'package:sanjay_notes/Screens/my_drawer.dart';
-import 'package:sanjay_notes/routes.dart';
+
 
 class CreateNewLabelScreen extends StatefulWidget {
   const CreateNewLabelScreen({super.key});
@@ -113,7 +112,6 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                     children: [
                       for (int i = controllers.length - 1; i >= 0; i--)
                         InkWell(
-                          onTap: () {},
                           child: Row(
                             children: [
                               Padding(

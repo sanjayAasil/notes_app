@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_manager.dart';
@@ -16,6 +17,7 @@ class NotesDb {
   static const remainderNotesKey = 'remainderNotes';
 
   static addNote(String key, Note note) {
+    debugPrint("NotesDb addNote: note json ${note.json}");
     FirestoreService().addNote(note.json);
 
     if (key == notesKey) {
@@ -34,15 +36,10 @@ class NotesDb {
   }
 
   static addNotes(String key, List<Note> notes) {
-    // List<Note> noteS = getAllNotes(key);
-    //
-    // noteS.addAll(notes);
-    //
-    // List<Map<String, dynamic>> jsonList = noteS.map((e) => e.json).toList();
-    //
-    // String encoded = jsonEncode(jsonList);
-    //
-    // prefs.setString(key, encoded);
+    for (Note note in notes) {
+      debugPrint("NotesDb addNotes: ${note.json}");
+      FirestoreService().addNote(note.json);
+    }
 
     if (key == notesKey) {
       DataManager().notes.addAll(notes);
@@ -59,16 +56,7 @@ class NotesDb {
     }
   }
 
-  static removeNote(String key, String noteId) {
-    FirestoreService().deleteNote(noteId);
-
-    // List<Note> notes = getAllNotes(key);
-    //
-    // notes.removeWhere((element) => element.id == noteId);
-    //
-    // List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();
-
-    // prefs.setString(key, jsonEncode(jsonList));
+  static removeNote(String key, String noteId) async {
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => element.id == noteId);
     } else if (key == favoriteNotesKey) {
@@ -85,6 +73,11 @@ class NotesDb {
   }
 
   static removeNotes(String key, List<String> noteIds) {
+    for (String noteId in noteIds) {
+      debugPrint("NotesDb removeNotes: $noteIds");
+      FirestoreService().deleteNote(noteId);
+    }
+
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => noteIds.contains(element.id));
     } else if (key == favoriteNotesKey) {

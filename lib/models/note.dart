@@ -40,7 +40,6 @@ class Note {
       );
 
   factory Note.fromJson(Map<String, dynamic> json) {
-    debugPrint("Note fromJson: $json");
     return Note._(
       id: json['id'],
       title: json['title'],

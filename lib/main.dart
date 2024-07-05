@@ -77,6 +77,13 @@ initializeDb() async {
   DataManager().remainderNotes = await FirestoreService().getRemainderNotes();
 
   DataManager().listModels = await FirestoreService().getListModels();
+  DataManager().deletedListModels =  await FirestoreService().getDeletedListModels();
+  DataManager().pinnedListModels =    await FirestoreService().getPinnedListModels();
+  DataManager().favoriteListModels =  await FirestoreService().getFavoriteListModels();
+  DataManager().archivedListModels =  await FirestoreService().getArchivedListModels();
+  DataManager().remainderListModels =  await FirestoreService().getRemainderListModels();
+
+  DataManager().labels = await FirestoreService().getLabels();
 }
 
 initializeAwesomeNotification() {
