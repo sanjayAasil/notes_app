@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_manager.dart';
@@ -19,36 +15,8 @@ class NotesDb {
   static const deletedNotesKey = 'deletedNotes';
   static const remainderNotesKey = 'remainderNotes';
 
-  static List<Note> getAllNotes(String key) {
-    String? data = prefs.getString(key);
-
-    log('$key - $data');
-
-    if (data == null) return [];
-
-    List decoded = jsonDecode(data);
-    debugPrint("NotesDb getAllNotes: checkzzz $key = ${data}");
-
-    List<Note> result = decoded.map((e) => Note.fromJson(e)).toList();
-    result.sort((a, b) => -1 * a.createdAt.compareTo(b.createdAt));
-    return result;
-  }
-
   static addNote(String key, Note note) {
-    ///adding note to firestore
     FirestoreService().addNote(note.json);
-    debugPrint("NotesDb addNote: ${FirestoreService().hashCode}");
-
-    List<Note> notes = getAllNotes(key);
-
-    notes.add(note);
-
-    List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();
-
-    String encoded = jsonEncode(jsonList);
-
-    ///adding notes to SharedPref Db
-    prefs.setString(key, encoded);
 
     if (key == notesKey) {
       DataManager().notes.add(note);
@@ -66,15 +34,15 @@ class NotesDb {
   }
 
   static addNotes(String key, List<Note> notes) {
-    List<Note> noteS = getAllNotes(key);
-
-    noteS.addAll(notes);
-
-    List<Map<String, dynamic>> jsonList = noteS.map((e) => e.json).toList();
-
-    String encoded = jsonEncode(jsonList);
-
-    prefs.setString(key, encoded);
+    // List<Note> noteS = getAllNotes(key);
+    //
+    // noteS.addAll(notes);
+    //
+    // List<Map<String, dynamic>> jsonList = noteS.map((e) => e.json).toList();
+    //
+    // String encoded = jsonEncode(jsonList);
+    //
+    // prefs.setString(key, encoded);
 
     if (key == notesKey) {
       DataManager().notes.addAll(notes);
@@ -92,17 +60,15 @@ class NotesDb {
   }
 
   static removeNote(String key, String noteId) {
-    ///firestore delete
-    debugPrint("NotesDb removeNote: ");
     FirestoreService().deleteNote(noteId);
 
-    List<Note> notes = getAllNotes(key);
+    // List<Note> notes = getAllNotes(key);
+    //
+    // notes.removeWhere((element) => element.id == noteId);
+    //
+    // List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();
 
-    notes.removeWhere((element) => element.id == noteId);
-
-    List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();
-
-    prefs.setString(key, jsonEncode(jsonList));
+    // prefs.setString(key, jsonEncode(jsonList));
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => element.id == noteId);
     } else if (key == favoriteNotesKey) {
@@ -119,13 +85,6 @@ class NotesDb {
   }
 
   static removeNotes(String key, List<String> noteIds) {
-    List<Note> notes = getAllNotes(key);
-
-    notes.removeWhere((element) => noteIds.contains(element.id));
-
-    List<Map<String, dynamic>> jsonList = notes.map((e) => e.json).toList();
-
-    prefs.setString(key, jsonEncode(jsonList));
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => noteIds.contains(element.id));
     } else if (key == favoriteNotesKey) {

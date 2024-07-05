@@ -1,16 +1,15 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
-import 'package:sanjay_notes/Database/label_db.dart';
-import 'package:sanjay_notes/Database/list_model_db.dart';
+
 import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:versatile_dialogs/loading_dialog.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -76,6 +75,8 @@ initializeDb() async {
   DataManager().pinnedNotes = await FirestoreService().getPinnedNotes();
   DataManager().deletedNotes = await FirestoreService().getDeletedNotes();
   DataManager().remainderNotes = await FirestoreService().getRemainderNotes();
+
+  DataManager().listModels = await FirestoreService().getListModels();
 }
 
 initializeAwesomeNotification() {

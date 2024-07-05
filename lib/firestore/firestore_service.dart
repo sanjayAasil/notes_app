@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+
+import 'package:sanjay_notes/models/list_model.dart';
 
 import '../models/note.dart';
 
@@ -17,15 +18,16 @@ class FirestoreService {
 
   ///get collections of notes, lists
   final CollectionReference<Map<String, dynamic>> _notesCollection = FirebaseFirestore.instance.collection('notes');
-  final CollectionReference _listModelsCollection = FirebaseFirestore.instance.collection('listModels');
+  final CollectionReference<Map<String, dynamic>> _listModelsCollection =
+      FirebaseFirestore.instance.collection('listModels');
 
-  ///CREATE: adding notes
+  ///CREATE: adding notes, lists
   Future<void> addNote(Map<String, dynamic> note) async {
-    await _notesCollection.add(note);
+    await _notesCollection.doc(note['id']).set(note);
   }
 
   Future<void> addListModel(Map<String, dynamic> listModel) async {
-    await _listModelsCollection.add(listModel);
+    await _listModelsCollection.doc(listModel['id']).set(listModel);
   }
 
   ///READ: getting notes from firestore
@@ -41,14 +43,26 @@ class FirestoreService {
     return querySnapshot.docs.map((doc) => Note.fromJson(doc.data())).toList();
   }
 
-  Future<List<Note>> getArchivedNotes() async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _notesCollection
-        .where(isArchive, isEqualTo: true)
+  Future<List<ListModel>> getListModels() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _listModelsCollection
+        .where(isArchive, isEqualTo: false)
         .where(isDeleted, isEqualTo: false)
-        .where(isFavorite)
-        .where(isPinned)
+        .where(isFavorite, isEqualTo: false)
+        .where(isPinned, isEqualTo: false)
         .get();
+    return querySnapshot.docs.map((doc) => ListModel.fromJson(doc.data())).toList();
+  }
+
+  Future<List<Note>> getArchivedNotes() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await _notesCollection.where(isArchive, isEqualTo: true).where(isDeleted, isEqualTo: false).get();
     return querySnapshot.docs.map((doc) => Note.fromJson(doc.data())).toList();
+  }
+
+  Future<List<ListModel>> getArchivedListModels() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await _listModelsCollection.where(isArchive, isEqualTo: true).where(isDeleted, isEqualTo: false).get();
+    return querySnapshot.docs.map((doc) => ListModel.fromJson(doc.data())).toList();
   }
 
   Future<List<Note>> getFavoriteNotes() async {
@@ -56,9 +70,17 @@ class FirestoreService {
         .where(isArchive, isEqualTo: false)
         .where(isDeleted, isEqualTo: false)
         .where(isFavorite, isEqualTo: true)
-        .where(isPinned)
         .get();
     return querySnapshot.docs.map((doc) => Note.fromJson(doc.data())).toList();
+  }
+
+  Future<List<ListModel>> getFavoriteListModels() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _listModelsCollection
+        .where(isArchive, isEqualTo: false)
+        .where(isDeleted, isEqualTo: false)
+        .where(isFavorite, isEqualTo: true)
+        .get();
+    return querySnapshot.docs.map((doc) => ListModel.fromJson(doc.data())).toList();
   }
 
   Future<List<Note>> getPinnedNotes() async {
@@ -71,32 +93,47 @@ class FirestoreService {
     return querySnapshot.docs.map((doc) => Note.fromJson(doc.data())).toList();
   }
 
-  Future<List<Note>> getDeletedNotes() async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _notesCollection
-        .where(isArchive)
-        .where(isDeleted, isEqualTo: true)
-        .where(isFavorite)
-        .where(isPinned)
+  Future<List<ListModel>> getPinnedListModels() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _listModelsCollection
+        .where(isArchive, isEqualTo: false)
+        .where(isDeleted, isEqualTo: false)
+        .where(isFavorite, isEqualTo: false)
+        .where(isPinned, isEqualTo: true)
         .get();
+    return querySnapshot.docs.map((doc) => ListModel.fromJson(doc.data())).toList();
+  }
+
+  Future<List<Note>> getDeletedNotes() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _notesCollection.where(isDeleted, isEqualTo: true).get();
     return querySnapshot.docs.map((doc) => Note.fromJson(doc.data())).toList();
   }
 
+  Future<List<ListModel>> getDeletedListModels() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await _listModelsCollection.where(isDeleted, isEqualTo: true).get();
+    return querySnapshot.docs.map((doc) => ListModel.fromJson(doc.data())).toList();
+  }
+
   Future<List<Note>> getRemainderNotes() async {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await _notesCollection
-        .where(isArchive)
-        .where(isDeleted, isEqualTo: false)
-        .where(isFavorite)
-        .where(isPinned)
-        .where('scheduleTime', isNotEqualTo: null)
-        .get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await _notesCollection.where(isDeleted, isEqualTo: false).where('scheduleTime', isGreaterThan: 0).get();
     return querySnapshot.docs.map((doc) => Note.fromJson(doc.data())).toList();
+  }
+
+  Future<List<ListModel>> getRemainderListModels() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await _listModelsCollection.where(isDeleted, isEqualTo: false).where('scheduleTime', isGreaterThan: 0).get();
+    return querySnapshot.docs.map((doc) => ListModel.fromJson(doc.data())).toList();
   }
 
   /// UPDATE: updating notes in firestore
 
   ///DELETE:  Deleting notes in firestore
-  Future<void> deleteNote(String docId) async {
-    debugPrint("FirestoreService deleteNote: called delete");
-    await _notesCollection.doc(docId).delete();
+  Future<void> deleteNote(String noteId) async {
+    await _notesCollection.doc(noteId).delete();
+  }
+
+  Future<void> deleteListModel(String noteId) async {
+    await _listModelsCollection.doc(noteId).delete();
   }
 }
