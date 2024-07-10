@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/models/list_model.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
-import 'package:sanjay_notes/utils.dart';
+import 'package:sanjay_notes/Common/utils.dart';
 
 class NewListScreen extends StatefulWidget {
   const NewListScreen({super.key});
@@ -275,7 +275,7 @@ class _NewListScreenState extends State<NewListScreen> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(right: 10.0),
+                                padding: const EdgeInsets.only(right: 10.0),
                                 child: Icon(
                                   Icons.delete_outline_outlined,
                                   color: Colors.grey.shade800,
@@ -730,12 +730,12 @@ class ColorsTile extends StatelessWidget {
   final bool isSelected;
 
   const ColorsTile({
-    Key? key,
+    super.key,
     required this.color,
     this.onColorChanging,
     this.icon,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/models/list_model.dart';
-import 'package:sanjay_notes/widget_helper.dart';
+import 'package:sanjay_notes/Common/widget_helper.dart';
 import '../models/note.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -119,51 +119,27 @@ class _SearchScreenState extends State<SearchScreen> {
       listModelResult.clear();
     } else {
       noteResult = [
-        ...DataManager().notes.where((element) => element.title.toLowerCase().contains(search.toLowerCase())).toList(),
-        ...DataManager().notes.where((element) => element.note.toLowerCase().contains(search.toLowerCase())).toList(),
-        ...DataManager()
-            .favoriteNotes
-            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
-        ...DataManager()
-            .favoriteNotes
-            .where((element) => element.note.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
-        ...DataManager()
-            .archivedNotes
-            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
-        ...DataManager()
-            .archivedNotes
-            .where((element) => element.note.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
-        ...DataManager()
-            .pinnedNotes
-            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
-        ...DataManager()
-            .pinnedNotes
-            .where((element) => element.note.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
+        ...DataManager().notes.where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
+        ...DataManager().notes.where((element) => element.note.toLowerCase().contains(search.toLowerCase())),
+        ...DataManager().favoriteNotes.where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
+        ...DataManager().favoriteNotes.where((element) => element.note.toLowerCase().contains(search.toLowerCase())),
+        ...DataManager().archivedNotes.where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
+        ...DataManager().archivedNotes.where((element) => element.note.toLowerCase().contains(search.toLowerCase())),
+        ...DataManager().pinnedNotes.where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
+        ...DataManager().pinnedNotes.where((element) => element.note.toLowerCase().contains(search.toLowerCase())),
       ];
 
       listModelResult = [
-        ...DataManager()
-            .listModels
-            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
+        ...DataManager().listModels.where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
         ...DataManager()
             .pinnedListModels
-            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
         ...DataManager()
             .archivedListModels
-            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
         ...DataManager()
             .favoriteListModels
-            .where((element) => element.title.toLowerCase().contains(search.toLowerCase()))
-            .toList(),
+            .where((element) => element.title.toLowerCase().contains(search.toLowerCase())),
       ];
     }
     setState(() {

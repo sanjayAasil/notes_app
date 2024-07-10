@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
-import 'package:sanjay_notes/utils.dart';
-import 'package:versatile_dialogs/loading_dialog.dart';
 
-import '../../main.dart';
+import '../../Common/utils.dart';
 import '../../models/list_model.dart';
 import '../../models/note.dart';
-import '../../widget_helper.dart';
+import '../../Common/widget_helper.dart';
 
 class HomeScreenListView extends StatefulWidget {
   const HomeScreenListView({super.key});

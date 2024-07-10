@@ -7,7 +7,7 @@ import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
-import 'package:sanjay_notes/utils.dart';
+import 'package:sanjay_notes/Common/utils.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
 
 import '../../Database/data_manager.dart';

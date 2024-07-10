@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
-import 'package:sanjay_notes/widget_helper.dart';
+import 'package:sanjay_notes/Common/widget_helper.dart';
 import '../../models/list_model.dart';
 import '../my_drawer.dart';
 import '../../models/note.dart';

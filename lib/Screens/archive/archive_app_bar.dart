@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/providers/archive_provider.dart';
-import 'package:sanjay_notes/utils.dart';
+import 'package:sanjay_notes/Common/utils.dart';
 import '../../Database/data_manager.dart';
 import '../../models/list_model.dart';
 import '../../models/note.dart';

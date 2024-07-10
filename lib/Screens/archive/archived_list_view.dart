@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/providers/archive_provider.dart';
-import 'package:sanjay_notes/widget_helper.dart';
+import 'package:sanjay_notes/Common/widget_helper.dart';
+
 import '../../Database/data_manager.dart';
 import '../../models/list_model.dart';
 import '../../models/note.dart';
 
 class ArchivedListView extends StatefulWidget {
-  const ArchivedListView({
-    Key? key,
-  }) : super(key: key);
+  const ArchivedListView({super.key});
 
   @override
   State<ArchivedListView> createState() => _ArchivedListViewState();

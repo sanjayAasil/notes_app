@@ -6,8 +6,8 @@ import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Screens/my_drawer.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/providers/deleted-provider.dart';
-import 'package:sanjay_notes/utils.dart';
-import 'package:sanjay_notes/widget_helper.dart';
+import '../Common/utils.dart';
+import '../Common/widget_helper.dart';
 import '../models/list_model.dart';
 import '../models/note.dart';
 

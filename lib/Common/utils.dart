@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
 
-import 'main.dart';
+import '../main.dart';
 
 class Utils {
   Utils._();

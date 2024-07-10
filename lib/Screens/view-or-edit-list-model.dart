@@ -5,7 +5,7 @@ import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/models/list_model.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 
-import 'package:sanjay_notes/utils.dart';
+import 'package:sanjay_notes/Common/utils.dart';
 
 class ViewOrEditListModel extends StatefulWidget {
   final ListModel listModel;
@@ -961,12 +961,12 @@ class ColorsTile extends StatelessWidget {
   final bool isSelected;
 
   const ColorsTile({
-    Key? key,
+    super.key,
     required this.color,
     this.onColorChanging,
     this.icon,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1001,7 +1001,7 @@ class ColorsTile extends StatelessWidget {
 class ListModelForDeletedScreen extends StatelessWidget {
   final ListModel listModel;
 
-  const ListModelForDeletedScreen({Key? key, required this.listModel}) : super(key: key);
+  const ListModelForDeletedScreen({super.key, required this.listModel});
 
   @override
   Widget build(BuildContext context) {

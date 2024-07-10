@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:sanjay_notes/routes.dart';
-import 'firebase_options.dart';
+import 'firebase/firebase_options.dart';
 import 'package:http/http.dart' as http;
 
 void main() async {

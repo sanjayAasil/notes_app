@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/Screens/deleted_screen.dart';
 import 'package:sanjay_notes/Screens/my_drawer.dart';
-import 'package:sanjay_notes/main.dart';
+
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/routes.dart';
-import 'package:versatile_dialogs/loading_dialog.dart';
+
 import '../archive/archive_screen.dart';
 import '../favorite/favorite_screen.dart';
 import '../remainder/remainder_screen.dart';
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class NotesScreen extends StatelessWidget {
-  const NotesScreen({Key? key}) : super(key: key);
+  const NotesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

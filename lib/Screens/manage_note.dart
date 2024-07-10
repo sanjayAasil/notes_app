@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/models/note.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
-import 'package:sanjay_notes/utils.dart';
+import 'package:sanjay_notes/Common/utils.dart';
 
 class ManageNotePage extends StatefulWidget {
   final Note? note;
@@ -1007,12 +1007,12 @@ class ColorsTile extends StatelessWidget {
   final Function? onColorChanging;
 
   const ColorsTile({
-    Key? key,
+    super.key,
     required this.color,
     this.onColorChanging,
     this.isSelected = false,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1047,7 +1047,7 @@ class ColorsTile extends StatelessWidget {
 class NoteForDeletedScreen extends StatelessWidget {
   final Note note;
 
-  const NoteForDeletedScreen({Key? key, required this.note}) : super(key: key);
+  const NoteForDeletedScreen({super.key, required this.note});
 
   @override
   Widget build(BuildContext context) {
