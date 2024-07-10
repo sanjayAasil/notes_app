@@ -1115,7 +1115,7 @@ class NoteForDeletedScreen extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  NotesDb.removeNote(NotesDb.deletedNotesKey, note.id);
+                  NotesDb.removeNote(NotesDb.deletedNotesKey, note.id, permanentDelete: true);
                   Navigator.of(context).pop();
 
                   ScaffoldMessenger.of(context).showSnackBar(

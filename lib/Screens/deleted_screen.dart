@@ -233,10 +233,10 @@ class _DeletedScreenState extends State<DeletedScreen> {
 
   onDelete() {
     if (DataManager().deletedNotes.isNotEmpty) {
-      NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds);
+      NotesDb.removeNotes(NotesDb.deletedNotesKey, selectedIds, permanentDelete: true);
     }
     if (DataManager().deletedListModels.isNotEmpty) {
-      ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds);
+      ListModelsDb.removeListModels(ListModelsDb.deletedListModelKey, selectedIds, permanentDelete: true);
     }
     deletedProvider.clearSelectedIds();
     DataManager().notify();

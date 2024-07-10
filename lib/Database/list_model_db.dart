@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:sanjay_notes/models/list_model.dart';
-import 'package:sanjay_notes/Database/notes_db.dart';
 
 class ListModelsDb {
   ListModelsDb._();
@@ -17,7 +13,6 @@ class ListModelsDb {
   static const remainderListModelKey = 'remainderListModelKey';
 
   static addListModel(String key, ListModel listModel) {
-    ///adding listmodel to firestore
     FirestoreService().addListModel(listModel.json);
 
     if (key == listModelKey) {
@@ -36,6 +31,9 @@ class ListModelsDb {
   }
 
   static addListModels(String key, List<ListModel> listModels) {
+    for (ListModel listModel in listModels) {
+      FirestoreService().addListModel(listModel.json);
+    }
     if (key == listModelKey) {
       DataManager().listModels.addAll(listModels);
     } else if (key == archivedListModelKey) {
@@ -51,7 +49,10 @@ class ListModelsDb {
     }
   }
 
-  static removeListModel(String key, String listModelId) {
+  static removeListModel(String key, String listModelId, {bool permanentDelete = false}) {
+    if (permanentDelete) {
+      FirestoreService().deleteListModel(listModelId);
+    }
     if (key == listModelKey) {
       DataManager().listModels.removeWhere((element) => element.id == listModelId);
     } else if (key == archivedListModelKey) {
@@ -67,7 +68,12 @@ class ListModelsDb {
     }
   }
 
-  static removeListModels(String key, List<String> listModelIds) {
+  static removeListModels(String key, List<String> listModelIds, {bool permanentDelete = false}) {
+    if (permanentDelete) {
+      for (String id in listModelIds) {
+        FirestoreService().deleteListModel(id);
+      }
+    }
     if (key == listModelKey) {
       DataManager().listModels.removeWhere((element) => listModelIds.contains(element.id));
     } else if (key == archivedListModelKey) {

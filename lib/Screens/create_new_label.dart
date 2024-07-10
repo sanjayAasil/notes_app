@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/Database/label_db.dart';
 
-
 class CreateNewLabelScreen extends StatefulWidget {
   const CreateNewLabelScreen({super.key});
 

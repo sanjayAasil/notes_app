@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
+import 'package:sanjay_notes/utils.dart';
+import 'package:versatile_dialogs/loading_dialog.dart';
 
+import '../../main.dart';
 import '../../models/list_model.dart';
 import '../../models/note.dart';
 import '../../widget_helper.dart';
 
 class HomeScreenListView extends StatefulWidget {
-  const HomeScreenListView({Key? key}) : super(key: key);
+  const HomeScreenListView({super.key});
 
   @override
   State<HomeScreenListView> createState() => _HomeScreenListViewState();
@@ -28,67 +31,77 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
     context.watch<HomeScreenProvider>();
     context.watch<DataManager>();
     _timeSorting();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (DataManager().pinnedNotes.isNotEmpty || DataManager().pinnedListModels.isNotEmpty)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Text(
-                  'Pinned',
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-              ),
-              for (Note note in DataManager().pinnedNotes)
-                NoteTileListView(
-                  note: note,
-                  selectedIds: homeScreenProvider.selectedIds,
-                  onUpdateRequest: () => homeScreenProvider.notify(),
-                ),
-              for (ListModel listModel in DataManager().pinnedListModels)
-                ListModelTileListView(
-                  selectedIds: homeScreenProvider.selectedIds,
-                  listModel: listModel,
-                  onUpdateRequest: () => homeScreenProvider.notify(),
-                )
-            ],
-          ),
-        Column(
+    return RefreshIndicator(
+      color: Colors.blue.shade700,
+      onRefresh: () async {
+        await Utils.refresh(context);
+        setState(() {});
+      },
+      child: ListView.builder(
+        itemCount: 1,
+        itemBuilder: (BuildContext context, int index) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (DataManager().pinnedNotes.isNotEmpty && DataManager().notes.isNotEmpty ||
-                DataManager().pinnedNotes.isNotEmpty && DataManager().listModels.isNotEmpty ||
-                DataManager().pinnedListModels.isNotEmpty && DataManager().listModels.isNotEmpty ||
-                DataManager().pinnedListModels.isNotEmpty && DataManager().notes.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Text(
-                  'Others',
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
+            if (DataManager().pinnedNotes.isNotEmpty || DataManager().pinnedListModels.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    child: Text(
+                      'Pinned',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
                   ),
-                ),
+                  for (Note note in DataManager().pinnedNotes)
+                    NoteTileListView(
+                      note: note,
+                      selectedIds: homeScreenProvider.selectedIds,
+                      onUpdateRequest: () => homeScreenProvider.notify(),
+                    ),
+                  for (ListModel listModel in DataManager().pinnedListModels)
+                    ListModelTileListView(
+                      selectedIds: homeScreenProvider.selectedIds,
+                      listModel: listModel,
+                      onUpdateRequest: () => homeScreenProvider.notify(),
+                    )
+                ],
               ),
-            for (Note note in DataManager().notes)
-              NoteTileListView(
-                note: note,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (DataManager().pinnedNotes.isNotEmpty && DataManager().notes.isNotEmpty ||
+                    DataManager().pinnedNotes.isNotEmpty && DataManager().listModels.isNotEmpty ||
+                    DataManager().pinnedListModels.isNotEmpty && DataManager().listModels.isNotEmpty ||
+                    DataManager().pinnedListModels.isNotEmpty && DataManager().notes.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    child: Text(
+                      'Others',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                for (Note note in DataManager().notes)
+                  NoteTileListView(
+                    note: note,
+                    selectedIds: homeScreenProvider.selectedIds,
+                    onUpdateRequest: () => homeScreenProvider.notify(),
+                  ),
+              ],
+            ),
+            for (ListModel listModel in DataManager().listModels)
+              ListModelTileListView(
                 selectedIds: homeScreenProvider.selectedIds,
+                listModel: listModel,
                 onUpdateRequest: () => homeScreenProvider.notify(),
               ),
           ],
         ),
-        for (ListModel listModel in DataManager().listModels)
-          ListModelTileListView(
-            selectedIds: homeScreenProvider.selectedIds,
-            listModel: listModel,
-            onUpdateRequest: () => homeScreenProvider.notify(),
-          ),
-      ],
+      ),
     );
   }
 

@@ -54,7 +54,10 @@ class NotesDb {
     }
   }
 
-  static removeNote(String key, String noteId) async {
+  static removeNote(String key, String noteId, {bool permanentDelete = false}) async {
+    if (permanentDelete) {
+      FirestoreService().deleteNote(noteId);
+    }
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => element.id == noteId);
     } else if (key == favoriteNotesKey) {
@@ -70,7 +73,12 @@ class NotesDb {
     }
   }
 
-  static removeNotes(String key, List<String> noteIds) {
+  static removeNotes(String key, List<String> noteIds, {bool permanentDelete = false}) {
+    if (permanentDelete) {
+      for (String id in noteIds) {
+        FirestoreService().deleteNote(id);
+      }
+    }
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => noteIds.contains(element.id));
     } else if (key == favoriteNotesKey) {

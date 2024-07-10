@@ -148,8 +148,8 @@ class FirestoreService {
     await _notesCollection.doc(noteId).delete();
   }
 
-  Future<void> deleteListModel(String noteId) async {
-    await _listModelsCollection.doc(noteId).delete();
+  Future<void> deleteListModel(String listModelId) async {
+    await _listModelsCollection.doc(listModelId).delete();
   }
 
   Future<void> deleteLabels() async {

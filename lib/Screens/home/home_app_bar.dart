@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/list_model_db.dart';
 import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
-import 'package:sanjay_notes/firestore/firestore_service.dart';
 
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/utils.dart';
@@ -24,7 +23,7 @@ class DefaultHomeAppBar extends StatefulWidget {
 }
 
 class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
-  User user = DataManager().user!;
+  User? user = DataManager().user;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +45,7 @@ class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
                   padding: const EdgeInsets.only(left: 20),
                   child: Icon(
                     Icons.menu,
-                    size: 25,
+                    size: 30,
                     color: Colors.grey.shade800,
                   ),
                 ),
@@ -82,16 +81,32 @@ class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: InkWell(
+            if (user?.photoURL == null)
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: InkWell(
                   onTap: _showProfile,
                   child: Icon(
                     Icons.account_circle_outlined,
                     size: 30,
                     color: Colors.grey.shade800,
-                  )),
-            ),
+                  ),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: InkWell(
+                  onTap: _showProfile,
+                  child: ClipOval(
+                    child: Image.network(
+                      '${user!.photoURL}',
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -102,28 +117,47 @@ class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        icon: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(40),
+        icon: InkWell(
+          onTap: _showProfile,
+          child: user?.photoURL != null
+              ? FittedBox(
+                  child: Image.network(
+                    '${user!.photoURL}',
+                  ),
+                )
+              : const Icon(
+                  CupertinoIcons.profile_circled,
+                  size: 60,
+                ),
+        ),
+        content: FittedBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (user?.uid != null) Text('Id: ${user!.uid}'),
+              if (user?.displayName != null) Text('Name: ${user!.displayName}'),
+              if (user?.email != null) Text('Email: ${user!.email}'),
+              if (user?.phoneNumber != null) Text('Ph.No: ${user!.phoneNumber}'),
+            ],
           ),
-          child: FittedBox(child: Image.network(user.photoURL.toString())),
         ),
-        title: const Text('Profile'),
-        content: TextButton(
-          onPressed: () async {
-            LoadingDialog loadingDialog = LoadingDialog()..show(context);
+        actions: [
+          TextButton(
+            onPressed: () async {
+              LoadingDialog loadingDialog = LoadingDialog()..show(context);
 
-            await FirebaseAuthManager().signOut();
+              await FirebaseAuthManager().signOut();
 
-            if (context.mounted) {
-              loadingDialog.dismiss(context);
-              Navigator.of(context).pop();
+              if (context.mounted) {
+                loadingDialog.dismiss(context);
+                Navigator.of(context).pop();
 
-              Navigator.of(context).pushNamed(Routes.mainScreen);
-            }
-          },
-          child: Text('Sign Out'),
-        ),
+                Navigator.of(context).pushNamed(Routes.mainScreen);
+              }
+            },
+            child: const Text('Sign Out'),
+          ),
+        ],
       ),
     );
   }

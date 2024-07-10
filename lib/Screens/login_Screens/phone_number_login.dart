@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
@@ -49,7 +51,7 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(40),
-                  topRight: const Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
                 color: Colors.white,
               ),
@@ -72,30 +74,31 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue.shade700),
                             ),
                     ),
-                    otpSent
-                        ? TextField(
-                            textInputAction: TextInputAction.next,
-                            controller: otpController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              hintText: 'Enter OTP',
-                              hintStyle: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: 15,
-                              ),
-                            ),
-                          )
-                        : TextField(
-                            controller: phoneNumberController,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              hintText: 'Enter Mobile Number',
-                              hintStyle: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: 15,
-                              ),
-                            ),
+                    if (otpSent)
+                      TextField(
+                        textInputAction: TextInputAction.next,
+                        controller: otpController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'Enter OTP',
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 15,
                           ),
+                        ),
+                      )
+                    else
+                      TextField(
+                        controller: phoneNumberController,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          hintText: 'Enter Mobile Number',
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 70),
                     if (otpSent)
                       InkWell(
@@ -105,8 +108,10 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                             message: 'Signing In',
                             progressbarColor: Colors.blue.shade700,
                           )..show(context);
-                          await FirebaseAuthManager().signInWithOtp(otpController.text.trim(), verificationId);
+                          User? user =
+                              await FirebaseAuthManager().signInWithOtp(context, otpController.text.trim(), verificationId);
                           if (context.mounted) {
+                            DataManager().user = user;
                             loadingDialog.dismiss(context);
                             Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
                           }

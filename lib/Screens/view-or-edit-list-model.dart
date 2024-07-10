@@ -1059,7 +1059,7 @@ class ListModelForDeletedScreen extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id);
+                  ListModelsDb.removeListModel(ListModelsDb.deletedListModelKey, listModel.id, permanentDelete: true);
                   Navigator.of(context).pop();
                   DataManager().notify();
                 },

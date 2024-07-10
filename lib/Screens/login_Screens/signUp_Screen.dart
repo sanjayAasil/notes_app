@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
 
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
@@ -185,6 +186,7 @@ signUp(BuildContext context, String email, String password) async {
     return null;
   }
   if (context.mounted) {
+    DataManager().user = user;
     loadingDialog.dismiss(context);
 
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);

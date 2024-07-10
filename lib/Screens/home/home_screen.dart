@@ -96,22 +96,7 @@ class NotesScreen extends StatelessWidget {
             )
           else
             Expanded(
-              child: RefreshIndicator(
-                color: Colors.blue,
-                onRefresh: () async {
-                  if (context.mounted) {
-                    LoadingDialog loadingDialog = LoadingDialog(message: 'Syncing', progressbarColor: Colors.blue)
-                      ..show(context);
-                    await initializeDb();
-                    loadingDialog.dismiss(context);
-                  }
-                },
-                child: ListView.builder(
-                  itemCount: 1,
-                  itemBuilder: (context, index) =>
-                      DataManager().homeScreenView ? const HomeScreenListView() : const HomeScreenGridView(),
-                ),
-              ),
+              child: DataManager().homeScreenView ? const HomeScreenListView() : const HomeScreenGridView(),
             ),
 
           Container(

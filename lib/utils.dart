@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:versatile_dialogs/loading_dialog.dart';
+
+import 'main.dart';
 
 class Utils {
   Utils._();
@@ -76,5 +79,13 @@ class Utils {
           contentPadding: const EdgeInsets.all(20),
           content: Text('Do you want to $content?')),
     );
+  }
+
+  static refresh(BuildContext context) async {
+    if (context.mounted) {
+      LoadingDialog loadingDialog = LoadingDialog(message: 'Syncing', progressbarColor: Colors.blue)..show(context);
+      await initializeDb();
+      loadingDialog.dismiss(context);
+    }
   }
 }

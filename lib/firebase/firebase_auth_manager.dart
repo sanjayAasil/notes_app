@@ -33,9 +33,10 @@ class FirebaseAuthManager {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: SnackBar(
-            content: Text(' ${e.message}'),
-          )),
+            content: SnackBar(
+              content: Text(' ${e.message}'),
+            ),
+          ),
         );
       }
 
@@ -67,16 +68,24 @@ class FirebaseAuthManager {
         codeSent: onCodeSent,
         codeAutoRetrievalTimeout: (String verificationId) {
           verificationId = verificationId;
-          debugPrint("FirebaseAuthManager requestOTP: codeAutoRetrieval Timedout");
+
           //timeout for auto phone resolution
         },
       );
-    } catch (e) {
-      debugPrint("FirebaseAuthManager requestOTP: $e");
+    } on FirebaseException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: SnackBar(
+              content: Text(' ${e.message}'),
+            ),
+          ),
+        );
+      }
     }
   }
 
-  Future<User?> signInWithOtp(String otp, String verificationId) async {
+  Future<User?> signInWithOtp(BuildContext context, String otp, String verificationId) async {
     try {
       debugPrint("FirebaseAuthManager signInWithOtp: check $verificationId");
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -88,8 +97,17 @@ class FirebaseAuthManager {
       final UserCredential userCredential = await auth.signInWithCredential(credential);
       debugPrint("FirebaseAuthManager signInWithOtp: $credential");
       return userCredential.user;
-    } catch (e) {
-      debugPrint("FirebaseAuthManager signInWithOtp: $e");
+    } on FirebaseException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: SnackBar(
+              content: Text(' ${e.message}'),
+            ),
+          ),
+        );
+      }
+
       return null;
     }
   }
