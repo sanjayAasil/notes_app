@@ -1,28 +1,26 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
-
-import 'package:sanjay_notes/Database/notes_db.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:sanjay_notes/routes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'firebase_options.dart';
+import 'package:http/http.dart' as http;
 
 void main() async {
-  debugPrint(" main: init");
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  prefs = await SharedPreferences.getInstance();
-  initializeAwesomeNotification();
-  await initializeDb();
+  bool isConnectedToInternet = await hasInternetConnection();
+
+  if (isConnectedToInternet) {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+    initializeAwesomeNotification();
+
+    await initializeDb();
+  }
   runApp(const MyApp());
-  debugPrint(" main: check main");
 }
 
 class MyApp extends StatefulWidget {
@@ -52,23 +50,6 @@ class _MyAppState extends State<MyApp> {
 }
 
 initializeDb() async {
-  //DataManager().notes = NotesDb.getAllNotes(NotesDb.notesKey);
-  // DataManager().archivedNotes = NotesDb.getAllNotes(NotesDb.archivedNotesKey);
-  // DataManager().favoriteNotes = NotesDb.getAllNotes(NotesDb.favoriteNotesKey);
-  // DataManager().pinnedNotes = NotesDb.getAllNotes(NotesDb.pinnedNotesKey);
-  // DataManager().deletedNotes = NotesDb.getAllNotes(NotesDb.deletedNotesKey);
-  // DataManager().remainderNotes = NotesDb.getAllNotes(NotesDb.remainderNotesKey);
-  //
-  // DataManager().listModels = ListModelsDb.getAllListModels(ListModelsDb.listModelKey);
-  // DataManager().deletedListModels = ListModelsDb.getAllListModels(ListModelsDb.deletedListModelKey);
-  // DataManager().pinnedListModels = ListModelsDb.getAllListModels(ListModelsDb.pinnedListModelKey);
-  // DataManager().favoriteListModels = ListModelsDb.getAllListModels(ListModelsDb.favoriteListModelKey);
-  // DataManager().archivedListModels = ListModelsDb.getAllListModels(ListModelsDb.archivedListModelKey);
-  // DataManager().remainderListModels = ListModelsDb.getAllListModels(ListModelsDb.remainderListModelKey);
-  //
-  // DataManager().labels = LabelsDb.getAllLabels();
-
-  ///Firestore fetchings
   DataManager().notes = await FirestoreService().getNotes();
   DataManager().archivedNotes = await FirestoreService().getArchivedNotes();
   DataManager().favoriteNotes = await FirestoreService().getFavoriteNotes();
@@ -77,11 +58,11 @@ initializeDb() async {
   DataManager().remainderNotes = await FirestoreService().getRemainderNotes();
 
   DataManager().listModels = await FirestoreService().getListModels();
-  DataManager().deletedListModels =  await FirestoreService().getDeletedListModels();
-  DataManager().pinnedListModels =    await FirestoreService().getPinnedListModels();
-  DataManager().favoriteListModels =  await FirestoreService().getFavoriteListModels();
-  DataManager().archivedListModels =  await FirestoreService().getArchivedListModels();
-  DataManager().remainderListModels =  await FirestoreService().getRemainderListModels();
+  DataManager().deletedListModels = await FirestoreService().getDeletedListModels();
+  DataManager().pinnedListModels = await FirestoreService().getPinnedListModels();
+  DataManager().favoriteListModels = await FirestoreService().getFavoriteListModels();
+  DataManager().archivedListModels = await FirestoreService().getArchivedListModels();
+  DataManager().remainderListModels = await FirestoreService().getRemainderListModels();
 
   DataManager().labels = await FirestoreService().getLabels();
 }
@@ -100,4 +81,13 @@ initializeAwesomeNotification() {
       ),
     ],
   );
+}
+
+Future<bool> hasInternetConnection() async {
+  try {
+    final response = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 5));
+    return response.statusCode == 200;
+  } catch (e) {
+    return false;
+  }
 }

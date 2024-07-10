@@ -28,72 +28,67 @@ class _HomeScreenListViewState extends State<HomeScreenListView> {
     context.watch<HomeScreenProvider>();
     context.watch<DataManager>();
     _timeSorting();
-    return RefreshIndicator(
-      onRefresh: () async{
-        debugPrint("_HomeScreenListViewState build: ");
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (DataManager().pinnedNotes.isNotEmpty || DataManager().pinnedListModels.isNotEmpty)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  child: Text(
-                    'Pinned',
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
-                    ),
-                  ),
-                ),
-                for (Note note in DataManager().pinnedNotes)
-                  NoteTileListView(
-                    note: note,
-                    selectedIds: homeScreenProvider.selectedIds,
-                    onUpdateRequest: () => homeScreenProvider.notify(),
-                  ),
-                for (ListModel listModel in DataManager().pinnedListModels)
-                  ListModelTileListView(
-                    selectedIds: homeScreenProvider.selectedIds,
-                    listModel: listModel,
-                    onUpdateRequest: () => homeScreenProvider.notify(),
-                  )
-              ],
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (DataManager().pinnedNotes.isNotEmpty || DataManager().pinnedListModels.isNotEmpty)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (DataManager().pinnedNotes.isNotEmpty && DataManager().notes.isNotEmpty ||
-                  DataManager().pinnedNotes.isNotEmpty && DataManager().listModels.isNotEmpty ||
-                  DataManager().pinnedListModels.isNotEmpty && DataManager().listModels.isNotEmpty ||
-                  DataManager().pinnedListModels.isNotEmpty && DataManager().notes.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  child: Text(
-                    'Others',
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
-                    ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Text(
+                  'Pinned',
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
                   ),
                 ),
-              for (Note note in DataManager().notes)
+              ),
+              for (Note note in DataManager().pinnedNotes)
                 NoteTileListView(
                   note: note,
                   selectedIds: homeScreenProvider.selectedIds,
                   onUpdateRequest: () => homeScreenProvider.notify(),
                 ),
+              for (ListModel listModel in DataManager().pinnedListModels)
+                ListModelTileListView(
+                  selectedIds: homeScreenProvider.selectedIds,
+                  listModel: listModel,
+                  onUpdateRequest: () => homeScreenProvider.notify(),
+                )
             ],
           ),
-          for (ListModel listModel in DataManager().listModels)
-            ListModelTileListView(
-              selectedIds: homeScreenProvider.selectedIds,
-              listModel: listModel,
-              onUpdateRequest: () => homeScreenProvider.notify(),
-            ),
-        ],
-      ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (DataManager().pinnedNotes.isNotEmpty && DataManager().notes.isNotEmpty ||
+                DataManager().pinnedNotes.isNotEmpty && DataManager().listModels.isNotEmpty ||
+                DataManager().pinnedListModels.isNotEmpty && DataManager().listModels.isNotEmpty ||
+                DataManager().pinnedListModels.isNotEmpty && DataManager().notes.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Text(
+                  'Others',
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ),
+            for (Note note in DataManager().notes)
+              NoteTileListView(
+                note: note,
+                selectedIds: homeScreenProvider.selectedIds,
+                onUpdateRequest: () => homeScreenProvider.notify(),
+              ),
+          ],
+        ),
+        for (ListModel listModel in DataManager().listModels)
+          ListModelTileListView(
+            selectedIds: homeScreenProvider.selectedIds,
+            listModel: listModel,
+            onUpdateRequest: () => homeScreenProvider.notify(),
+          ),
+      ],
     );
   }
 

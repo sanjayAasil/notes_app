@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/Screens/deleted_screen.dart';
 import 'package:sanjay_notes/Screens/my_drawer.dart';
+import 'package:sanjay_notes/main.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/routes.dart';
+import 'package:versatile_dialogs/loading_dialog.dart';
 import '../archive/archive_screen.dart';
 import '../favorite/favorite_screen.dart';
 import '../remainder/remainder_screen.dart';
@@ -94,9 +96,21 @@ class NotesScreen extends StatelessWidget {
             )
           else
             Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: DataManager().homeScreenView ? const HomeScreenListView() : const HomeScreenGridView(),
+              child: RefreshIndicator(
+                color: Colors.blue,
+                onRefresh: () async {
+                  if (context.mounted) {
+                    LoadingDialog loadingDialog = LoadingDialog(message: 'Syncing', progressbarColor: Colors.blue)
+                      ..show(context);
+                    await initializeDb();
+                    loadingDialog.dismiss(context);
+                  }
+                },
+                child: ListView.builder(
+                  itemCount: 1,
+                  itemBuilder: (context, index) =>
+                      DataManager().homeScreenView ? const HomeScreenListView() : const HomeScreenGridView(),
+                ),
               ),
             ),
 

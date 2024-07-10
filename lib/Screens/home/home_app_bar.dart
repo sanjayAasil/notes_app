@@ -293,7 +293,7 @@ class SelectedHomeAppBar extends StatelessWidget {
 
     for (Note note in notes) {
       note.isDeleted = true;
-      FirestoreService().deleteNote(note.id);
+
       debugPrint("SelectedHomeAppBar onDeleted: delete check");
     }
     for (Note note in pinnedNotes) {

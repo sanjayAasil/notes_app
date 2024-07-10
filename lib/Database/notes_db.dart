@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'data_manager.dart';
 import '../models/note.dart';
-
-late SharedPreferences prefs;
 
 class NotesDb {
   NotesDb._();
@@ -73,11 +71,6 @@ class NotesDb {
   }
 
   static removeNotes(String key, List<String> noteIds) {
-    for (String noteId in noteIds) {
-      debugPrint("NotesDb removeNotes: $noteIds");
-      FirestoreService().deleteNote(noteId);
-    }
-
     if (key == notesKey) {
       DataManager().notes.removeWhere((element) => noteIds.contains(element.id));
     } else if (key == favoriteNotesKey) {

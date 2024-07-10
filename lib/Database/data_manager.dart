@@ -18,7 +18,7 @@ class DataManager extends ChangeNotifier {
 
   static final DataManager _instance = DataManager._();
 
-  DataManager._() : _settingsModel = SettingsModel.fromJson(jsonDecode(prefs.getString('settings') ?? '{}'));
+  DataManager._() : _settingsModel = SettingsModel.fromJson({});
 
   factory DataManager() => _instance;
 
