@@ -1,8 +1,10 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
+import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/firestore/firestore_service.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'firebase/firebase_options.dart';
@@ -17,8 +19,8 @@ void main() async {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
     initializeAwesomeNotification();
-
-    await initializeDb();
+    User? user = DataManager().user = FirebaseAuth.instance.currentUser;
+    if (user != null) await initializeDb();
   }
   runApp(const MyApp());
 }
@@ -50,6 +52,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 initializeDb() async {
+  debugPrint(" initializeDb: start");
   DataManager().notes = await FirestoreService().getNotes();
   DataManager().archivedNotes = await FirestoreService().getArchivedNotes();
   DataManager().favoriteNotes = await FirestoreService().getFavoriteNotes();
@@ -65,6 +68,8 @@ initializeDb() async {
   DataManager().remainderListModels = await FirestoreService().getRemainderListModels();
 
   DataManager().labels = await FirestoreService().getLabels();
+
+  debugPrint(" initializeDb: end");
 }
 
 initializeAwesomeNotification() {

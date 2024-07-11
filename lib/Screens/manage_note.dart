@@ -105,14 +105,15 @@ class _ManageNotePageState extends State<ManageNotePage> {
                           ),
                           const Expanded(child: SizedBox()),
                           if (widget.note == null || !widget.note!.isArchive)
-                            StatefulBuilder(builder: (context, setState) {
-                              return InkWell(
-                                onTap: () {
-                                  addToFavorite = !addToFavorite;
-                                  setState(() {});
-                                },
-                                borderRadius: BorderRadius.circular(40),
-                                child: Padding(
+                            StatefulBuilder(
+                              builder: (context, setState) {
+                                return InkWell(
+                                  onTap: () {
+                                    addToFavorite = !addToFavorite;
+                                    setState(() {});
+                                  },
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: addToFavorite
                                         ? Icon(
@@ -122,9 +123,11 @@ class _ManageNotePageState extends State<ManageNotePage> {
                                         : Icon(
                                             Icons.favorite_border,
                                             color: Colors.grey.shade800,
-                                          )),
-                              );
-                            }),
+                                          ),
+                                  ),
+                                );
+                              },
+                            ),
                           StatefulBuilder(builder: (context, setState) {
                             return InkWell(
                               onTap: () {
@@ -689,6 +692,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
     if (titleController.text.trim().isNotEmpty || noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
         Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
+        debugPrint("_ManageNotePageState onBackPressed: ${note.uid}");
         note.color = mainColor;
         if (_date != null && _timeOfDay != null) {
           note.scheduleTime = DateTime(

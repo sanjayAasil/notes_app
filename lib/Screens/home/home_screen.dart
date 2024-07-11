@@ -4,10 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/Screens/deleted_screen.dart';
 import 'package:sanjay_notes/Screens/my_drawer.dart';
-
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/routes.dart';
-
+import '../../main.dart';
 import '../archive/archive_screen.dart';
 import '../favorite/favorite_screen.dart';
 import '../remainder/remainder_screen.dart';
@@ -28,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     context.watch<DataManager>();
-
     return ChangeNotifierProvider(
       create: (_) => homeScreenProvider,
       builder: (context, child) {
@@ -148,8 +146,39 @@ class NotesScreen extends StatelessWidget {
           onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
           backgroundColor: Colors.grey.shade200,
           elevation: 20,
-          child: const Icon(Icons.add, size: 40, color: CupertinoColors.activeBlue),
+          child: GradientIcon(
+            Icons.add,
+            50,
+            LinearGradient(
+              colors: [Colors.white, Colors.blue, Colors.black],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class GradientIcon extends StatelessWidget {
+  final IconData icon;
+  final double size;
+  final Gradient gradient;
+
+  GradientIcon(this.icon, this.size, this.gradient);
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      blendMode: BlendMode.srcIn,
+      shaderCallback: (bounds) => gradient.createShader(
+        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+      ),
+      child: Icon(
+        icon,
+        size: size,
+        color: Colors.white, // Color is set to white to apply the gradient
       ),
     );
   }

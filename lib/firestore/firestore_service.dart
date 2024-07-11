@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
 
 import 'package:sanjay_notes/models/list_model.dart';
 
 import '../models/note.dart';
 
 class FirestoreService {
+  final String uid = 'uid';
   final String isArchive = 'isArchive';
   final String isDeleted = 'isDeleted';
   final String isFavorite = 'isFavorite';
@@ -41,6 +43,7 @@ class FirestoreService {
   //NOTES
   Future<List<Note>> getNotes() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await _notesCollection
+        .where(uid, isEqualTo: DataManager().user?.uid)
         .where(isArchive, isEqualTo: false)
         .where(isDeleted, isEqualTo: false)
         .where(isFavorite, isEqualTo: false)

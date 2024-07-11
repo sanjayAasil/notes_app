@@ -147,12 +147,13 @@ class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
               LoadingDialog loadingDialog = LoadingDialog()..show(context);
 
               await FirebaseAuthManager().signOut();
+              DataManager().user = null;
+              Utils.clearDataManagerData();
 
               if (context.mounted) {
                 loadingDialog.dismiss(context);
-                Navigator.of(context).pop();
 
-                Navigator.of(context).pushNamed(Routes.mainScreen);
+                Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
               }
             },
             child: const Text('Sign Out'),

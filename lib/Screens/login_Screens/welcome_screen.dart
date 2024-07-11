@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/Common/utils.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
+
+import '../../main.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -134,12 +137,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       debugPrint("_WelcomeScreenState signIn: ");
       LoadingDialog loadingDialog = LoadingDialog(progressbarColor: Colors.blue.shade700)..show(context);
       final User? user = await FirebaseAuthManager().signInWithGoogle(context);
+
       if (context.mounted) {
         loadingDialog.dismiss(context);
         Navigator.of(context).popAndPushNamed(Routes.mainScreen);
       }
-      if (user == null) return null;
+      if (user == null) return;
       DataManager().user = user;
+      Utils.clearDataManagerData();
+
+      await initializeDb();
+      DataManager().notify();
+      debugPrint("_WelcomeScreenState signInGoogle: ${user.uid}");
 
       if (context.mounted) {
         loadingDialog.dismiss(context);

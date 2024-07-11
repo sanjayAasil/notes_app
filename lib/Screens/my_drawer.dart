@@ -35,26 +35,14 @@ class MyDrawer extends StatelessWidget {
                     left: 25,
                     bottom: 25,
                   ),
-                  child: const Text(
-                    'Keep',
-                    style: TextStyle(
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
+                  child: GradientText(
+                    'Keep Notes',
+                    gradient: LinearGradient(
+                      colors: [Colors.blue.shade900, Colors.blue.shade600, Colors.blue.shade200],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 20,
-                    bottom: 25,
-                  ),
-                  child: const Text(
-                    ' Notes',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -216,6 +204,32 @@ class DrawerTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class GradientText extends StatelessWidget {
+  GradientText(
+    this.text, {
+    required this.gradient,
+    this.style,
+  });
+
+  final String text;
+  final TextStyle? style;
+  final Gradient gradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      blendMode: BlendMode.srcIn,
+      shaderCallback: (bounds) => gradient.createShader(
+        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+      ),
+      child: Text(
+        text,
+        style: style?.copyWith(color: Colors.white) ?? const TextStyle(color: Colors.white),
       ),
     );
   }

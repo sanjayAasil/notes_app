@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/Common/utils.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
+
+import '../../main.dart';
 
 class PhoneNumberLoginScreen extends StatefulWidget {
   const PhoneNumberLoginScreen({super.key});
@@ -108,8 +111,10 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                             message: 'Signing In',
                             progressbarColor: Colors.blue.shade700,
                           )..show(context);
-                          User? user =
-                              await FirebaseAuthManager().signInWithOtp(context, otpController.text.trim(), verificationId);
+                          User? user = await FirebaseAuthManager()
+                              .signInWithOtp(context, otpController.text.trim(), verificationId);
+                          Utils.clearDataManagerData();
+                          await initializeDb();
                           if (context.mounted) {
                             DataManager().user = user;
                             loadingDialog.dismiss(context);

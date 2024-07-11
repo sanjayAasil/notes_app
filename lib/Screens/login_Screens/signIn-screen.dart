@@ -4,7 +4,9 @@ import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
 
+import '../../Common/utils.dart';
 import '../../firebase/firebase_auth_manager.dart';
+import '../../main.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -172,6 +174,9 @@ _signIn(BuildContext context, String email, String password) async {
     ..show(context);
 
   User? user = await FirebaseAuthManager().signInWithEmail(context, email, password);
+  DataManager().user = user;
+  Utils.clearDataManagerData();
+  await initializeDb();
   if (user == null) {
     if (context.mounted) {
       loadingDialog.dismiss(context);
@@ -180,7 +185,7 @@ _signIn(BuildContext context, String email, String password) async {
   }
   if (context.mounted) {
     loadingDialog.dismiss(context);
-    DataManager().user = user;
+
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
   }
   debugPrint(" signUp: signedUp Successfully $user");

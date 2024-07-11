@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
 
+import '../Database/data_manager.dart';
 import '../main.dart';
 
 class Utils {
@@ -87,5 +88,23 @@ class Utils {
       await initializeDb();
       loadingDialog.dismiss(context);
     }
+  }
+
+  static clearDataManagerData() {
+    DataManager().notes.clear();
+    DataManager().archivedNotes.clear();
+    DataManager().favoriteNotes.clear();
+    DataManager().pinnedNotes.clear();
+    DataManager().deletedNotes.clear();
+    DataManager().remainderNotes.clear();
+
+    DataManager().listModels.clear();
+    DataManager().deletedListModels.clear();
+    DataManager().pinnedListModels.clear();
+    DataManager().favoriteListModels.clear();
+    DataManager().archivedListModels.clear();
+    DataManager().remainderListModels.clear();
+
+    DataManager().labels.clear();
   }
 }

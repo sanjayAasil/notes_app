@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sanjay_notes/Database/data_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class Note {
+  final String? uid;
   final String id;
   String title;
   String note;
@@ -15,6 +17,7 @@ class Note {
   DateTime? scheduleTime;
 
   Note._({
+    required this.uid,
     required this.id,
     required this.title,
     required this.note,
@@ -33,6 +36,7 @@ class Note {
     required String note,
   }) =>
       Note._(
+        uid: DataManager().user?.uid,
         id: const Uuid().v4(),
         title: title,
         note: note,
@@ -41,6 +45,7 @@ class Note {
 
   factory Note.fromJson(Map<String, dynamic> json) {
     return Note._(
+      uid: json['uid'],
       id: json['id'],
       title: json['title'],
       note: json['note'],
@@ -56,6 +61,7 @@ class Note {
   }
 
   Map<String, dynamic> get json => {
+        'uid': uid,
         'id': id,
         'title': title,
         'note': note,
