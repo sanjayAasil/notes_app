@@ -6,7 +6,6 @@ import 'package:versatile_dialogs/loading_dialog.dart';
 
 import '../../Common/utils.dart';
 import '../../firebase/firebase_auth_manager.dart';
-import '../../main.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -22,6 +21,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       body: Stack(
         children: [
@@ -176,7 +177,7 @@ _signIn(BuildContext context, String email, String password) async {
   User? user = await FirebaseAuthManager().signInWithEmail(context, email, password);
   DataManager().user = user;
   Utils.clearDataManagerData();
-  await initializeDb();
+
   if (user == null) {
     if (context.mounted) {
       loadingDialog.dismiss(context);

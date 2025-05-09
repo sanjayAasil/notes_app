@@ -6,8 +6,6 @@ import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
 
-import '../../main.dart';
-
 class PhoneNumberLoginScreen extends StatefulWidget {
   const PhoneNumberLoginScreen({super.key});
 
@@ -114,7 +112,7 @@ class _PhoneNumberLoginScreenState extends State<PhoneNumberLoginScreen> {
                           User? user = await FirebaseAuthManager()
                               .signInWithOtp(context, otpController.text.trim(), verificationId);
                           Utils.clearDataManagerData();
-                          await initializeDb();
+
                           if (context.mounted) {
                             DataManager().user = user;
                             loadingDialog.dismiss(context);

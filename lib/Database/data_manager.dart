@@ -1,10 +1,8 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjay_notes/models/list_model.dart';
 import 'package:sanjay_notes/models/settings_model.dart';
 import '../models/note.dart';
-
 
 class DataManager extends ChangeNotifier {
   SettingsModel _settingsModel;
@@ -79,6 +77,9 @@ class DataManager extends ChangeNotifier {
 
   User? user = FirebaseAuth.instance.currentUser;
 
+  bool hasInitializedDb = false;
+}
+
 //User(displayName: Sanjay,
 // email: sanjuaasil@gmail.com,
 // isEmailVerified: true,
@@ -94,4 +95,3 @@ class DataManager extends ChangeNotifier {
 // and User(displayName: Sanjay, email: sanjuaasil@gmail.com, isEmailVerified: true, isAnonymous: false,
 // metadata: UserMetadata(creationTime: 2024-07-02 05:49:08.528Z, lastSignInTime: 2024-07-03 08:31:02.122Z),
 // phoneNumber: null, photoURL: https://lh3.googleusercontent.com/a/ACg8ocKGL3vpc2-12PpLUNFfUS33Wco0Y2Qrky7Bxo
-}

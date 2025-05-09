@@ -6,8 +6,6 @@ import 'package:sanjay_notes/firebase/firebase_auth_manager.dart';
 import 'package:sanjay_notes/routes.dart';
 import 'package:versatile_dialogs/loading_dialog.dart';
 
-import '../../main.dart';
-
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
@@ -146,7 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       DataManager().user = user;
       Utils.clearDataManagerData();
 
-      await initializeDb();
+
       DataManager().notify();
       debugPrint("_WelcomeScreenState signInGoogle: ${user.uid}");
 

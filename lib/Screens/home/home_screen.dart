@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sanjay_notes/Database/data_manager.dart';
@@ -6,7 +5,6 @@ import 'package:sanjay_notes/Screens/deleted_screen.dart';
 import 'package:sanjay_notes/Screens/my_drawer.dart';
 import 'package:sanjay_notes/providers/home_screen_provider.dart';
 import 'package:sanjay_notes/routes.dart';
-import '../../main.dart';
 import '../archive/archive_screen.dart';
 import '../favorite/favorite_screen.dart';
 import '../remainder/remainder_screen.dart';
@@ -114,21 +112,24 @@ class NotesScreen extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () =>
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Coming Soon...'))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Icon(Icons.draw_outlined, color: Colors.grey.shade800),
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () =>
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Coming Soon...'))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Icon(Icons.mic_none_rounded, color: Colors.grey.shade800),
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () =>
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Coming Soon...'))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Icon(Icons.photo_outlined, color: Colors.grey.shade800),
@@ -146,7 +147,7 @@ class NotesScreen extends StatelessWidget {
           onPressed: () => Navigator.of(context).pushNamed(Routes.createNewNoteScreen),
           backgroundColor: Colors.grey.shade200,
           elevation: 20,
-          child: GradientIcon(
+          child: const GradientIcon(
             Icons.add,
             50,
             LinearGradient(
@@ -166,7 +167,7 @@ class GradientIcon extends StatelessWidget {
   final double size;
   final Gradient gradient;
 
-  GradientIcon(this.icon, this.size, this.gradient);
+  const GradientIcon(this.icon, this.size, this.gradient, {super.key});
 
   @override
   Widget build(BuildContext context) {

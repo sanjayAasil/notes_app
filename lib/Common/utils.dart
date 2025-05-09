@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:versatile_dialogs/loading_dialog.dart';
-
 import '../Database/data_manager.dart';
 import '../main.dart';
 
@@ -83,11 +81,8 @@ class Utils {
   }
 
   static refresh(BuildContext context) async {
-    if (context.mounted) {
-      LoadingDialog loadingDialog = LoadingDialog(message: 'Syncing', progressbarColor: Colors.blue)..show(context);
-      await initializeDb();
-      loadingDialog.dismiss(context);
-    }
+    await initializeDb();
+    DataManager().hasInitializedDb = true;
   }
 
   static clearDataManagerData() {
