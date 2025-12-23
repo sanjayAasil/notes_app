@@ -1,0 +1,2 @@
+C:/Users/Hp/OneDrive/Desktop/notes_app/notes_app/android/app/.cxx/Debug/556ppc52/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Hp/OneDrive/Desktop/notes_app/notes_app/android/app/.cxx/Debug/556ppc52/armeabi-v7a/CMakeFiles/rebuild_cache.dir

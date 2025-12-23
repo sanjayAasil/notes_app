@@ -1,0 +1,2 @@
+C:/Users/Hp/sanjay_notes/android/app/.cxx/Debug/ulc2l5zd/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Hp/sanjay_notes/android/app/.cxx/Debug/ulc2l5zd/arm64-v8a/CMakeFiles/rebuild_cache.dir
