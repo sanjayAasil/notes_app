@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "1003473576371",
     "project_id": "keep-notes-adb09",
-    "storage_bucket": "keep-notes-adb09.appspot.com"
+    "storage_bucket": "keep-notes-adb09.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "com.example.sanjay_notes"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1003473576371-k86hea52oqnp15aeq6av4q7u95n88cps.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sanjay_notes",
+            "certificate_hash": "5ae50f3c68e443a7387013a7b34347ff5597e8e5"
+          }
+        },
+        {
+          "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA1bXPMtUwpXodiDT6G9KvNgk45Gmami4E"
@@ -20,7 +33,94 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003473576371:android:f055b97fc521fa70792bc6",
+        "android_client_info": {
+          "package_name": "com.keep.notes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003473576371-3mh78aj9qrma8kvtp6fl4ucd519gnubt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keep.notes",
+            "certificate_hash": "df8782bcc97ed27a69b44ef419d4026cc8b349dd"
+          }
+        },
+        {
+          "client_id": "1003473576371-a2bjbbgnpci9k8b5tau8tng9sk10f0ou.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keep.notes",
+            "certificate_hash": "5ae50f3c68e443a7387013a7b34347ff5597e8e5"
+          }
+        },
+        {
+          "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1bXPMtUwpXodiDT6G9KvNgk45Gmami4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003473576371:android:85de4a9e8fcee2d7792bc6",
+        "android_client_info": {
+          "package_name": "com.keepnotesapp.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003473576371-k8li0voinqtbjfvftlgqeju46h4c9de6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keepnotesapp.mobile",
+            "certificate_hash": "5ae50f3c68e443a7387013a7b34347ff5597e8e5"
+          }
+        },
+        {
+          "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1bXPMtUwpXodiDT6G9KvNgk45Gmami4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
