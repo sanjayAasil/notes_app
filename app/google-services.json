@@ -96,6 +96,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1003473576371-76b3pv0h3o0cphg8c0ohepv8q3652jfm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keepnotesapp.mobile",
+            "certificate_hash": "76776b20c7c4396209832d3f0972f7404dcdb658"
+          }
+        },
+        {
+          "client_id": "1003473576371-h5qkqm6goo4oe5j2tlndo24dptoq5jc4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keepnotesapp.mobile",
+            "certificate_hash": "df8782bcc97ed27a69b44ef419d4026cc8b349dd"
+          }
+        },
+        {
           "client_id": "1003473576371-k8li0voinqtbjfvftlgqeju46h4c9de6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
