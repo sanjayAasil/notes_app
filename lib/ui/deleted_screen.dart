@@ -8,7 +8,7 @@ import '../database/list_model_db.dart';
 import '../database/notes_db.dart';
 import '../models/list_model.dart';
 import '../models/note.dart';
-import '../providers/deleted-provider.dart';
+import '../providers/deleted_provider.dart';
 import 'my_drawer.dart';
 
 class DeletedScreen extends StatefulWidget {

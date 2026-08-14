@@ -60,7 +60,7 @@ class Note {
     'isArchive': isArchive,
     'isPinned': isPinned,
     'isDeleted': isDeleted,
-    'color': color.value,
+    'color': color.a,
     'isFavorite': isFavorite,
     'labels': labels,
     'createdAt': createdAt.millisecondsSinceEpoch,

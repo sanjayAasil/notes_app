@@ -48,7 +48,7 @@ class ListModel {
   Map<String, dynamic> get json => {
     'id': id,
     'title': title,
-    'color': color.value,
+    'color': color.a,
     'isArchive': isArchive,
     'isDeleted': isDeleted,
     'isPinned': isPinned,

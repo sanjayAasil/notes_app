@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'models/list_model.dart';
 import 'models/note.dart';
 import 'ui/archive/archive_screen.dart';
-import 'ui/create_list-model.dart';
+import 'ui/create_list_model.dart';
 import 'ui/create_new_label.dart';
 import 'ui/deleted_screen.dart';
 import 'ui/favorite/favorite_screen.dart';
 import 'ui/home/home_screen.dart';
 import 'ui/label_screen.dart';
 import 'ui/login/phone_number_login.dart';
-import 'ui/login/signIn-screen.dart';
-import 'ui/login/signUp_Screen.dart';
+import 'ui/login/signin_screen.dart';
+import 'ui/login/signup_screen.dart';
 import 'ui/login/welcome_screen.dart';
 import 'ui/manage_note.dart';
 import 'ui/remainder/remainder_screen.dart';
 import 'ui/search_screen.dart';
 import 'ui/settings_screen.dart';
-import 'ui/view-or-edit-list-model.dart';
+import 'ui/view_or_edit_list_model.dart';
 
 class Routes {
   static const String mainScreen = '/';

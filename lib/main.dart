@@ -11,17 +11,14 @@ import 'firebase_options.dart';
 import 'firestore/firestore_service.dart';
 
 void main() async {
-  bool isConnectedToInternet = await hasInternetConnection();
+  WidgetsFlutterBinding.ensureInitialized();
 
-  if (isConnectedToInternet) {
-    WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  initializeAwesomeNotification();
+  User? user = DataManager().user = FirebaseAuth.instance.currentUser;
+  if (user != null) await initializeDb();
 
-    initializeAwesomeNotification();
-    User? user = DataManager().user = FirebaseAuth.instance.currentUser;
-    if (user != null) await initializeDb();
-  }
   runApp(const MyApp());
 }
 
@@ -41,12 +38,8 @@ class _MyAppState extends State<MyApp> {
         context.watch<DataManager>();
         return MaterialApp(
           theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              backgroundColor: Colors.white
-            ),
-            popupMenuTheme: PopupMenuThemeData(
-              color: Colors.white,
-            ),
+            appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+            popupMenuTheme: PopupMenuThemeData(color: Colors.white),
             scaffoldBackgroundColor: Colors.white,
             primarySwatch: Colors.blue,
           ),
@@ -68,11 +61,16 @@ Future<void> initializeDb() async {
   DataManager().remainderNotes = await FirestoreService().getRemainderNotes();
 
   DataManager().listModels = await FirestoreService().getListModels();
-  DataManager().deletedListModels = await FirestoreService().getDeletedListModels();
-  DataManager().pinnedListModels = await FirestoreService().getPinnedListModels();
-  DataManager().favoriteListModels = await FirestoreService().getFavoriteListModels();
-  DataManager().archivedListModels = await FirestoreService().getArchivedListModels();
-  DataManager().remainderListModels = await FirestoreService().getRemainderListModels();
+  DataManager().deletedListModels =
+      await FirestoreService().getDeletedListModels();
+  DataManager().pinnedListModels =
+      await FirestoreService().getPinnedListModels();
+  DataManager().favoriteListModels =
+      await FirestoreService().getFavoriteListModels();
+  DataManager().archivedListModels =
+      await FirestoreService().getArchivedListModels();
+  DataManager().remainderListModels =
+      await FirestoreService().getRemainderListModels();
 
   DataManager().labels = await FirestoreService().getLabels();
 
@@ -90,13 +88,4 @@ initializeAwesomeNotification() {
       ledColor: Colors.white,
     ),
   ]);
-}
-
-Future<bool> hasInternetConnection() async {
-  try {
-    final response = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 5));
-    return response.statusCode == 200;
-  } catch (e) {
-    return false;
-  }
 }

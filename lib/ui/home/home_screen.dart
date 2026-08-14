@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context.watch<HomeScreenProvider>();
         return PopScope(
           canPop: homeScreenProvider.selectedDrawer == HomeDrawerEnum.notes,
-          onPopInvoked: (value) => homeScreenProvider.selectedDrawer = HomeDrawerEnum.notes,
+          onPopInvokedWithResult: (value, v) => homeScreenProvider.selectedDrawer = HomeDrawerEnum.notes,
           child: body,
         );
       },

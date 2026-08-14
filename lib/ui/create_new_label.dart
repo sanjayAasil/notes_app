@@ -27,7 +27,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvoked: (value) {
+      onPopInvokedWithResult: (value, v) {
         if (isBackPressed) return;
 
         onBackPress(true);
@@ -36,7 +36,9 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
         body: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50),
+              padding: EdgeInsets.only(
+                top: const MediaQueryData().padding.top + 50,
+              ),
               child: Row(
                 children: [
                   InkWell(
@@ -51,10 +53,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                   ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Edit labels',
-                      style: TextStyle(fontSize: 20),
-                    ),
+                    child: Text('Edit labels', style: TextStyle(fontSize: 20)),
                   ),
                 ],
               ),
@@ -87,7 +86,11 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                 InkWell(
                   onTap: () {
                     if (creatingController.text.trim().isNotEmpty) {
-                      controllers.add(TextEditingController(text: creatingController.text.trim()));
+                      controllers.add(
+                        TextEditingController(
+                          text: creatingController.text.trim(),
+                        ),
+                      );
                       creatingController.clear();
                       setState(() {});
                     }
@@ -150,7 +153,7 @@ class _CreateNewLabelScreenState extends State<CreateNewLabelScreen> {
                     ],
                   ),
                 ),
-              )
+              ),
           ],
         ),
       ),

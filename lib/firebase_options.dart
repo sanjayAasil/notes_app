@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -54,10 +51,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA1bXPMtUwpXodiDT6G9KvNgk45Gmami4E',
-    appId: '1:1003473576371:android:f055b97fc521fa70792bc6',
+    appId: '1:1003473576371:android:f97a0ee213529bc5792bc6',
     messagingSenderId: '1003473576371',
     projectId: 'keep-notes-adb09',
     storageBucket: 'keep-notes-adb09.firebasestorage.app',
   );
-
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAzHsDphbV2-zXZXez7kicNymgLfd_osU0',
+    appId: '1:1003473576371:web:d178843a5d5a728b792bc6',
+    messagingSenderId: '1003473576371',
+    projectId: 'keep-notes-adb09',
+    authDomain: 'keep-notes-adb09.firebaseapp.com',
+    storageBucket: 'keep-notes-adb09.firebasestorage.app',
+  );
 }

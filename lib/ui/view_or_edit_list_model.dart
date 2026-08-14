@@ -59,7 +59,7 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvoked: (bool value) {
+      onPopInvokedWithResult: (bool value, v) {
         if (isBackPressed) return;
         if (!widget.listModel.isDeleted) {
           onBackPressed(true);

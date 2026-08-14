@@ -74,7 +74,7 @@ class _ManageNotePageState extends State<ManageNotePage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvoked: (bool value) {
+      onPopInvokedWithResult: (bool value, v) {
         if (isBackPressed) return;
 
         if (widget.note == null || (widget.note != null && !widget.note!.isDeleted)) {
