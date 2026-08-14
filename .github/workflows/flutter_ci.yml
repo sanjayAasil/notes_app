@@ -1,0 +1,56 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    name: Analyze, Test and Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout source code
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # 2. Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # 3. Show Flutter version
+      - name: Flutter version
+        run: flutter --version
+
+      # 4. Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 5. Analyze Dart code
+      - name: Analyze
+        run: flutter analyze
+
+      # 6. Run tests
+      - name: Test
+        run: flutter test
+
+      # 7. Build Android App Bundle
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+
+      # 8. Upload AAB as GitHub artifact
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: keep-notes-aab
+          path: build/app/outputs/bundle/release/app-release.aab

@@ -1,0 +1,21 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "keep-notes-adb09",
+          "appId": "1:1003473576371:android:f055b97fc521fa70792bc6",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "keep-notes-adb09",
+          "configurations": {
+            "android": "1:1003473576371:android:f055b97fc521fa70792bc6"
+          }
+        }
+      }
+    }
+  }
+}

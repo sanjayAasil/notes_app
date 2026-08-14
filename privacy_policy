@@ -1,0 +1,73 @@
+Privacy policy for notes app:
+
+1. Information We Collect
+1.1 Account Information
+When you sign in, we collect information required by Firebase Authentication, such as:
+Email address (if using email login)
+Phone number (if using OTP login)
+Google account basic profile (name, email, profile picture — if using Google sign-in)
+We do not collect passwords — authentication is handled securely by Firebase.
+
+2. Notes and App Data
+Your notes and app data are stored securely in:
+✔ Google Firebase Cloud Firestore
+The purpose of storing data in the cloud is to:
+sync notes across devices
+back up notes
+restore content when reinstalling
+We do not sell or share your content with anyone.
+
+3. How We Use the Information
+We use collected information only to:
+create and manage your account
+store and sync notes
+improve app reliability and security
+We do not use your information for advertising or tracking.
+
+4. Third-Party Services (Firebase)
+This app uses Google Firebase services:
+Firebase Authentication
+Cloud Firestore
+Firebase may collect certain technical information such as:
+device information
+app usage logs
+crash reports
+This data is processed according to Google’s privacy policy:
+
+5. Children’s Privacy
+This app is intended for all age groups.
+We do not knowingly collect more data than necessary to create an account and provide app features.
+If a parent believes their child has provided unwanted information, they may contact us and request deletion.
+
+6. Data Sharing
+We do not:
+✘ sell data ✘ rent data ✘ share data with advertisers ✘ share personal data with third parties except Firebase (service provider)
+Data remains connected only to your account.
+
+7. Data Retention and Deletion
+Your data remains stored while your account is active.
+You may request:
+✔ deletion of your account ✔ deletion of your notes
+Contact us, and we will delete the data within a reasonable time.
+
+8. Permissions
+The app may request permissions only when required for features.
+Example:
+Internet — to sync with Firebase
+Storage (optional, if exporting/importing notes)
+Permissions are used only for functionality, not tracking.
+
+9. Security
+We rely on Firebase security features including:
+encrypted communication (HTTPS)
+authentication rules
+secure database access controls
+However, no system is 100% secure. Use the app responsibly.
+
+10. Changes to This Policy
+We may update the Privacy Policy when features change. The latest version will always be available on this page.
+
+11. Contact Us
+If you have questions or requests:
+
+Email: sanjuaasil@gmail.com
