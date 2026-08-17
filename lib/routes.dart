@@ -1,6 +1,6 @@
 import 'dart:core';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'database/data_manager.dart';
 import 'models/list_model.dart';
 import 'models/note.dart';
 import 'ui/archive/archive_screen.dart';
@@ -41,7 +41,7 @@ class Routes {
   static Route<dynamic>? onGenerate(RouteSettings settings) {
     switch (settings.name) {
       case mainScreen:
-        return FirebaseAuth.instance.currentUser == null
+        return DataManager().user == null
             ? MaterialPageRoute(builder: (context) => const WelcomeScreen())
             : MaterialPageRoute(builder: (context) => const HomeScreen());
       case signInScreen:
