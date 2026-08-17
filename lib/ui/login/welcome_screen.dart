@@ -62,7 +62,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             InkWell(
               onTap: () => Navigator.of(context).pushNamed(Routes.signUpScreen),
               child: Container(
-                height: 53,
+                height: 54,
                 width: 320,
                 decoration: BoxDecoration(
                   color: Colors.white,
