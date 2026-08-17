@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_notes/routes.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 import 'database/data_manager.dart';
 import 'firebase_options.dart';
 import 'firestore/firestore_service.dart';
