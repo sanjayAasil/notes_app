@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../Database/data_manager.dart';
+import '../../database/data_manager.dart';
 import '../../common/widget_helper.dart';
 import '../../providers/favourite_provider.dart';
 

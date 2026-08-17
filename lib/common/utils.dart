@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../Database/data_manager.dart';
+import '../database/data_manager.dart';
 import '../main.dart';
 
 class Utils {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
- import '../../Database/data_manager.dart';
+ import '../../database/data_manager.dart';
 import '../../providers/favourite_provider.dart';
 import '../my_drawer.dart';
 import 'favorite_app_bar.dart';
