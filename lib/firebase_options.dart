@@ -23,10 +23,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -63,5 +60,16 @@ class DefaultFirebaseOptions {
     projectId: 'keep-notes-adb09',
     authDomain: 'keep-notes-adb09.firebaseapp.com',
     storageBucket: 'keep-notes-adb09.firebasestorage.app',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBWdfheDx5ICJoxIp1aRCyDOiujNieoS1M',
+    appId: '1:1003473576371:ios:3062e96a059628b3792bc6',
+    messagingSenderId: '1003473576371',
+    projectId: 'keep-notes-adb09',
+    storageBucket: 'keep-notes-adb09.firebasestorage.app',
+    androidClientId: '1003473576371-3isu8174agjo0pogcoi3bj86la1ho3cf.apps.googleusercontent.com',
+    iosClientId: '1003473576371-hoc0cko4854si736itv0nholfl7qgk8e.apps.googleusercontent.com',
+    iosBundleId: 'com.example.keepNotes',
   );
 }
