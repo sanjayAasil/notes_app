@@ -19,8 +19,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: double.infinity,
-        width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.yellow.shade700,
         ),

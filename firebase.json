@@ -1,1 +1,61 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"keep-notes-adb09","appId":"1:1003473576371:android:f97a0ee213529bc5792bc6","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"keep-notes-adb09","configurations":{"android":"1:1003473576371:android:f97a0ee213529bc5792bc6","ios":"1:1003473576371:ios:3062e96a059628b3792bc6","web":"1:1003473576371:web:d178843a5d5a728b792bc6"}}},"ios":{"default":{"projectId":"keep-notes-adb09","appId":"1:1003473576371:ios:3062e96a059628b3792bc6","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}}}},"firestore":{"database":"(default)","location":"asia-south1","rules":"firestore.rules","indexes":"firestore.indexes.json"},"auth":{"providers":{"anonymous":true,"emailPassword":true,"googleSignIn":{"oAuthBrandDisplayName":"My App","supportEmail":"support@undefined.firebaseapp.com"}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "keep-notes-adb09",
+          "appId": "1:1003473576371:android:f97a0ee213529bc5792bc6",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "keep-notes-adb09",
+          "configurations": {
+            "android": "1:1003473576371:android:f97a0ee213529bc5792bc6",
+            "ios": "1:1003473576371:ios:3062e96a059628b3792bc6",
+            "web": "1:1003473576371:web:d178843a5d5a728b792bc6"
+          }
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "keep-notes-adb09",
+          "appId": "1:1003473576371:ios:3062e96a059628b3792bc6",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "asia-south1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "providers": {
+      "anonymous": true,
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "My App",
+        "supportEmail": "support@undefined.firebaseapp.com"
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

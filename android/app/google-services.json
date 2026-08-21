@@ -37,6 +37,13 @@
             {
               "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1003473576371-hoc0cko4854si736itv0nholfl7qgk8e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.keepNotes"
+              }
             }
           ]
         }
@@ -82,6 +89,13 @@
             {
               "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1003473576371-hoc0cko4854si736itv0nholfl7qgk8e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.keepNotes"
+              }
             }
           ]
         }
@@ -135,6 +149,13 @@
             {
               "client_id": "1003473576371-mb88uoftv8peq4tad9ev6ul9vr589m64.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1003473576371-hoc0cko4854si736itv0nholfl7qgk8e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.keepNotes"
+              }
             }
           ]
         }
