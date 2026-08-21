@@ -13,11 +13,11 @@ on:
 
 jobs:
   test:
-    name: Analyze, Test and Build Web
+    name: Analyze, Test & Build Web
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout source code
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v6
 
@@ -52,22 +52,27 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
-      # 9. Upload Web Build
+      # 9. Upload the exact build for deployment
       - name: Upload Web Build
         uses: actions/upload-artifact@v4
         with:
           name: keep-notes-web
           path: build/web
+          if-no-files-found: error
+          retention-days: 7
 
 
   deploy:
     name: Deploy Web to Firebase Hosting
     needs: test
+
+    # Deploy ONLY after a successful push to main
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout source code
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v6
 
@@ -76,31 +81,20 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
+          cache: npm
 
       # 3. Install Firebase CLI
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # 4. Setup Flutter
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      # 4. Download the tested Web build
+      - name: Download Web Build
+        uses: actions/download-artifact@v5
         with:
-          channel: stable
-          cache: true
+          name: keep-notes-web
+          path: build/web
 
-      # 5. Enable Flutter Web
-      - name: Enable Flutter Web
-        run: flutter config --enable-web
-
-      # 6. Install dependencies
-      - name: Install dependencies
-        run: flutter pub get
-
-      # 7. Build Flutter Web
-      - name: Build Flutter Web
-        run: flutter build web --release
-
-      # 8. Deploy to Firebase Hosting
+      # 5. Deploy to Firebase Hosting
       - name: Deploy to Firebase
         run: firebase deploy --only hosting
         env:
