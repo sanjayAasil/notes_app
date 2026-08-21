@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import '../database/data_manager.dart';
+
 class ListModel {
+  final String? uid;
   final String id;
   String title;
   final List<ListItem> items;
@@ -15,6 +18,7 @@ class ListModel {
   DateTime? scheduleTime;
 
   ListModel._({
+    required this.uid,
     required this.id,
     required this.title,
     required this.items,
@@ -28,24 +32,37 @@ class ListModel {
     required this.createdAt,
   }) : labels = labels ?? [];
 
-  factory ListModel.create({required String title, required List<ListItem> items}) =>
-      ListModel._(id: const Uuid().v4(), title: title, items: items, createdAt: DateTime.now());
+  factory ListModel.create({
+    required String title,
+    required List<ListItem> items,
+  }) => ListModel._(
+    uid: DataManager().user?.uid,
+    id: const Uuid().v4(),
+    title: title,
+    items: items,
+    createdAt: DateTime.now(),
+  );
 
   factory ListModel.fromJson(Map<String, dynamic> json) => ListModel._(
+    uid: json['uid'],
     id: json['id'],
     title: json['title'],
     items: List.from(json['items']).map((e) => ListItem.fromJson(e)).toList(),
-    color: Color(json['color']),
+    color: Color(int.tryParse(json['color'].toString()) ?? 0),
     isArchive: json['isArchive'],
     isDeleted: json['isDeleted'],
     isPinned: json['isPinned'],
     isFavorite: json['isFavorite'],
     labels: List.from(json['labels']),
     createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
-    scheduleTime: json['scheduleTime'] != null ? DateTime.fromMillisecondsSinceEpoch(json['scheduleTime']) : null,
+    scheduleTime:
+        json['scheduleTime'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(json['scheduleTime'])
+            : null,
   );
 
   Map<String, dynamic> get json => {
+    'uid': uid,
     'id': id,
     'title': title,
     'color': color.a,
@@ -66,7 +83,8 @@ class ListItem {
 
   ListItem({required this.name, this.ticked = false});
 
-  factory ListItem.fromJson(Map<String, dynamic> json) => ListItem(name: json['name'], ticked: json['ticked']);
+  factory ListItem.fromJson(Map<String, dynamic> json) =>
+      ListItem(name: json['name'], ticked: json['ticked']);
 
   Map<String, dynamic> get json => {'name': name, 'ticked': ticked};
 }

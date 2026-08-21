@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,10 +104,11 @@ class _DefaultHomeAppBarState extends State<DefaultHomeAppBar> {
               Padding(
                 padding: const EdgeInsets.only(right: 10.0),
                 child: ClipOval(
-                  child: Image.network(
-                    '${user!.photoURL}',
+                  child: CachedNetworkImage(
+                    imageUrl: user!.photoURL ?? '',
                     height: 40,
                     width: 40,
+                    errorWidget: (_, _, _) => SizedBox(),
                   ),
                 ),
               ),
