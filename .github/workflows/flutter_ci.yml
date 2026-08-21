@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI/CD
 
 on:
   push:
@@ -32,25 +32,87 @@ jobs:
       - name: Flutter version
         run: flutter --version
 
-      # 4. Install dependencies
+      # 4. Enable Flutter Web
+      - name: Enable Flutter Web
+        run: flutter config --enable-web
+
+      # 5. Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. Analyze Dart code
+      # 6. Analyze Dart code
       - name: Analyze
         run: flutter analyze
 
-      # 6. Run tests
+      # 7. Run tests
       - name: Test
         run: flutter test
 
-      # 7. Build Android App Bundle
+      # 8. Build Android App Bundle
       - name: Build App Bundle
         run: flutter build appbundle --release
 
-      # 8. Upload AAB as GitHub artifact
+      # 9. Upload AAB
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: keep-notes-aab
           path: build/app/outputs/bundle/release/app-release.aab
+
+      # 10. Build Flutter Web
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      # 11. Upload Web Build
+      - name: Upload Web Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: keep-notes-web
+          path: build/web
+
+
+  deploy:
+    name: Deploy Web to Firebase Hosting
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      # 3. Install Firebase CLI
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      # 4. Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # 5. Enable Flutter Web
+      - name: Enable Flutter Web
+        run: flutter config --enable-web
+
+      # 6. Install Flutter dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 7. Build Flutter Web
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      # 8. Deploy to Firebase Hosting
+      - name: Deploy to Firebase
+        run: firebase deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
