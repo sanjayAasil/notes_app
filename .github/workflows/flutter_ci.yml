@@ -1,4 +1,4 @@
-name: Flutter CI/CD
+name: Flutter Web CI/CD
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   test:
-    name: Analyze, Test and Build
+    name: Analyze, Test and Build Web
     runs-on: ubuntu-latest
 
     steps:
@@ -48,22 +48,11 @@ jobs:
       - name: Test
         run: flutter test
 
-      # 8. Build Android App Bundle
-      - name: Build App Bundle
-        run: flutter build appbundle --release
-
-      # 9. Upload AAB
-      - name: Upload AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: keep-notes-aab
-          path: build/app/outputs/bundle/release/app-release.aab
-
-      # 10. Build Flutter Web
+      # 8. Build Flutter Web
       - name: Build Flutter Web
         run: flutter build web --release
 
-      # 11. Upload Web Build
+      # 9. Upload Web Build
       - name: Upload Web Build
         uses: actions/upload-artifact@v4
         with:
@@ -78,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
+      # 1. Checkout source code
       - name: Checkout repository
         uses: actions/checkout@v6
 
@@ -103,7 +92,7 @@ jobs:
       - name: Enable Flutter Web
         run: flutter config --enable-web
 
-      # 6. Install Flutter dependencies
+      # 6. Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
