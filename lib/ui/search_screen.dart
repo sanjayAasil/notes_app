@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../common/responsive.dart';
 import '../common/widget_helper.dart';
 import '../database/data_manager.dart';
 import '../models/list_model.dart';
@@ -31,11 +32,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
+
     return Scaffold(
       body: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            margin: EdgeInsets.only(top: isDesktop ? 20 : MediaQuery.of(context).padding.top),
             height: 60,
             alignment: AlignmentDirectional.centerStart,
             child: Row(
@@ -88,28 +91,34 @@ class _SearchScreenState extends State<SearchScreen> {
             )
           else
             Expanded(
-              child: ListView.builder(
-                itemCount: combinedData.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  if (combinedData[index] is Note) {
-                    return NoteTileListView(
-                      note: combinedData[index],
-                      selectedIds: const [],
-                    );
-                  } else {
-                    return ListModelTileListView(
-                      selectedIds: const [],
-                      listModel: combinedData[index],
-                    );
-                  }
-                },
+              child: Center(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: ListView.builder(
+                    itemCount: combinedData.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      if (combinedData[index] is Note) {
+                        return NoteTileListView(
+                          note: combinedData[index],
+                          selectedIds: const [],
+                        );
+                      } else {
+                        return ListModelTileListView(
+                          selectedIds: const [],
+                          listModel: combinedData[index],
+                        );
+                      }
+                    },
+                  ),
+                ),
               ),
             ),
         ],
       ),
     );
   }
+
 
   void _foundResult(String search) {
     List<Note> noteResult = [];

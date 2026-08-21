@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../common/responsive.dart';
 import '../database/data_manager.dart';
 import '../database/list_model_db.dart';
 import '../database/notes_db.dart';
@@ -20,47 +21,63 @@ class _LabelScreenState extends State<LabelScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
+
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            color: Colors.grey.shade200,
-            child: Padding(
-              padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 40),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: onBackPress,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(Icons.arrow_back, color: Colors.grey.shade800),
-                      ),
-                    ),
-                    const Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Enter label name',
-                            hintStyle: TextStyle(fontWeight: FontWeight.w300),
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              Container(
+                color: Colors.grey.shade200,
+                child: Padding(
+                  padding: EdgeInsets.only(top: isDesktop ? 20 : const MediaQueryData().padding.top + 40),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: onBackPress,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Icon(Icons.arrow_back, color: Colors.grey.shade800),
                           ),
                         ),
-                      ),
+                        const Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Enter label name',
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: DataManager().labels.length,
+                  itemBuilder: (context, index) {
+                    final label = DataManager().labels[DataManager().labels.length - 1 - index];
+                    return LabelTile(label: label, selectedLabels: selectedLabels);
+                  },
+                ),
+              ),
+            ],
           ),
-          for (int i = DataManager().labels.length - 1; i >= 0; i--)
-            LabelTile(label: DataManager().labels[i], selectedLabels: selectedLabels),
-        ],
+        ),
       ),
     );
   }
+
 
   onBackPress() {
     List<Note> notes = DataManager().notes.where((element) => widget.selectedIds.contains(element.id)).toList();

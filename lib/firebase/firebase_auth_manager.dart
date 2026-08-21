@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthManager {
-  static const clientId = "1003473576371-t46btsb406aobc9i5t7auktkmsqjseam.apps.googleusercontent.com";
+  static const clientId =
+      "1003473576371-t46btsb406aobc9i5t7auktkmsqjseam.apps.googleusercontent.com";
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn(clientId: clientId);
@@ -11,24 +13,39 @@ class FirebaseAuthManager {
   /// ---------------- GOOGLE SIGN IN ----------------
   Future<User?> signInWithGoogle() async {
     try {
+      if (kIsWeb) {
+        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+        final UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithPopup(googleProvider);
+
+        return userCredential.user;
+      }
+
+      // Android / iOS
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return null; // user cancelled
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      if (googleUser == null) {
+        return null;
+      }
 
-      final credential = GoogleAuthProvider.credential(
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await auth.signInWithCredential(credential);
-      debugPrint("Google SignIn Success: ${userCredential.user?.uid}");
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+
       return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      debugPrint("Google Sign In Error: ${e.message}");
-      return null;
-    } catch (e) {
-      debugPrint("Google Sign In Unknown Error: $e");
+    } catch (e, stack) {
+      debugPrint('signInWithGoogle error: $e');
+      debugPrintStack(stackTrace: stack);
       return null;
     }
   }
@@ -62,11 +79,20 @@ class FirebaseAuthManager {
     }
   }
 
-  Future<User?> signInWithOtp(BuildContext context, String otp, String verificationId) async {
+  Future<User?> signInWithOtp(
+    BuildContext context,
+    String otp,
+    String verificationId,
+  ) async {
     try {
-      final credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otp);
+      final credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otp,
+      );
 
-      final UserCredential userCredential = await auth.signInWithCredential(credential);
+      final UserCredential userCredential = await auth.signInWithCredential(
+        credential,
+      );
 
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
@@ -76,9 +102,14 @@ class FirebaseAuthManager {
   }
 
   /// ---------------- EMAIL SIGN UP ----------------
-  Future<User?> signUpWithEmail(String email, String password, BuildContext context) async {
+  Future<User?> signUpWithEmail(
+    String email,
+    String password,
+    BuildContext context,
+  ) async {
     try {
-      final UserCredential userCredential = await auth.createUserWithEmailAndPassword(email: email, password: password);
+      final UserCredential userCredential = await auth
+          .createUserWithEmailAndPassword(email: email, password: password);
       debugPrint("signUpWithEmail success");
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
@@ -88,9 +119,14 @@ class FirebaseAuthManager {
   }
 
   /// ---------------- EMAIL SIGN IN ----------------
-  Future<User?> signInWithEmail(BuildContext context, String email, String password) async {
+  Future<User?> signInWithEmail(
+    BuildContext context,
+    String email,
+    String password,
+  ) async {
     try {
-      final UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      final UserCredential userCredential = await auth
+          .signInWithEmailAndPassword(email: email, password: password);
 
       return userCredential.user;
     } on FirebaseAuthException catch (e) {

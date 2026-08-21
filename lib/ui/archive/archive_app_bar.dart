@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../common/responsive.dart';
 import '../../common/utils.dart';
 import '../../database/data_manager.dart';
 import '../../database/list_model_db.dart';
@@ -15,24 +16,36 @@ class DefaultArchiveAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
     context.watch<DataManager>();
     return Padding(
-      padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50, left: 15),
+      padding: EdgeInsets.only(
+        top: const MediaQueryData().padding.top + 50,
+        left: 15,
+      ),
       child: Row(
         children: [
-          Builder(
-            builder:
-                (context) => InkWell(
-                  onTap: () => Scaffold.of(context).openDrawer(),
-                  borderRadius: BorderRadius.circular(40),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.menu, color: Colors.grey.shade800, size: 30),
-                  ),
-                ),
-          ),
+          isDesktop
+              ? SizedBox()
+              : Builder(
+                builder:
+                    (context) => InkWell(
+                      onTap: () => Scaffold.of(context).openDrawer(),
+                      borderRadius: BorderRadius.circular(40),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.grey.shade800,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+              ),
           const SizedBox(width: 20),
-          const Expanded(child: Text('Archive', style: TextStyle(fontSize: 18))),
+          const Expanded(
+            child: Text('Archive', style: TextStyle(fontSize: 18)),
+          ),
           InkWell(
             borderRadius: BorderRadius.circular(40),
             onTap: () => Navigator.of(context).pushNamed(Routes.searchScreen),
@@ -44,13 +57,19 @@ class DefaultArchiveAppBar extends StatelessWidget {
           InkWell(
             borderRadius: BorderRadius.circular(40),
             onTap: () {
-              DataManager().archiveScreenView = !DataManager().archiveScreenView;
+              DataManager().archiveScreenView =
+                  !DataManager().archiveScreenView;
               context.read<ArchiveProvider>().notify();
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10.0,
+                vertical: 10,
+              ),
               child: Icon(
-                DataManager().archiveScreenView ? CupertinoIcons.rectangle_grid_1x2 : CupertinoIcons.rectangle_grid_2x2,
+                DataManager().archiveScreenView
+                    ? CupertinoIcons.rectangle_grid_1x2
+                    : CupertinoIcons.rectangle_grid_2x2,
                 size: 25,
               ),
             ),
@@ -92,21 +111,41 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
         child: Row(
           children: [
             InkWell(
-              child: const Padding(padding: EdgeInsets.all(15), child: Icon(CupertinoIcons.xmark, size: 25)),
+              child: const Padding(
+                padding: EdgeInsets.all(15),
+                child: Icon(CupertinoIcons.xmark, size: 25),
+              ),
               onTap: () => archiveProvider.clearSelectedIds(),
             ),
-            Expanded(child: Text('${selectedIds.length}', style: const TextStyle(fontSize: 20))),
-            InkWell(
-              onTap: onPinned,
-              child: const Padding(padding: EdgeInsets.all(12), child: Icon(CupertinoIcons.pin, size: 25)),
+            Expanded(
+              child: Text(
+                '${selectedIds.length}',
+                style: const TextStyle(fontSize: 20),
+              ),
             ),
             InkWell(
-              child: const Padding(padding: EdgeInsets.all(12), child: Icon(CupertinoIcons.bell, size: 25)),
+              onTap: onPinned,
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(CupertinoIcons.pin, size: 25),
+              ),
+            ),
+            InkWell(
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(CupertinoIcons.bell, size: 25),
+              ),
               onTap: () {},
             ),
             InkWell(
-              onTap: () => Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds),
-              child: const Padding(padding: EdgeInsets.all(12), child: Icon(Icons.label_outline, size: 25)),
+              onTap:
+                  () => Navigator.of(
+                    context,
+                  ).pushNamed(Routes.labelScreen, arguments: selectedIds),
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(Icons.label_outline, size: 25),
+              ),
             ),
             InkWell(
               onTap:
@@ -116,7 +155,10 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
                     content: 'UnArchive',
                     snackBarMessage: 'Notes removed from Archive',
                   ),
-              child: const Padding(padding: EdgeInsets.all(12), child: Icon(Icons.unarchive_outlined, size: 25)),
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(Icons.unarchive_outlined, size: 25),
+              ),
             ),
             InkWell(
               onTap:
@@ -126,7 +168,10 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
                     content: 'Delete',
                     snackBarMessage: 'Notes moved to Bin',
                   ),
-              child: const Padding(padding: EdgeInsets.all(12), child: Icon(Icons.delete_outline, size: 25)),
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(Icons.delete_outline, size: 25),
+              ),
             ),
           ],
         ),
@@ -135,7 +180,10 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
   }
 
   onPinned() {
-    List<Note> notes = DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+    List<Note> notes =
+        DataManager().archivedNotes
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
 
     for (Note note in notes) {
       note.isPinned = true;
@@ -146,13 +194,18 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
     }
 
     List<ListModel> listModels =
-        DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().archivedListModels
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
     }
     if (listModels.isNotEmpty) {
-      ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
+      ListModelsDb.removeListModels(
+        ListModelsDb.archivedListModelKey,
+        selectedIds,
+      );
       ListModelsDb.addListModels(ListModelsDb.archivedListModelKey, listModels);
     }
 
@@ -160,7 +213,10 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
   }
 
   onDelete() {
-    List<Note> notes = DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+    List<Note> notes =
+        DataManager().archivedNotes
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (Note note in notes) {
       note.isDeleted = true;
       NotesDb.addNote(NotesDb.deletedNotesKey, note);
@@ -171,19 +227,27 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
     }
 
     List<ListModel> listModels =
-        DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().archivedListModels
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (ListModel listModel in listModels) {
       listModel.isDeleted = true;
     }
     if (listModels.isNotEmpty) {
-      ListModelsDb.removeListModels(ListModelsDb.archivedListModelKey, selectedIds);
+      ListModelsDb.removeListModels(
+        ListModelsDb.archivedListModelKey,
+        selectedIds,
+      );
       ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
     }
     archiveProvider.clearSelectedIds();
   }
 
   onUnArchive() {
-    List<Note> notes = DataManager().archivedNotes.where((element) => selectedIds.contains(element.id)).toList();
+    List<Note> notes =
+        DataManager().archivedNotes
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (Note note in notes) {
       note.isArchive = false;
       if (note.isFavorite) {
@@ -198,7 +262,9 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
     }
 
     List<ListModel> listModels =
-        DataManager().archivedListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().archivedListModels
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (ListModel listModel in listModels) {
       listModel.isArchive = false;
       if (listModel.isFavorite) {
@@ -208,7 +274,10 @@ class _SelectedArchiveAppBarState extends State<SelectedArchiveAppBar> {
       } else {
         ListModelsDb.addListModel(ListModelsDb.listModelKey, listModel);
       }
-      ListModelsDb.removeListModel(ListModelsDb.archivedListModelKey, listModel.id);
+      ListModelsDb.removeListModel(
+        ListModelsDb.archivedListModelKey,
+        listModel.id,
+      );
     }
     archiveProvider.clearSelectedIds();
   }

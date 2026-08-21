@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../common/responsive.dart';
 import '../../database/data_manager.dart';
 import '../../common/widget_helper.dart';
 import '../../providers/favourite_provider.dart';
@@ -25,75 +26,96 @@ class _FavoriteGridViewState extends State<FavoriteGridView> {
   Widget build(BuildContext context) {
     context.watch<FavouriteProvider>();
     context.watch<DataManager>();
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (favouriteProvider.isPinned)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Text(
-                  'Pinned',
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int crossAxisCount = 2;
+        if (Responsive.isDesktop(context)) {
+          crossAxisCount = 4;
+        } else if (Responsive.isTablet(context)) {
+          crossAxisCount = 3;
+        }
+
+        double spacing = 10;
+        double itemWidth = (constraints.maxWidth - (spacing * (crossAxisCount + 1))) / crossAxisCount;
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(spacing),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (favouriteProvider.isPinned)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Text(
+                    'Pinned',
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                    ),
                   ),
                 ),
-              ),
-            Wrap(
-              alignment: WrapAlignment.start,
-              children: [
-                for (int i = 0; i < DataManager().favoriteNotes.length; i++)
-                  if (DataManager().favoriteNotes[i].isPinned)
-                    NoteTileGridView(
-                      selectedIds: favouriteProvider.selectedIds,
-                      note: DataManager().favoriteNotes[i],
-                      onUpdateRequest: () => favouriteProvider.notify(),
-                    ),
-                for (int i = 0; i < DataManager().favoriteListModels.length; i++)
-                  if (DataManager().favoriteListModels[i].isPinned)
-                    ListModelTileGridView(
-                      selectedIds: favouriteProvider.selectedIds,
-                      listModel: DataManager().favoriteListModels[i],
-                      onUpdateRequest: () => favouriteProvider.notify(),
-                    ),
-              ],
-            ),
-            if (favouriteProvider.isPinned && favouriteProvider.others)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Text(
-                  'Others',
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-              ),
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Wrap(
+              Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
                 children: [
                   for (int i = 0; i < DataManager().favoriteNotes.length; i++)
-                    if (!DataManager().favoriteNotes[i].isPinned)
+                    if (DataManager().favoriteNotes[i].isPinned)
                       NoteTileGridView(
                         selectedIds: favouriteProvider.selectedIds,
                         note: DataManager().favoriteNotes[i],
                         onUpdateRequest: () => favouriteProvider.notify(),
+                        width: itemWidth,
                       ),
-
                   for (int i = 0; i < DataManager().favoriteListModels.length; i++)
-                    if (!DataManager().favoriteListModels[i].isPinned)
+                    if (DataManager().favoriteListModels[i].isPinned)
                       ListModelTileGridView(
                         selectedIds: favouriteProvider.selectedIds,
                         listModel: DataManager().favoriteListModels[i],
                         onUpdateRequest: () => favouriteProvider.notify(),
+                        width: itemWidth,
                       ),
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
+              if (favouriteProvider.isPinned && favouriteProvider.others)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  child: Text(
+                    'Others',
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ),
+              Align(
+                alignment: AlignmentDirectional.topStart,
+                child: Wrap(
+                  spacing: spacing,
+                  runSpacing: spacing,
+                  children: [
+                    for (int i = 0; i < DataManager().favoriteNotes.length; i++)
+                      if (!DataManager().favoriteNotes[i].isPinned)
+                        NoteTileGridView(
+                          selectedIds: favouriteProvider.selectedIds,
+                          note: DataManager().favoriteNotes[i],
+                          onUpdateRequest: () => favouriteProvider.notify(),
+                          width: itemWidth,
+                        ),
+
+                    for (int i = 0; i < DataManager().favoriteListModels.length; i++)
+                      if (!DataManager().favoriteListModels[i].isPinned)
+                        ListModelTileGridView(
+                          selectedIds: favouriteProvider.selectedIds,
+                          listModel: DataManager().favoriteListModels[i],
+                          onUpdateRequest: () => favouriteProvider.notify(),
+                          width: itemWidth,
+                        ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -66,26 +66,27 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
         }
       },
       child: Scaffold(
-        body: Container(
-          color: mainColor,
-          child:
-              widget.listModel.isDeleted
-                  ? ListModelForDeletedScreen(listModel: widget.listModel)
-                  : Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                        height: 60,
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () => onBackPressed(false),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Icon(Icons.arrow_back, color: Colors.grey.shade800),
-                              ),
-                            ),
+        backgroundColor: mainColor,
+        body: SafeArea(
+          child: Center(
+            child: Container(
+               child:
+                  widget.listModel.isDeleted
+                      ? ListModelForDeletedScreen(listModel: widget.listModel)
+                      : Column(
+                        children: [
+                          Container(
+                            height: 60,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () => onBackPressed(false),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Icon(Icons.arrow_back, color: Colors.grey.shade800),
+                                  ),
+                                ),
                             const Expanded(child: SizedBox()),
                             if (!widget.listModel.isArchive)
                               StatefulBuilder(
@@ -326,8 +327,10 @@ class _ViewOrEditListModelState extends State<ViewOrEditListModel> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                        ],
+                      ),
+            ),
+          ),
         ),
       ),
     );
@@ -902,7 +905,6 @@ class ListModelForDeletedScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
           height: 60,
           alignment: AlignmentDirectional.centerStart,
           child: Row(

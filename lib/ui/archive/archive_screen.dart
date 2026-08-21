@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../common/responsive.dart';
 import '../../database/data_manager.dart';
 import '../../providers/archive_provider.dart';
 import '../my_drawer.dart';
@@ -19,12 +20,14 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
+
     return ChangeNotifierProvider(
         create: (_) => archiveProvider,
         builder: (context, child) {
           context.watch<ArchiveProvider>();
           return Scaffold(
-            drawer: const MyDrawer(
+            drawer: isDesktop ? null : const MyDrawer(
               selectedTab: HomeDrawerEnum.archive,
             ),
             body: Column(
@@ -51,7 +54,9 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                     ),
                   )
                 else
-                  DataManager().archiveScreenView ? const ArchivedListView() : const ArchivedGridView(),
+                  Expanded(
+                    child: DataManager().archiveScreenView ? const ArchivedListView() : const ArchivedGridView(),
+                  ),
               ],
             ),
           );

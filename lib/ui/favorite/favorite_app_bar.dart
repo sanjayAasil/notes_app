@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../common/responsive.dart';
 import '../../common/utils.dart';
 import '../../database/data_manager.dart';
 import '../../database/list_model_db.dart';
@@ -15,56 +16,68 @@ class DefaultFavoriteAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
     return Padding(
-      padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50, left: 15),
+      padding: EdgeInsets.only(
+        top: const MediaQueryData().padding.top + 50,
+        left: 15,
+      ),
       child: Row(
         children: [
-          Builder(
-              builder: (context) => InkWell(
-                    onTap: () => Scaffold.of(context).openDrawer(),
-                    borderRadius: BorderRadius.circular(40),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.menu, color: Colors.grey.shade800, size: 30),
+          isDesktop
+              ? SizedBox()
+              : Builder(
+                builder:
+                    (context) => InkWell(
+                      onTap: () => Scaffold.of(context).openDrawer(),
+                      borderRadius: BorderRadius.circular(40),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.grey.shade800,
+                          size: 30,
+                        ),
+                      ),
                     ),
-                  )),
+              ),
           const SizedBox(width: 20),
           const Expanded(
-            child: Text(
-              'Favorites',
-              style: TextStyle(fontSize: 18),
-            ),
+            child: Text('Favorites', style: TextStyle(fontSize: 18)),
           ),
           InkWell(
             borderRadius: BorderRadius.circular(40),
             onTap: () => Navigator.of(context).pushNamed(Routes.searchScreen),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: Icon(
-                Icons.search,
-                size: 25,
-              ),
+              child: Icon(Icons.search, size: 25),
             ),
           ),
           InkWell(
             borderRadius: BorderRadius.circular(40),
             onTap: () {
-              DataManager().favoriteScreenView = !DataManager().favoriteScreenView;
+              DataManager().favoriteScreenView =
+                  !DataManager().favoriteScreenView;
               context.read<FavouriteProvider>().notify();
               DataManager().notify();
             },
-            child: Builder(builder: (context) {
-              context.watch<DataManager>();
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                child: Icon(
-                  DataManager().favoriteScreenView
-                      ? CupertinoIcons.rectangle_grid_1x2
-                      : CupertinoIcons.rectangle_grid_2x2,
-                  size: 25,
-                ),
-              );
-            }),
+            child: Builder(
+              builder: (context) {
+                context.watch<DataManager>();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 10,
+                  ),
+                  child: Icon(
+                    DataManager().favoriteScreenView
+                        ? CupertinoIcons.rectangle_grid_1x2
+                        : CupertinoIcons.rectangle_grid_2x2,
+                    size: 25,
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -105,78 +118,64 @@ class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
             InkWell(
               child: const Padding(
                 padding: EdgeInsets.all(15),
-                child: Icon(
-                  CupertinoIcons.xmark,
-                  size: 25,
-                ),
+                child: Icon(CupertinoIcons.xmark, size: 25),
               ),
               onTap: () => favouriteProvider.clearSelectedIds(),
             ),
             Expanded(
-                child: Text(
-              '${selectedIds.length}',
-              style: const TextStyle(
-                fontSize: 20,
+              child: Text(
+                '${selectedIds.length}',
+                style: const TextStyle(fontSize: 20),
               ),
-            )),
+            ),
             InkWell(
               onTap: onPinned,
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: Icon(
-                  CupertinoIcons.pin,
-                  size: 25,
-                ),
+                child: Icon(CupertinoIcons.pin, size: 25),
               ),
             ),
             InkWell(
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: Icon(
-                  CupertinoIcons.bell,
-                  size: 25,
-                ),
+                child: Icon(CupertinoIcons.bell, size: 25),
               ),
               onTap: () {},
             ),
             InkWell(
-              onTap: () => Navigator.of(context).pushNamed(Routes.labelScreen, arguments: selectedIds),
+              onTap:
+                  () => Navigator.of(
+                    context,
+                  ).pushNamed(Routes.labelScreen, arguments: selectedIds),
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: Icon(
-                  Icons.label_outline,
-                  size: 25,
-                ),
+                child: Icon(Icons.label_outline, size: 25),
               ),
             ),
             InkWell(
-              onTap: () => Utils.commonDialog(
-                context: context,
-                function: onArchive,
-                content: 'Archive',
-                snackBarMessage: 'Notes moved to Archive',
-              ),
+              onTap:
+                  () => Utils.commonDialog(
+                    context: context,
+                    function: onArchive,
+                    content: 'Archive',
+                    snackBarMessage: 'Notes moved to Archive',
+                  ),
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: Icon(
-                  Icons.archive_outlined,
-                  size: 25,
-                ),
+                child: Icon(Icons.archive_outlined, size: 25),
               ),
             ),
             InkWell(
-              onTap: () => Utils.commonDialog(
-                context: context,
-                function: onDelete,
-                content: 'Delete',
-                snackBarMessage: 'Notes moved to Bin',
-              ),
+              onTap:
+                  () => Utils.commonDialog(
+                    context: context,
+                    function: onDelete,
+                    content: 'Delete',
+                    snackBarMessage: 'Notes moved to Bin',
+                  ),
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: Icon(
-                  Icons.delete_outline,
-                  size: 25,
-                ),
+                child: Icon(Icons.delete_outline, size: 25),
               ),
             ),
           ],
@@ -186,7 +185,10 @@ class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
   }
 
   onPinned() {
-    List<Note> notes = DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
+    List<Note> notes =
+        DataManager().favoriteNotes
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
 
     for (Note note in notes) {
       note.isPinned = true;
@@ -197,20 +199,28 @@ class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
     }
 
     List<ListModel> listModels =
-        DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().favoriteListModels
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
 
     for (ListModel listModel in listModels) {
       listModel.isPinned = true;
     }
     if (listModels.isNotEmpty) {
-      ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
+      ListModelsDb.removeListModels(
+        ListModelsDb.favoriteListModelKey,
+        selectedIds,
+      );
       ListModelsDb.addListModels(ListModelsDb.favoriteListModelKey, listModels);
     }
     favouriteProvider.clearSelectedIds();
   }
 
   onArchive() {
-    List<Note> notes = DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
+    List<Note> notes =
+        DataManager().favoriteNotes
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (Note note in notes) {
       note.isArchive = true;
       note.isFavorite = false;
@@ -219,12 +229,17 @@ class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
     }
 
     List<ListModel> listModels =
-        DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().favoriteListModels
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (ListModel listModel in listModels) {
       listModel.isArchive = true;
       listModel.isFavorite = false;
       ListModelsDb.addListModel(ListModelsDb.archivedListModelKey, listModel);
-      ListModelsDb.removeListModel(ListModelsDb.favoriteListModelKey, listModel.id);
+      ListModelsDb.removeListModel(
+        ListModelsDb.favoriteListModelKey,
+        listModel.id,
+      );
     }
     favouriteProvider.clearSelectedIds();
   }
@@ -232,7 +247,10 @@ class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
   onDelete() {
     debugPrint("SelectedFavoriteAppBar build: ");
 
-    List<Note> notes = DataManager().favoriteNotes.where((element) => selectedIds.contains(element.id)).toList();
+    List<Note> notes =
+        DataManager().favoriteNotes
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (Note note in notes) {
       note.isDeleted = true;
     }
@@ -243,12 +261,17 @@ class _SelectedFavoriteAppBarState extends State<SelectedFavoriteAppBar> {
     }
 
     List<ListModel> listModels =
-        DataManager().favoriteListModels.where((element) => selectedIds.contains(element.id)).toList();
+        DataManager().favoriteListModels
+            .where((element) => selectedIds.contains(element.id))
+            .toList();
     for (ListModel listModel in listModels) {
       listModel.isDeleted = true;
     }
     if (listModels.isNotEmpty) {
-      ListModelsDb.removeListModels(ListModelsDb.favoriteListModelKey, selectedIds);
+      ListModelsDb.removeListModels(
+        ListModelsDb.favoriteListModelKey,
+        selectedIds,
+      );
       ListModelsDb.addListModels(ListModelsDb.deletedListModelKey, listModels);
     }
 

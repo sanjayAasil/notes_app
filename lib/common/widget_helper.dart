@@ -220,12 +220,14 @@ class NoteTileGridView extends StatefulWidget {
   final List<String> selectedIds;
   final Note note;
   final Function()? onUpdateRequest;
+  final double? width;
 
   const NoteTileGridView({
     super.key,
     required this.selectedIds,
     this.onUpdateRequest,
     required this.note,
+    this.width,
   });
 
   @override
@@ -250,7 +252,7 @@ class _NoteTileGridViewState extends State<NoteTileGridView> {
   Widget build(BuildContext context) {
     context.watch<DataManager>();
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 5,
+      width: widget.width ?? (MediaQuery.of(context).size.width / 2 - 5),
       padding: const EdgeInsets.all(5),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -632,12 +634,14 @@ class ListModelTileGridView extends StatefulWidget {
   final List<String> selectedIds;
   final Function? onUpdateRequest;
   final ListModel listModel;
+  final double? width;
 
   const ListModelTileGridView({
     super.key,
     required this.selectedIds,
     this.onUpdateRequest,
     required this.listModel,
+    this.width,
   });
 
   @override
@@ -662,7 +666,7 @@ class _ListModelTileGridViewState extends State<ListModelTileGridView> {
   Widget build(BuildContext context) {
     context.watch<DataManager>();
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 5,
+      width: widget.width ?? (MediaQuery.of(context).size.width / 2 - 5),
       padding: const EdgeInsets.all(5),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),

@@ -1,7 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../common/utils.dart';
 import '../database/data_manager.dart';
 import '../database/notes_db.dart';
@@ -35,16 +34,18 @@ class _ManageNotePageState extends State<ManageNotePage> {
   void initState() {
     titleController.text = widget.note?.title ?? '';
     noteController.text = widget.note?.note ?? '';
-    addToFavorite = widget.note == null
-        ? false
-        : widget.note!.isFavorite
-        ? true
-        : false;
-    addToPin = widget.note == null
-        ? false
-        : widget.note!.isPinned
-        ? true
-        : false;
+    addToFavorite =
+        widget.note == null
+            ? false
+            : widget.note!.isFavorite
+            ? true
+            : false;
+    addToPin =
+        widget.note == null
+            ? false
+            : widget.note!.isPinned
+            ? true
+            : false;
     if (widget.note == null) {
       mainColor = Colors.white;
     } else {
@@ -63,7 +64,10 @@ class _ManageNotePageState extends State<ManageNotePage> {
             widget.note!.scheduleTime!.month,
             widget.note!.scheduleTime!.day,
           );
-          _timeOfDay = TimeOfDay(hour: widget.note!.scheduleTime!.hour, minute: widget.note!.scheduleTime!.minute);
+          _timeOfDay = TimeOfDay(
+            hour: widget.note!.scheduleTime!.hour,
+            minute: widget.note!.scheduleTime!.minute,
+          );
         }
       }
     }
@@ -77,425 +81,490 @@ class _ManageNotePageState extends State<ManageNotePage> {
       onPopInvokedWithResult: (bool value, v) {
         if (isBackPressed) return;
 
-        if (widget.note == null || (widget.note != null && !widget.note!.isDeleted)) {
+        if (widget.note == null ||
+            (widget.note != null && !widget.note!.isDeleted)) {
           onBackPressed(true);
         }
       },
       child: Scaffold(
-        body: Container(
-          color: mainColor,
-          child: widget.note != null && widget.note!.isDeleted
-              ? NoteForDeletedScreen(note: widget.note!)
-              : Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: MediaQuery
-                    .of(context)
-                    .padding
-                    .top),
-                height: 60,
-                alignment: AlignmentDirectional.centerStart,
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () => onBackPressed(false),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    ),
-                    const Expanded(child: SizedBox()),
-                    if (widget.note == null || !widget.note!.isArchive)
-                      StatefulBuilder(
-                        builder: (context, setState) {
-                          return InkWell(
-                            onTap: () {
-                              addToFavorite = !addToFavorite;
-                              setState(() {});
-                            },
-                            borderRadius: BorderRadius.circular(40),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: addToFavorite
-                                  ? Icon(
-                                Icons.favorite,
-                                color: Colors.red.shade800,
-                              )
-                                  : Icon(
-                                Icons.favorite_border,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    StatefulBuilder(builder: (context, setState) {
-                      return InkWell(
-                        onTap: () {
-                          addToPin = !addToPin;
-                          setState(() {});
-                        },
-                        borderRadius: BorderRadius.circular(40),
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: addToPin
-                                ? Icon(
-                              CupertinoIcons.pin_fill,
-                              color: Colors.grey.shade800,
-                            )
-                                : const Icon(CupertinoIcons.pin)),
-                      );
-                    }),
-                    InkWell(
-                      onTap: () => remainder(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          CupertinoIcons.bell,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: archiveButton,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: widget.note == null
-                            ? Icon(
-                          Icons.archive_outlined,
-                          color: Colors.grey.shade800,
-                        )
-                            : widget.note!.isArchive
-                            ? Icon(
-                          Icons.unarchive_outlined,
-                          color: Colors.grey.shade800,
-                        )
-                            : Icon(
-                          Icons.archive_outlined,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    ),
-                    // SizedBox(),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, left: 20),
-                        child: TextField(
-                          style: const TextStyle(
-                            fontSize: 30,
-                          ),
-                          controller: titleController,
-                          decoration: const InputDecoration(
-                            hintText: 'Title',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 25,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: TextField(
-                          controller: noteController,
-                          maxLines: null,
-                          decoration: const InputDecoration(
-                            hintText: 'Note',
-                            hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      (_date != null && _timeOfDay != null) && !isTimePassed
-                          ? Padding(
-                        padding: const EdgeInsets.only(left: 20.0, top: 20),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 5.0),
-                              child: Icon(
-                                Icons.alarm,
-                                color: Colors.yellow.shade700,
-                              ),
-                            ),
-                            Text(
-                              Utils.getFormattedDateTime(
-                                DateTime(
-                                  _date!.year,
-                                  _date!.month,
-                                  _date!.day,
-                                  _timeOfDay!.hour,
-                                  _timeOfDay!.minute,
+        backgroundColor: mainColor,
+        body: SafeArea(
+          child: Center(
+            child: Container(
+              child:
+                  widget.note != null && widget.note!.isDeleted
+                      ? NoteForDeletedScreen(note: widget.note!)
+                      : Column(
+                        children: [
+                          Container(
+                            height: 60,
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () => onBackPressed(false),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Icon(
+                                      Icons.arrow_back_outlined,
+                                      color: Colors.grey.shade800,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              style: TextStyle(color: Colors.yellow.shade700),
-                            ),
-                          ],
-                        ),
-                      )
-                          : const SizedBox(),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Wrap(
-                            children: [
-                              if (widget.note != null)
-                                for (String label in widget.note!.labels)
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade300,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
+                                const Expanded(child: SizedBox()),
+                                if (widget.note == null ||
+                                    !widget.note!.isArchive)
+                                  StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return InkWell(
+                                        onTap: () {
+                                          addToFavorite = !addToFavorite;
+                                          setState(() {});
+                                        },
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child:
+                                              addToFavorite
+                                                  ? Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.red.shade800,
+                                                  )
+                                                  : Icon(
+                                                    Icons.favorite_border,
+                                                    color: Colors.grey.shade800,
+                                                  ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return InkWell(
+                                      onTap: () {
+                                        addToPin = !addToPin;
+                                        setState(() {});
+                                      },
+                                      borderRadius: BorderRadius.circular(40),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Text(
-                                          '  $label  ',
-                                          style: TextStyle(
-                                            color: Colors.grey.shade700,
-                                          ),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child:
+                                            addToPin
+                                                ? Icon(
+                                                  CupertinoIcons.pin_fill,
+                                                  color: Colors.grey.shade800,
+                                                )
+                                                : const Icon(
+                                                  CupertinoIcons.pin,
+                                                ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                InkWell(
+                                  onTap: () => remainder(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      CupertinoIcons.bell,
+                                      color: Colors.grey.shade800,
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: archiveButton,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child:
+                                        widget.note == null
+                                            ? Icon(
+                                              Icons.archive_outlined,
+                                              color: Colors.grey.shade800,
+                                            )
+                                            : widget.note!.isArchive
+                                            ? Icon(
+                                              Icons.unarchive_outlined,
+                                              color: Colors.grey.shade800,
+                                            )
+                                            : Icon(
+                                              Icons.archive_outlined,
+                                              color: Colors.grey.shade800,
+                                            ),
+                                  ),
+                                ),
+                                // SizedBox(),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 20,
+                                      left: 20,
+                                    ),
+                                    child: TextField(
+                                      style: const TextStyle(fontSize: 30),
+                                      controller: titleController,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Title',
+                                        border: InputBorder.none,
+                                        hintStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 25,
                                         ),
                                       ),
                                     ),
                                   ),
-                            ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: TextField(
+                                      controller: noteController,
+                                      maxLines: null,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Note',
+                                        hintStyle: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                    ),
+                                  ),
+                                  (_date != null && _timeOfDay != null) &&
+                                          !isTimePassed
+                                      ? Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 20.0,
+                                          top: 20,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 5.0,
+                                              ),
+                                              child: Icon(
+                                                Icons.alarm,
+                                                color: Colors.yellow.shade700,
+                                              ),
+                                            ),
+                                            Text(
+                                              Utils.getFormattedDateTime(
+                                                DateTime(
+                                                  _date!.year,
+                                                  _date!.month,
+                                                  _date!.day,
+                                                  _timeOfDay!.hour,
+                                                  _timeOfDay!.minute,
+                                                ),
+                                              ),
+                                              style: TextStyle(
+                                                color: Colors.yellow.shade700,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                      : const SizedBox(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Align(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: Wrap(
+                                        children: [
+                                          if (widget.note != null)
+                                            for (String label
+                                                in widget.note!.labels)
+                                              Padding(
+                                                padding: const EdgeInsets.all(
+                                                  5.0,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade300,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          5,
+                                                        ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          5.0,
+                                                        ),
+                                                    child: Text(
+                                                      '  $label  ',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Colors
+                                                                .grey
+                                                                .shade700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 45,
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: _pickAColor,
-                      borderRadius: BorderRadius.circular(40),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.color_lens_outlined,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    ),
-                    if (widget.note != null)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 70.0),
-                        child: Text(
-                          Utils.getFormattedDateTime(widget.note!.createdAt),
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                      ),
-                    const Expanded(child: SizedBox()),
-                    PopupMenuButton(
-                      itemBuilder: (context) =>
-                      [
-                        PopupMenuItem(
-                          value: 'deleted',
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10.0),
-                                child: Icon(
-                                  Icons.delete_outline_outlined,
-                                  color: Colors.grey.shade800,
+                          SizedBox(
+                            height: 45,
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: _pickAColor,
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Icon(
+                                      Icons.color_lens_outlined,
+                                      color: Colors.grey.shade800,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'Delete',
-                                style: TextStyle(color: Colors.grey.shade800),
-                              ),
-                            ],
+                                if (widget.note != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 70.0),
+                                    child: Text(
+                                      Utils.getFormattedDateTime(
+                                        widget.note!.createdAt,
+                                      ),
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey.shade800,
+                                      ),
+                                    ),
+                                  ),
+                                const Expanded(child: SizedBox()),
+                                PopupMenuButton(
+                                  itemBuilder:
+                                      (context) => [
+                                        PopupMenuItem(
+                                          value: 'deleted',
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 10.0,
+                                                ),
+                                                child: Icon(
+                                                  Icons.delete_outline_outlined,
+                                                  color: Colors.grey.shade800,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade800,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                  onSelected: (value) => popUpDelete(),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                      onSelected: (value) => popUpDelete(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                        ],
+                      ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  _pickAColor() =>
-      showModalBottomSheet(
-        context: context,
-        builder: (context) =>
-            StatefulBuilder(builder: (context, setLocalState) {
-              return Container(
-                color: Colors.grey.shade300,
-                height: const MediaQueryData().padding.bottom + 150,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Colours',
-                          style: TextStyle(color: Colors.grey.shade800, fontSize: 15),
+  _pickAColor() => showModalBottomSheet(
+    context: context,
+    builder:
+        (context) => StatefulBuilder(
+          builder: (context, setLocalState) {
+            return Container(
+              color: Colors.grey.shade300,
+              height: const MediaQueryData().padding.bottom + 150,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Colours',
+                        style: TextStyle(
+                          color: Colors.grey.shade800,
+                          fontSize: 15,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              ColorsTile(
-                                color: Colors.white,
-                                isSelected: mainColor == Colors.white,
-                                icon: Icon(
-                                  Icons.format_color_reset_outlined,
-                                  size: 50,
-                                  color: Colors.grey.shade800,
-                                ),
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.white);
-                                },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            ColorsTile(
+                              color: Colors.white,
+                              isSelected: mainColor == Colors.white,
+                              icon: Icon(
+                                Icons.format_color_reset_outlined,
+                                size: 50,
+                                color: Colors.grey.shade800,
                               ),
-                              ColorsTile(
-                                color: Colors.yellow.shade200,
-                                isSelected: mainColor == Colors.yellow.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.yellow.shade200);
-                                },
-                              ),
-                              ColorsTile(
-                                color: Colors.green.shade200,
-                                isSelected: mainColor == Colors.green.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.green.shade200);
-                                },
-                              ),
-                              ColorsTile(
-                                color: Colors.blue.shade200,
-                                isSelected: mainColor == Colors.blue.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.blue.shade200);
-                                },
-                              ),
-                              ColorsTile(
-                                color: Colors.pink.shade200,
-                                isSelected: mainColor == Colors.pink.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.pink.shade200);
-                                },
-                              ),
-                              ColorsTile(
-                                color: Colors.deepOrange,
-                                isSelected: mainColor == Colors.deepOrange.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.deepOrange.shade200);
-                                },
-                              ),
-                              ColorsTile(
-                                color: Colors.purple.shade200,
-                                isSelected: mainColor == Colors.purple.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.purple.shade200);
-                                },
-                              ),
-                              ColorsTile(
-                                color: Colors.deepOrangeAccent.shade200,
-                                isSelected: mainColor == Colors.deepOrangeAccent.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.deepOrangeAccent.shade200);
-                                },
-                              ),
-                              ColorsTile(
-                                color: Colors.teal.shade200,
-                                isSelected: mainColor == Colors.teal.shade200,
-                                onColorChanging: () {
-                                  setLocalState(() {});
-                                  setState(() => mainColor = Colors.teal.shade200);
-                                },
-                              ),
-                            ],
-                          ),
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(() => mainColor = Colors.white);
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.yellow.shade200,
+                              isSelected: mainColor == Colors.yellow.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () => mainColor = Colors.yellow.shade200,
+                                );
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.green.shade200,
+                              isSelected: mainColor == Colors.green.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () => mainColor = Colors.green.shade200,
+                                );
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.blue.shade200,
+                              isSelected: mainColor == Colors.blue.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () => mainColor = Colors.blue.shade200,
+                                );
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.pink.shade200,
+                              isSelected: mainColor == Colors.pink.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () => mainColor = Colors.pink.shade200,
+                                );
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.deepOrange,
+                              isSelected:
+                                  mainColor == Colors.deepOrange.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () => mainColor = Colors.deepOrange.shade200,
+                                );
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.purple.shade200,
+                              isSelected: mainColor == Colors.purple.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () => mainColor = Colors.purple.shade200,
+                                );
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.deepOrangeAccent.shade200,
+                              isSelected:
+                                  mainColor == Colors.deepOrangeAccent.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () =>
+                                      mainColor =
+                                          Colors.deepOrangeAccent.shade200,
+                                );
+                              },
+                            ),
+                            ColorsTile(
+                              color: Colors.teal.shade200,
+                              isSelected: mainColor == Colors.teal.shade200,
+                              onColorChanging: () {
+                                setLocalState(() {});
+                                setState(
+                                  () => mainColor = Colors.teal.shade200,
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            }),
-      );
+              ),
+            );
+          },
+        ),
+  );
 
   void remainder() {
     showDialog(
       context: context,
-      builder: (context) =>
-          StatefulBuilder(builder: (context, localState) {
-            return SimpleDialog(
-              backgroundColor: Colors.grey.shade200,
-              title: const Text('Remainder'),
-              alignment: Alignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 10),
-                  child: ElevatedButton(
+      builder:
+          (context) => StatefulBuilder(
+            builder: (context, localState) {
+              return SimpleDialog(
+                backgroundColor: Colors.grey.shade200,
+                title: const Text('Remainder'),
+                alignment: Alignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 60.0,
+                      vertical: 10,
+                    ),
+                    child: ElevatedButton(
                       onPressed: () {
                         showDatePicker(
-                            builder: (context, child) =>
-                                Theme(
-                                  data: ThemeData(
-                                    colorScheme: ColorScheme.light(
-                                      primary: Colors.blue,
-                                      onPrimary: Colors.white,
-                                      surface: Colors.grey.shade50,
-                                    ),
+                          builder:
+                              (context, child) => Theme(
+                                data: ThemeData(
+                                  colorScheme: ColorScheme.light(
+                                    primary: Colors.blue,
+                                    onPrimary: Colors.white,
+                                    surface: Colors.grey.shade50,
                                   ),
-                                  child: child!,
                                 ),
-                            context: context,
-                            firstDate: DateTime.now(),
-                            initialDate: DateTime(
-                              _date?.year ?? DateTime
-                                  .now()
-                                  .year,
-                              _date?.month ?? DateTime
-                                  .now()
-                                  .month,
-                              _date?.day ?? DateTime
-                                  .now()
-                                  .day,
-                            ),
-                            lastDate: DateTime(2050),
-                            currentDate: DateTime.now())
-                            .then((value) => localState(() => _date = value!));
+                                child: child!,
+                              ),
+                          context: context,
+                          firstDate: DateTime.now(),
+                          initialDate: DateTime(
+                            _date?.year ?? DateTime.now().year,
+                            _date?.month ?? DateTime.now().month,
+                            _date?.day ?? DateTime.now().day,
+                          ),
+                          lastDate: DateTime(2050),
+                          currentDate: DateTime.now(),
+                        ).then((value) => localState(() => _date = value!));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue.shade600,
@@ -505,174 +574,172 @@ class _ManageNotePageState extends State<ManageNotePage> {
                         children: [
                           const Padding(
                             padding: EdgeInsets.only(right: 7),
-                            child: Icon(
-                              Icons.date_range,
-                              color: Colors.white,
-                            ),
+                            child: Icon(Icons.date_range, color: Colors.white),
                           ),
                           _date == null
                               ? const Text(
-                            'Select date',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          )
+                                'Select date',
+                                style: TextStyle(color: Colors.white),
+                              )
                               : Text(
-                            '${_date!.day}/${_date!.month}/${_date!.year}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                                '${_date!.day}/${_date!.month}/${_date!.year}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
                         ],
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay(
-                          hour: _timeOfDay?.hour == null ? DateTime
-                              .now()
-                              .hour : _timeOfDay!.hour,
-                          minute: _timeOfDay?.minute == null ? DateTime
-                              .now()
-                              .minute + 1 : _timeOfDay!.minute,
-                        ),
-                      ).then((value) => localState(() => _timeOfDay = value!));
-                    },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade600),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Padding(padding: EdgeInsets.only(right: 7), child: Icon(Icons.timer, color: Colors
-                            .white)),
-                        _timeOfDay == null
-                            ? const Text(
-                          'Select time',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        )
-                            : Text(
-                          _timeOfDay!.format(context).toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    const Expanded(child: SizedBox()),
-                    TextButton(
-                      onPressed: () {
-                        AwesomeNotifications().cancel(2);
-                        _date = null;
-                        _timeOfDay = null;
-                        if (widget.note != null) {
-                          widget.note!.scheduleTime = null;
-                        }
-                        setState(() {});
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            elevation: 20,
-                            content: Text("The note's reminder is Cancelled"),
-                            behavior: SnackBarBehavior.floating,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        DataManager().notify();
-                      },
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.grey.shade800,
-                        ),
                       ),
                     ),
-                    if (_date != null && _timeOfDay != null)
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 60.0,
+                      vertical: 10,
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay(
+                            hour:
+                                _timeOfDay?.hour == null
+                                    ? DateTime.now().hour
+                                    : _timeOfDay!.hour,
+                            minute:
+                                _timeOfDay?.minute == null
+                                    ? DateTime.now().minute + 1
+                                    : _timeOfDay!.minute,
+                          ),
+                        ).then(
+                          (value) => localState(() => _timeOfDay = value!),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue.shade600,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: 7),
+                            child: Icon(Icons.timer, color: Colors.white),
+                          ),
+                          _timeOfDay == null
+                              ? const Text(
+                                'Select time',
+                                style: TextStyle(color: Colors.white),
+                              )
+                              : Text(
+                                _timeOfDay!.format(context).toString(),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Expanded(child: SizedBox()),
                       TextButton(
                         onPressed: () {
+                          AwesomeNotifications().cancel(2);
+                          _date = null;
+                          _timeOfDay = null;
                           if (widget.note != null) {
-                            widget.note!.scheduleTime = DateTime(
-                              _date!.year,
-                              _date!.month,
-                              _date!.day,
-                              _timeOfDay!.hour,
-                              _timeOfDay!.minute,
-                            );
-                            isTimePassed = false;
+                            widget.note!.scheduleTime = null;
                           }
-
-                          AwesomeNotifications().createNotification(
-                            content: NotificationContent(
-                              id: 2,
-                              channelKey: 'basic_channel',
-                              title: titleController.text.trim(),
-                              body: noteController.text.trim(),
-                            ),
-                            schedule: NotificationCalendar(
-                              year: _date!.year,
-                              month: _date!.month,
-                              day: _date!.day,
-                              hour: _timeOfDay!.hour,
-                              minute: _timeOfDay!.minute,
-                              second: 0,
-                              //timeZone: 'Asia/Kolkata',
-                            ),
-                            actionButtons: [
-                              NotificationActionButton(
-                                key: 'label key',
-                                label: 'Cancel',
-                                color: Colors.blue,
-                              ),
-                              NotificationActionButton(
-                                key: 'label key',
-                                label: 'Mark as Done',
-                                color: Colors.blue,
-                              ),
-                            ],
-                          );
-
+                          setState(() {});
+                          Navigator.of(context).pop();
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               elevation: 20,
-                              content: Text("The note's reminder is Scheduled"),
+                              content: Text("The note's reminder is Cancelled"),
                               behavior: SnackBarBehavior.floating,
                               duration: Duration(seconds: 2),
                             ),
                           );
                           DataManager().notify();
-                          Navigator.of(context).pop();
-                          setState(() {});
                         },
                         child: Text(
-                          'Save',
-                          style: TextStyle(
-                            color: Colors.blue.shade800,
-                          ),
-                        ),
-                      )
-                    else
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                            color: Colors.grey.shade800,
-                          ),
+                          'Cancel',
+                          style: TextStyle(color: Colors.grey.shade800),
                         ),
                       ),
-                  ],
-                ),
-              ],
-            );
-          }),
+                      if (_date != null && _timeOfDay != null)
+                        TextButton(
+                          onPressed: () {
+                            if (widget.note != null) {
+                              widget.note!.scheduleTime = DateTime(
+                                _date!.year,
+                                _date!.month,
+                                _date!.day,
+                                _timeOfDay!.hour,
+                                _timeOfDay!.minute,
+                              );
+                              isTimePassed = false;
+                            }
+
+                            AwesomeNotifications().createNotification(
+                              content: NotificationContent(
+                                id: 2,
+                                channelKey: 'basic_channel',
+                                title: titleController.text.trim(),
+                                body: noteController.text.trim(),
+                              ),
+                              schedule: NotificationCalendar(
+                                year: _date!.year,
+                                month: _date!.month,
+                                day: _date!.day,
+                                hour: _timeOfDay!.hour,
+                                minute: _timeOfDay!.minute,
+                                second: 0,
+                                //timeZone: 'Asia/Kolkata',
+                              ),
+                              actionButtons: [
+                                NotificationActionButton(
+                                  key: 'label key',
+                                  label: 'Cancel',
+                                  color: Colors.blue,
+                                ),
+                                NotificationActionButton(
+                                  key: 'label key',
+                                  label: 'Mark as Done',
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                elevation: 20,
+                                content: Text(
+                                  "The note's reminder is Scheduled",
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                            DataManager().notify();
+                            Navigator.of(context).pop();
+                            setState(() {});
+                          },
+                          child: Text(
+                            'Save',
+                            style: TextStyle(color: Colors.blue.shade800),
+                          ),
+                        )
+                      else
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Save',
+                            style: TextStyle(color: Colors.grey.shade800),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
     );
   }
 
@@ -692,12 +759,12 @@ class _ManageNotePageState extends State<ManageNotePage> {
       }
       NotesDb.addNote(NotesDb.deletedNotesKey, widget.note!);
     } else {
-      if (titleController.text
-          .trim()
-          .isNotEmpty || noteController.text
-          .trim()
-          .isNotEmpty) {
-        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
+      if (titleController.text.trim().isNotEmpty ||
+          noteController.text.trim().isNotEmpty) {
+        Note note = Note.create(
+          title: titleController.text.trim(),
+          note: noteController.text.trim(),
+        );
         note.isDeleted = true;
         NotesDb.addNote(NotesDb.deletedNotesKey, note);
       }
@@ -716,13 +783,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
   void onBackPressed(bool skipPop) {
     isBackPressed = true;
-    if (titleController.text
-        .trim()
-        .isNotEmpty || noteController.text
-        .trim()
-        .isNotEmpty) {
+    if (titleController.text.trim().isNotEmpty ||
+        noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
-        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
+        Note note = Note.create(
+          title: titleController.text.trim(),
+          note: noteController.text.trim(),
+        );
         debugPrint("_ManageNotePageState onBackPressed: ${note.uid}");
         note.color = mainColor;
         if (_date != null && _timeOfDay != null) {
@@ -911,13 +978,13 @@ class _ManageNotePageState extends State<ManageNotePage> {
 
   void archiveButton() {
     isBackPressed = true;
-    if (titleController.text
-        .trim()
-        .isNotEmpty || noteController.text
-        .trim()
-        .isNotEmpty) {
+    if (titleController.text.trim().isNotEmpty ||
+        noteController.text.trim().isNotEmpty) {
       if (widget.note == null) {
-        Note note = Note.create(title: titleController.text.trim(), note: noteController.text.trim());
+        Note note = Note.create(
+          title: titleController.text.trim(),
+          note: noteController.text.trim(),
+        );
         note.color = mainColor;
         if (_date != null && _timeOfDay != null) {
           note.scheduleTime = DateTime(
@@ -1070,13 +1137,10 @@ class ColorsTile extends StatelessWidget {
             color: color,
             borderRadius: BorderRadius.circular(40),
           ),
-          child: isSelected
-              ? Icon(
-            Icons.check,
-            color: Colors.blue.shade900,
-            size: 40,
-          )
-              : null,
+          child:
+              isSelected
+                  ? Icon(Icons.check, color: Colors.blue.shade900, size: 40)
+                  : null,
         ),
       ),
     );
@@ -1094,8 +1158,7 @@ class NoteForDeletedScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding:
-          EdgeInsets.only(top: const MediaQueryData().padding.top + 50, left: const MediaQueryData().padding.left),
+          padding: const EdgeInsets.only(top: 10),
           child: Row(
             children: [
               InkWell(
@@ -1154,7 +1217,11 @@ class NoteForDeletedScreen extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  NotesDb.removeNote(NotesDb.deletedNotesKey, note.id, permanentDelete: true);
+                  NotesDb.removeNote(
+                    NotesDb.deletedNotesKey,
+                    note.id,
+                    permanentDelete: true,
+                  );
                   Navigator.of(context).pop();
 
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -1177,19 +1244,11 @@ class NoteForDeletedScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Text(
-                    note.title,
-                    style: const TextStyle(
-                      fontSize: 25,
-                    ),
-                  ),
+                  child: Text(note.title, style: const TextStyle(fontSize: 25)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    note.note,
-                    style: const TextStyle(fontSize: 15),
-                  ),
+                  child: Text(note.note, style: const TextStyle(fontSize: 15)),
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../common/responsive.dart';
 import '../common/utils.dart';
 import '../common/widget_helper.dart';
 import '../database/data_manager.dart';
@@ -35,37 +36,40 @@ class _DeletedScreenState extends State<DeletedScreen> {
         ? DataManager().deletedListModels.sort((a, b) => a.createdAt.compareTo(b.createdAt))
         : DataManager().deletedListModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
+    final isDesktop = Responsive.isDesktop(context);
+
     return ChangeNotifierProvider(
         create: (_) => deletedProvider,
         builder: (context, child) {
           selectedIds = context.watch<DeletedProvider>().selectedIds;
           context.watch<DeletedProvider>();
           return Scaffold(
-            drawer: const MyDrawer(selectedTab: HomeDrawerEnum.deleted),
+            drawer: isDesktop ? null : const MyDrawer(selectedTab: HomeDrawerEnum.deleted),
             body: Column(
               children: [
                 if (selectedIds.isEmpty)
                   Padding(
                     padding: EdgeInsets.only(
-                      top: const MediaQueryData().padding.top + 50,
-                      left: const MediaQueryData().padding.left + 10,
+                      top: isDesktop ? 20 : const MediaQueryData().padding.top + 50,
+                      left: 15,
                       bottom: 20,
                     ),
                     child: Row(
                       children: [
-                        Builder(
-                            builder: (context) => InkWell(
-                                  onTap: () => Scaffold.of(context).openDrawer(),
-                                  borderRadius: BorderRadius.circular(40),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.menu,
-                                      color: Colors.grey.shade800,
-                                      size: 30,
+                        if (!isDesktop)
+                          Builder(
+                              builder: (context) => InkWell(
+                                    onTap: () => Scaffold.of(context).openDrawer(),
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.menu,
+                                        color: Colors.grey.shade800,
+                                        size: 30,
+                                      ),
                                     ),
-                                  ),
-                                )),
+                                  )),
                         const SizedBox(
                           width: 20,
                         ),
@@ -82,9 +86,9 @@ class _DeletedScreenState extends State<DeletedScreen> {
                   Container(
                     alignment: Alignment.centerLeft,
                     width: double.infinity,
-                    height: const MediaQueryData().padding.top + 100,
+                    height: isDesktop ? 80 : const MediaQueryData().padding.top + 100,
                     child: Padding(
-                      padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50),
+                      padding: EdgeInsets.only(top: isDesktop ? 10 : const MediaQueryData().padding.top + 50),
                       child: Row(
                         children: [
                           InkWell(
@@ -153,36 +157,39 @@ class _DeletedScreenState extends State<DeletedScreen> {
                         ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
-                          child: Text('Your archived notes appear here'),
+                          child: Text('Your deleted notes appear here'),
                         ),
                       ],
                     ),
                   )
                 else
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          // SizedBox(height: 20),
-                          for (Note note in DataManager().deletedNotes)
-                            NoteTileListView(
-                              note: note,
-                              selectedIds: selectedIds,
-                              onUpdateRequest: () => deletedProvider.notify(),
-                            ),
-                          for (ListModel listModel in DataManager().deletedListModels)
-                            ListModelTileListView(
-                                selectedIds: selectedIds,
-                                listModel: listModel,
-                                onUpdateRequest: () => deletedProvider.notify()),
-                        ],
-                      ),
+                    child: Center(
+                      child: SingleChildScrollView(
+                       child: Column(
+                         children: [
+                           // SizedBox(height: 20),
+                           for (Note note in DataManager().deletedNotes)
+                             NoteTileListView(
+                               note: note,
+                               selectedIds: selectedIds,
+                               onUpdateRequest: () => deletedProvider.notify(),
+                             ),
+                           for (ListModel listModel in DataManager().deletedListModels)
+                             ListModelTileListView(
+                                 selectedIds: selectedIds,
+                                 listModel: listModel,
+                                 onUpdateRequest: () => deletedProvider.notify()),
+                         ],
+                       ),
+                                              ),
                     ),
                   ),
               ],
             ),
           );
         });
+
   }
 
   onRestore() {

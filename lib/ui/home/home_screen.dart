@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../common/responsive.dart';
 import '../../common/utils.dart';
 import '../../database/data_manager.dart';
 import '../../providers/home_screen_provider.dart';
@@ -33,7 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
         return PopScope(
           canPop: homeScreenProvider.selectedDrawer == HomeDrawerEnum.notes,
           onPopInvokedWithResult: (value, v) => homeScreenProvider.selectedDrawer = HomeDrawerEnum.notes,
-          child: body,
+          child: Responsive(
+            mobile: body,
+            desktop: Row(
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: MyDrawer(selectedTab: homeScreenProvider.selectedDrawer, isPermanent: true),
+                ),
+                const VerticalDivider(width: 1),
+                Expanded(child: body),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -78,8 +91,10 @@ class _NotesScreenState extends State<NotesScreen> {
   Widget build(BuildContext context) {
     context.watch<HomeScreenProvider>();
     context.watch<DataManager>();
+    final isDesktop = Responsive.isDesktop(context);
+
     return Scaffold(
-      drawer: const MyDrawer(selectedTab: HomeDrawerEnum.notes),
+      drawer: isDesktop ? null : const MyDrawer(selectedTab: HomeDrawerEnum.notes),
       body: Column(
         children: [
           if (context.read<HomeScreenProvider>().selectedIds.isEmpty)
@@ -96,7 +111,13 @@ class _NotesScreenState extends State<NotesScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Expanded(child: SizedBox()),
-                  Icon(Icons.sticky_note_2_outlined, color: Colors.yellow.shade800, size: 100),
+                  GradientIcon(
+                    Icons.sticky_note_2_outlined,
+                    100,
+                    LinearGradient(
+                      colors: [Colors.yellow.shade900, Colors.yellow.shade700, Colors.yellow.shade500],
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   const Text('Notes you add appear here'),
                   const Expanded(child: SizedBox()),
@@ -148,7 +169,6 @@ class _NotesScreenState extends State<NotesScreen> {
               ],
             ),
           ),
-          //Expanded(child: SizedBox()),
         ],
       ),
       floatingActionButton: Tooltip(

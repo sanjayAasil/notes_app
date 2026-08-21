@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
- import '../../database/data_manager.dart';
+import '../../common/responsive.dart';
+import '../../database/data_manager.dart';
 import '../../providers/favourite_provider.dart';
 import '../my_drawer.dart';
 import 'favorite_app_bar.dart';
@@ -19,13 +20,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Responsive.isDesktop(context);
+    
     return ChangeNotifierProvider(
       create: (_) => favouriteProvider,
       builder: (context, child) {
         context.watch<FavouriteProvider>();
 
         return Scaffold(
-          drawer: const MyDrawer(selectedTab: HomeDrawerEnum.favourites),
+          drawer: isDesktop ? null : const MyDrawer(selectedTab: HomeDrawerEnum.favourites),
           body: Column(
             children: [
               if (favouriteProvider.selectedIds.isEmpty)
@@ -50,7 +53,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   ),
                 )
               else
-                DataManager().favoriteScreenView ? const FavoriteListView() : const FavoriteGridView(),
+                Expanded(
+                  child: DataManager().favoriteScreenView ? const FavoriteListView() : const FavoriteGridView(),
+                ),
             ],
           ),
         );

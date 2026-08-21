@@ -11,22 +11,27 @@ import '../routes.dart';
 enum HomeDrawerEnum { notes, favourites, remainder, archive, deleted }
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key, required this.selectedTab});
+  const MyDrawer({super.key, required this.selectedTab, this.isPermanent = false});
 
   final HomeDrawerEnum selectedTab;
+  final bool isPermanent;
 
   @override
   Widget build(BuildContext context) {
     HomeScreenProvider homeScreenProvider = context.read<HomeScreenProvider>();
     return Drawer(
       backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20, left: 25, bottom: 25),
+                padding: EdgeInsets.only(
+                    top: isPermanent ? 40 : MediaQuery.of(context).padding.top + 20,
+                    left: 25,
+                    bottom: 25),
                 child: GradientText(
                   'Keep Notes',
                   gradient: LinearGradient(
@@ -34,7 +39,7 @@ class MyDrawer extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -42,7 +47,7 @@ class MyDrawer extends StatelessWidget {
           InkWell(
             onTap: () {
               homeScreenProvider.selectedDrawer = HomeDrawerEnum.notes;
-              Navigator.of(context).pop();
+              if (!isPermanent) Navigator.of(context).pop();
             },
             child: DrawerTile(
               name: 'Notes',
@@ -52,8 +57,8 @@ class MyDrawer extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pop();
               homeScreenProvider.selectedDrawer = HomeDrawerEnum.favourites;
+              if (!isPermanent) Navigator.of(context).pop();
             },
             child: DrawerTile(
               name: 'Favorites',
@@ -63,8 +68,8 @@ class MyDrawer extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pop();
               homeScreenProvider.selectedDrawer = HomeDrawerEnum.remainder;
+              if (!isPermanent) Navigator.of(context).pop();
             },
             child: DrawerTile(
               name: 'Remainder',
@@ -81,7 +86,10 @@ class MyDrawer extends StatelessWidget {
                   children: [
                     const Expanded(child: Padding(padding: EdgeInsets.all(10.0), child: Text('     Labels'))),
                     InkWell(
-                      onTap: () => Navigator.of(context).popAndPushNamed(Routes.createNewLabelScreen),
+                      onTap: () {
+                        if (!isPermanent) Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed(Routes.createNewLabelScreen);
+                      },
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                         child: Text('Edit'),
@@ -107,7 +115,10 @@ class MyDrawer extends StatelessWidget {
                         ],
                       ),
                     InkWell(
-                      onTap: () => Navigator.of(context).popAndPushNamed(Routes.createNewLabelScreen),
+                      onTap: () {
+                        if (!isPermanent) Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed(Routes.createNewLabelScreen);
+                      },
                       child: const DrawerTile(name: 'Create new label', icon: Icons.add),
                     ),
                   ],
@@ -117,13 +128,16 @@ class MyDrawer extends StatelessWidget {
             )
           else
             InkWell(
-              onTap: () => Navigator.of(context).popAndPushNamed(Routes.createNewLabelScreen),
+              onTap: () {
+                if (!isPermanent) Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.createNewLabelScreen);
+              },
               child: const DrawerTile(name: 'Create new label', icon: Icons.add),
             ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pop();
               homeScreenProvider.selectedDrawer = HomeDrawerEnum.archive;
+              if (!isPermanent) Navigator.of(context).pop();
             },
             child: DrawerTile(
               name: 'Archive',
@@ -133,8 +147,8 @@ class MyDrawer extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context).pop();
               homeScreenProvider.selectedDrawer = HomeDrawerEnum.deleted;
+              if (!isPermanent) Navigator.of(context).pop();
             },
             child: DrawerTile(
               name: 'Deleted',
@@ -143,7 +157,10 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () => Navigator.of(context).popAndPushNamed(Routes.settingsScreen),
+            onTap: () {
+              if (!isPermanent) Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(Routes.settingsScreen);
+            },
             child: const DrawerTile(name: 'Settings', icon: Icons.settings),
           ),
           InkWell(
@@ -153,12 +170,12 @@ class MyDrawer extends StatelessWidget {
                 context: context,
                 builder:
                     (context) => AlertDialog(
-                      content: Text('Are you sure want to Logout?'),
-                      title: Text("Log Out"),
+                      content: const Text('Are you sure want to Logout?'),
+                      title: const Text("Log Out"),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text('Cancel', style: TextStyle(color: Colors.grey)),
+                          child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
                         ),
                         TextButton(
                           onPressed: () async {
@@ -171,7 +188,7 @@ class MyDrawer extends StatelessWidget {
                               Navigator.of(context).pushNamedAndRemoveUntil(Routes.mainScreen, (route) => false);
                             }
                           },
-                          child: Text('Yes', style: TextStyle(color: Colors.blue)),
+                          child: const Text('Yes', style: TextStyle(color: Colors.blue)),
                         ),
                       ],
                     ),
@@ -179,9 +196,9 @@ class MyDrawer extends StatelessWidget {
             },
             child: const DrawerTile(name: 'Log Out', icon: Icons.logout),
           ),
-          Spacer(),
-          Align(alignment: Alignment.center, child: Text("Made with ❤️ by Sanjaykumar Aasil")),
-          SizedBox(height: 20),
+          const Spacer(),
+          const Align(alignment: Alignment.center, child: Text("Made with ❤️ by Sanjaykumar Aasil")),
+          const SizedBox(height: 20),
         ],
       ),
     );

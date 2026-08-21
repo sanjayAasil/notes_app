@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../common/responsive.dart';
 import '../../common/widget_helper.dart';
 import '../../database/data_manager.dart';
 import '../../database/list_model_db.dart';
@@ -20,6 +21,8 @@ class _RemainderState extends State<RemainderScreen> {
   @override
   Widget build(BuildContext context) {
     context.watch<DataManager>();
+    final isDesktop = Responsive.isDesktop(context);
+    
     List<Note> notes = DataManager().remainderNotes.where((element) => true).toList();
     for (Note note in notes) {
       if (note.scheduleTime != null && DateTime.now().isAfter(note.scheduleTime!)) {
@@ -33,24 +36,27 @@ class _RemainderState extends State<RemainderScreen> {
       }
     }
     return Scaffold(
-      drawer: const MyDrawer(selectedTab: HomeDrawerEnum.remainder),
+      drawer: isDesktop ? null : const MyDrawer(selectedTab: HomeDrawerEnum.remainder),
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: const MediaQueryData().padding.top + 50, left: 15),
+            padding: EdgeInsets.only(
+              top: isDesktop ? 20 : MediaQuery.of(context).padding.top + 20,
+              left: 15,
+            ),
             child: Row(
               children: [
-                Builder(
-                  builder:
-                      (context) => InkWell(
-                        onTap: () => Scaffold.of(context).openDrawer(),
-                        borderRadius: BorderRadius.circular(40),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.menu, color: Colors.grey.shade800, size: 30),
-                        ),
+                if (!isDesktop)
+                  Builder(
+                    builder: (context) => InkWell(
+                      onTap: () => Scaffold.of(context).openDrawer(),
+                      borderRadius: BorderRadius.circular(40),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.menu, color: Colors.grey.shade800, size: 30),
                       ),
-                ),
+                    ),
+                  ),
                 const SizedBox(width: 20),
                 const Expanded(child: Text('Remainder', style: TextStyle(fontSize: 18))),
                 InkWell(
@@ -81,21 +87,27 @@ class _RemainderState extends State<RemainderScreen> {
             )
           else
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (Note note in DataManager().remainderNotes)
-                          NoteTileListView(note: note, selectedIds: const []),
-                        for (ListModel listModel in DataManager().remainderListModels)
-                          ListModelTileListView(selectedIds: const [], listModel: listModel),
-                      ],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Center(
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 800),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            for (Note note in DataManager().remainderNotes)
+                              NoteTileListView(note: note, selectedIds: const []),
+                            for (ListModel listModel in DataManager().remainderListModels)
+                              ListModelTileListView(selectedIds: const [], listModel: listModel),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
         ],
