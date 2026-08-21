@@ -66,7 +66,6 @@ jobs:
     name: Deploy Web to Firebase Hosting
     needs: test
 
-    # Deploy ONLY after a successful push to main
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
@@ -81,7 +80,6 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 22
-          cache: npm
 
       # 3. Install Firebase CLI
       - name: Install Firebase CLI
